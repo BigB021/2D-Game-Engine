@@ -14,7 +14,7 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        String filePath = "assets/libgdx.png";
+        String filePath = "assets/test.png";
         Gdx.app.log("GameMain", "Loading texture from: " + filePath);
 
         if (Gdx.files.internal(filePath).exists()) {
