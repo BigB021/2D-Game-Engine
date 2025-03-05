@@ -19,6 +19,7 @@ public class Game extends ApplicationAdapter {
     private int width = 128,height = 128;
     private int x_start = 0,y_start = 0;
     private InputsManager inputsManager;
+    private  int i=0;
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -43,19 +44,32 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if (x_start > 896) x_start = 0;
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+
+
+
+        System.out.println(i);
+
         batch.begin();
         // Texture Region
         region = new TextureRegion(image,x_start,y_start, width, height);
 
-        x_start = x_start + width;
-        if (image != null) {
-            batch.draw(region, x, y);
+
+        if (i%3 == 0){
+            if (image != null) {
+                ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+                x_start = x_start + width;
+                if (x_start > 896) x_start = 0;
+
+                batch.draw(region, x, y);
+                if (Gdx.input.isKeyPressed(Input.Keys.A))
+                {x+=5;}
+            }
         }
+
         batch.end();
-        if (Gdx.input.isKeyPressed(Input.Keys.A))
-        {x++;}
+
+        i++;
+
 
     }
 
