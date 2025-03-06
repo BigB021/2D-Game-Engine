@@ -10,8 +10,7 @@ public abstract class Entity {
     protected Rectangle hitBox;
 
 
-    public Entity(Texture sprite, int x, int y, int width, int height) {
-        this.sprite = sprite;
+    public Entity(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.hitBox = new Rectangle(x, y, width, height);
@@ -48,4 +47,5 @@ public abstract class Entity {
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
     }
+
 }

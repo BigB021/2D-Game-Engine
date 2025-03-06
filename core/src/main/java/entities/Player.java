@@ -2,6 +2,7 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import utilities.Constants;
 
 public class Player extends Entity {
     private int playerAction;
@@ -11,16 +12,32 @@ public class Player extends Entity {
     private float playerSpeed;
 
 
-    public Player(Texture sprite, int x, int y, int width, int height, int playerAction, boolean isMoving, boolean isDead, boolean playerDirection, float playerSpeed) {
-        super(sprite, x, y, width, height);
-        this.playerAction = playerAction;
-        this.isMoving = isMoving;
-        this.isDead = isDead;
-        this.playerDirection = playerDirection;
+    public Player(int x, int y, int width, int height, float playerSpeed) {
+        super(x, y, width, height);
         this.playerSpeed = playerSpeed;
     }
 
     public void loadAnimation() {
+        switch (playerAction) {
+            case Constants.IDLE:
+                this.setSprite(new Texture(Constants.IDLE_ANIMATION));
+                break;
+            case Constants.WALK:
+                this.setSprite(new Texture(Constants.WALK_ANIMATION));
+                break;
+            case Constants.RUN:
+                this.setSprite(new Texture(Constants.RUN_ANIMATION));
+                break;
+            case Constants.JUMP:
+                this.setSprite(new Texture(Constants.JUMP_ANIMATION));
+                break;
+            case Constants.ATTACK_1:
+                this.setSprite(new Texture(Constants.ATTACK_1_ANIMATION));
+        }
 
+    }
+
+    public float getPlayerSpeed() {
+        return playerSpeed;
     }
 }
