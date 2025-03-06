@@ -8,7 +8,7 @@ public class GameLauncher {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Test Game"); // Window title
         config.setWindowedMode(800, 600); // Window size
-        config.setForegroundFPS(60); // Target FPS
+        config.setForegroundFPS(120); // Target FPS
 
         // Start the game
         Game game = new Game();

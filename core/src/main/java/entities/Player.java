@@ -1,6 +1,7 @@
 package entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import utilities.Constants;
 
@@ -17,7 +18,7 @@ public class Player extends Entity {
         this.playerSpeed = playerSpeed;
     }
 
-    public void loadAnimation() {
+    public void setAnimation() {
         switch (playerAction) {
             case Constants.IDLE:
                 this.setSprite(new Texture(Constants.IDLE_ANIMATION));
@@ -35,6 +36,11 @@ public class Player extends Entity {
                 this.setSprite(new Texture(Constants.ATTACK_1_ANIMATION));
         }
 
+    }
+
+
+    public  TextureRegion loadAnimation(int x,int y,int width,int height) {
+        return new TextureRegion(getSprite() ,x,y,width,height);
     }
 
     public float getPlayerSpeed() {
