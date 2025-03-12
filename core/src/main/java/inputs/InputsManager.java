@@ -4,11 +4,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import entities.Player;
 import utilities.Constants;
-
-import javax.swing.text.Utilities;
+import java.util.HashSet;
+import java.util.Set;
 
 public class InputsManager implements InputProcessor {
     private final Player player;
+    private final Set<Integer> pressedKeys = new HashSet<>();  // Store pressed keys
+
 
     public InputsManager(Player player) {
         this.player = player;
@@ -16,6 +18,20 @@ public class InputsManager implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+
+        pressedKeys.add(keycode);
+
+        // todo: fix running mechanism
+        if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT) && pressedKeys.contains(Input.Keys.D)) {
+            player.setPlayerSpeed(5);
+            player.setPlayerAction(Constants.RUN);
+            player.setPlayerDirection(Constants.RIGHT);
+            player.setMoving(true);
+
+            System.out.println("Player running");
+
+            return true;
+        }
         if (keycode == Input.Keys.D) {
             player.setPlayerAction(Constants.WALK);
             player.setPlayerDirection(1);
@@ -25,16 +41,19 @@ public class InputsManager implements InputProcessor {
             player.setPlayerDirection(-1);
             player.setMoving(true);
         }
+
         return false;
     }
 
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.D || keycode == Input.Keys.A) {
-            player.setPlayerAction(Constants.IDLE);
+        pressedKeys.remove(keycode);  // Remove key when released
+
+        if (pressedKeys.isEmpty()) {
             player.setMoving(false);
-            System.out.println("Moving Player: "+keycode);
+            player.setPlayerAction(Constants.IDLE);
+            player.setAnimation();
         }
         return false;
     }

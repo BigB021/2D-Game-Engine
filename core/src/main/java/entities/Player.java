@@ -10,12 +10,16 @@ public class Player extends Entity {
     private boolean isMoving;
     private boolean isDead;
     private int playerDirection;
-    private final float playerSpeed;
+    private double playerSpeed;
 
 
-    public Player(int x, int y, int width, int height, float playerSpeed) {
+    public Player(int x, int y, int width, int height, double playerSpeed) {
         super(x, y, width, height);
         this.playerSpeed = playerSpeed;
+        this.isMoving = false;
+        this.isDead = false;
+        this.playerAction = Constants.IDLE;
+        this.playerDirection = Constants.RIGHT;
     }
 
     public void setPlayerAction(int playerAction) {
@@ -44,14 +48,21 @@ public class Player extends Entity {
 
 
     public  TextureRegion loadAnimation(int x,int y,int width,int height) {
-        return new TextureRegion(getSprite() ,x,y,width,height);
+        if (getPlayerDirection() == Constants.RIGHT) {
+
+            return new TextureRegion(getSprite() ,x,y,getPlayerDirection() * width,height);
+        }
+        return new TextureRegion(getSprite() ,x + width,y,getPlayerDirection() * width,height);
     }
 
     public void movePlayer() {
         this.setAnimation();
         if (isMoving) {
-            this.setX(this.getX() + (int) this.getPlayerSpeed() * getPlayerDirection());
+            this.setX(this.getX() + this.getPlayerSpeed() * getPlayerDirection());
         }
+        // temp solution
+        // todo: implement method to switch between walk and dash speed
+        setPlayerSpeed(3.);
     }
 
 
@@ -63,8 +74,12 @@ public class Player extends Entity {
     public int getPlayerDirection() {
         return playerDirection;
     }
-    public float getPlayerSpeed() {
+
+    public double getPlayerSpeed() {
         return playerSpeed;
+    }
+    public void setPlayerSpeed(double playerSpeed) {
+        this.playerSpeed = playerSpeed;
     }
     public boolean isMoving() {
         return isMoving;
