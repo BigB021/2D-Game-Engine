@@ -14,5 +14,8 @@ public final class Constants {
     public  static final int JUMP = 3;
     public  static final int ATTACK_1 = 4;
 
+    public  static final int RIGHT = 1;
+    public  static final int LEFT = -1;
+
 
 }

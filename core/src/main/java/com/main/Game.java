@@ -16,13 +16,16 @@ import utilities.Constants;
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture image;
-    private TextureRegion region;
     private int x = 140, y = 210;
-    private int width = 128,height = 128;
+    private final int width = 128;
+    private final int height = 128;
     private int x_start = 0,y_start = 0;
-    private InputsManager inputsManager;
-    private  int i=0;
+    private InputsManager playerInput;
     private  Player player;
+    private float animationTimer = 0f;  // Timer to track elapsed time
+    private final float FRAME_DELAY = 0.1f;  // Delay between frames (adjust as needed)
+
+
     @Override
     public void create() {
         player = new Player((int)x,(int)y,width,height,5);
@@ -39,10 +42,12 @@ public class Game extends ApplicationAdapter {
         }
         // Inputs initialization
         //Gdx.input.setInputProcessor(new InputsManager());
-        inputsManager = new InputsManager();
+        playerInput = new InputsManager(player);
+        Gdx.input.setInputProcessor(playerInput);
 
         // Init player
         player.setSprite(new Texture(Constants.IDLE_ANIMATION));
+
 
 
 
@@ -51,37 +56,39 @@ public class Game extends ApplicationAdapter {
     @Override
     public void render() {
 
+        ScreenUtils.clear(0.5f, 0.15f, 0.2f, 1f);
+
+        player.movePlayer(); // Move the player every frame
+
+        animationTimer += Gdx.graphics.getDeltaTime(); // Increment timer
+
+        if (animationTimer >= FRAME_DELAY) {  // Check if enough time has passed
+            x_start = x_start + width;  // Move to the next frame
+            if (x_start > image.getWidth() - width) x_start = 0;  // Reset to first frame
+            animationTimer = 0f;  // Reset timer
+        }
+
         batch.begin();
-        region = player.loadAnimation(x_start,y_start ,width,height);
-
-        //System.out.println(i);
-        //if ( i % 4 == 0){
-            if (image != null) {
-                ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-                player.setSprite(new Texture(Constants.IDLE_ANIMATION));
-                x_start = x_start + width;
-                if (x_start > image.getWidth() - width) x_start = 0;
-
-
-                if (Gdx.input.isKeyPressed(Input.Keys.A))
-                {
-                    x -= player.getPlayerSpeed();
-                    player.setSprite(new Texture(Constants.RUN_ANIMATION));
-                    batch.draw(region, x+width, y, -width, height);
-                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-
-                    x += player.getPlayerSpeed();
-                    player.setSprite(new Texture(Constants.WALK_ANIMATION));
-                    batch.draw(region, x, y,width,height);
-
-                }
-                else batch.draw(region, x, y,width,height);
-
-                i = 0;
-            }
-        //}
-        i++;
+        TextureRegion region = player.loadAnimation(x_start, y_start, width, height);
+        batch.draw(region, player.getX(), player.getY(), width, height);
         batch.end();
+
+//        if (Gdx.input.isKeyPressed(Input.Keys.A))
+//        {
+//            x -= player.getPlayerSpeed();
+//            player.setSprite(new Texture(Constants.RUN_ANIMATION));
+//            batch.draw(region, x+width, y, -width, height);
+//        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+//            x += player.getPlayerSpeed();
+//            player.setSprite(new Texture(Constants.WALK_ANIMATION));
+//            batch.draw(region, x, y,width,height);
+//        } else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+//            y += player.getPlayerSpeed();
+//            player.setSprite(new Texture(Constants.JUMP_ANIMATION));
+//            batch.draw(region, x, y,width,height);
+//        } else batch.draw(region, x, y,width,height);
+
+
 
 
 
