@@ -3,7 +3,7 @@ package utilities;
 public final class Constants {
     public static  final String IDLE_ANIMATION = "assets/Idle.png";
     public static final String WALK_ANIMATION = "assets/Walk.png";
-    public static final String RUN_ANIMATION = "assets/Walk.png";
+    public static final String RUN_ANIMATION = "assets/Run.png";
     public static final String JUMP_ANIMATION = "assets/Jump.png";
     public static final String ATTACK_1_ANIMATION = "assets/Attack_1.png";
 
@@ -17,5 +17,8 @@ public final class Constants {
     public  static final int RIGHT = 1;
     public  static final int LEFT = -1;
 
+
+    public static final float FRAME_DELAY = 0.1f; // 100ms per frame
+    public static final int ATTACK_1_FRAMES = 6;
 
 }

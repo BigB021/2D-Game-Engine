@@ -2,9 +2,7 @@ package com.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -15,11 +13,9 @@ import utilities.Constants;
 
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
-    private int x = 140, y = 210;
     private final int width = 128;
     private final int height = 128;
     private int x_start = 0,y_start = 0;
-    private InputsManager playerInput;
     private  Player player;
     private float animationTimer = 0f;
     private final float FRAME_DELAY = 0.1f;
@@ -27,14 +23,17 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
-        player = new Player((int)x,(int)y,width,height,3.);
+        int x = 140, y = 210;
+        player = new Player(x,y,width,height,3.);
 
         // Inputs initialization
-        playerInput = new InputsManager(player);
+        InputsManager playerInput = new InputsManager(player);
         Gdx.input.setInputProcessor(playerInput);
 
         // Init player
         player.setSprite(new Texture(Constants.IDLE_ANIMATION));
+        player.setCooldown(player.getAttackAnimationDuration());
+
 
         batch = new SpriteBatch();
 

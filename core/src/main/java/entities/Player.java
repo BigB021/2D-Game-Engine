@@ -9,8 +9,15 @@ public class Player extends Entity {
     private int playerAction;
     private boolean isMoving;
     private boolean isDead;
+    private boolean isAttacking;
+    private boolean isJumping;
     private int playerDirection;
     private double playerSpeed;
+    private double cooldown;
+    private long lastAttackTime = 0;
+
+
+
 
 
     public Player(int x, int y, int width, int height, double playerSpeed) {
@@ -58,12 +65,11 @@ public class Player extends Entity {
     public void movePlayer() {
         this.setAnimation();
         if (isMoving) {
-            this.setX(this.getX() + this.getPlayerSpeed() * getPlayerDirection());
+            double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
+            this.setX(this.getX() + speed * getPlayerDirection());
         }
-        // temp solution
-        // todo: implement method to switch between walk and dash speed
-        setPlayerSpeed(3.);
     }
+
 
 
 
@@ -88,5 +94,34 @@ public class Player extends Entity {
     public void setMoving(boolean moving) {
         isMoving = moving;
     }
+
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+    public void setAttacking(boolean attacking) {
+        isAttacking = attacking;
+    }
+
+    public double getCooldown() {
+        return cooldown;
+    }
+    public void setCooldown(double cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public long getLastAttackTime() {
+        return lastAttackTime;
+    }
+
+    public void setLastAttackTime(long lastAttackTime) {
+        this.lastAttackTime = lastAttackTime;
+    }
+
+    public float getAttackAnimationDuration() {
+        int frameCount = Constants.ATTACK_1_FRAMES; // Total frames in attack animation
+        float frameDelay = Constants.FRAME_DELAY;   // Delay per frame in seconds
+        return frameCount * frameDelay; // Total animation duration in seconds
+    }
+
 
 }
