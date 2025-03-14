@@ -18,97 +18,90 @@ import java.io.IOException;
 
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
-    private Texture image;
-    private Texture background;
-    private TextureRegion region;
-    private int x = 140,y = 210;
-    private int width = 128,height = 128;
+    private final int width = 128;
+    private final int height = 128;
     private int x_start = 0,y_start = 0;
     private InputsManager inputsManager;
     private  int i=0;
     private  Player player;
+    private float animationTimer = 0f;
+    private final float FRAME_DELAY = 0.1f;
+
 
     @Override
     public void create() {
-        player = new Player(x,y,width,height,5);
-        batch = new SpriteBatch();
-
-        String filePath = Constants.IDLE_ANIMATION;
-        //Gdx.app.log("GameMain", "Loading texture from: " + filePath);
-
-        if (Gdx.files.internal(filePath).exists()) {
-            Gdx.app.log("GameMain", "File exists");
-            image = new Texture(filePath);
-
-        } else {
-            Gdx.app.error("GameMain", "File not found: " + filePath);
-        }
-        // Inputs initialization
-        //Gdx.input.setInputProcessor(new InputsManager());
-        inputsManager = new InputsManager();
-
-        // Init player
-        player.setSprite(new Texture(Constants.IDLE_ANIMATION));
 
 
 
     }
 
     @Override
-    public void render () {
+    public void render() {
         TileManager tileManager = null;
         try {
             tileManager = new TileManager();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        ScreenUtils.clear(0.5f, 0.15f, 0.2f, 1f);
+
+        player.movePlayer();
+
+        animationTimer += Gdx.graphics.getDeltaTime();
+
+        if (animationTimer >= FRAME_DELAY) {  // Check if enough time has passed
+            x_start = x_start + width;
+            if (x_start > player.getSprite().getWidth() - width) x_start = 0;  // Reset to first frame
+            animationTimer = 0f;  // Reset timer
+        }
+
         batch.begin();
         tileManager.render(batch);
+
+        TextureRegion region = player.loadAnimation(x_start, y_start, width, height);
+        batch.draw(region, (int)player.getX(),(int) player.getY(), width, height);
+
+        batch.end();
         // Texture Regionrender
         //region = new TextureRegion(player.getSprite(),x_start,y_start, width, height);
         region = new TextureRegion(player.getSprite(),x_start,y_start, width, height);
 //        background = new Texture(Constants.BACKGROUND);
 //        batch.draw(background,1,1);
 
-        if ( i % 4 == 0){
-            if (image != null) {
-                ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-                player.setSprite(new Texture(Constants.IDLE_ANIMATION));
-                x_start = x_start + width;
-                if (x_start > image.getWidth() - width) x_start = 0;
+//        if ( i % 4 == 0){
+//            if (image != null) {
+//                ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+//                player.setSprite(new Texture(Constants.IDLE_ANIMATION));
+//                x_start = x_start + width;
+//                if (x_start > image.getWidth() - width) x_start = 0;
+//
+//                batch.draw(region, x, y);
+//                if (Gdx.input.isKeyPressed(Input.Keys.A))
+//                {
+//                    x -= player.getPlayerSpeed();
+//                    player.setSprite(new Texture(Constants.RUN_ANIMATION));
+//                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+//                    x+= player.getPlayerSpeed();
+//                    player.setSprite(new Texture(Constants.WALK_ANIMATION));
+//
+//
+//                }
+//            }
 
-                batch.draw(region, x, y);
-                if (Gdx.input.isKeyPressed(Input.Keys.A))
-                {
-                    x -= player.getPlayerSpeed();
-                    player.setSprite(new Texture(Constants.RUN_ANIMATION));
-                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    x+= player.getPlayerSpeed();
-                    player.setSprite(new Texture(Constants.WALK_ANIMATION));
 
 
-                }
-            }
-        }
-
-        batch.end();
-
-        i++;
 
 
     }
 
     @Override
     public void dispose() {
-        try {
-            if (batch != null) {
-                batch.dispose();
+            try {
+                if (batch != null) {
+                    batch.dispose();
+                }
+            } catch (Exception e) {
+                Gdx.app.error("GameMain", "Error during disposal", e);
             }
-            if (image != null) {
-                image.dispose();
-            }
-        } catch (Exception e) {
-            Gdx.app.error("GameMain", "Error during disposal", e);
         }
-    }
 }

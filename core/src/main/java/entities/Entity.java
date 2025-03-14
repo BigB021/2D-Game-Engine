@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {
     protected Texture sprite;
-    protected int x, y;
+    protected double x, y;
     protected Rectangle hitBox;
 
 
@@ -24,15 +24,15 @@ public abstract class Entity {
         this.sprite = sprite;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
