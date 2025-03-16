@@ -49,4 +49,9 @@ public final class Constants {
     public static final float FRAME_DELAY = 0.1f; // 100ms per frame
     public static final int ATTACK_1_FRAMES = 6;
 
+    public static final int FRAME_WIDTH = 128;
+    public static final int FRAME_HEIGHT = 128;
+
+
+
 }

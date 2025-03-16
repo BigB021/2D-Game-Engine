@@ -4,18 +4,30 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Abstract class that represents base entity in the game.
+ * Provides common properties and methods for all game entities.
+ */
 public abstract class Entity {
     protected Texture sprite;
-    protected double x, y;
+    protected int x, y;
     protected Rectangle hitBox;
 
-
+    /**
+     * Constructs an entity with a specified position and hitbox dimensions.
+     *
+     * @param x      The initial x-coordinate of the entity.
+     * @param y      The initial y-coordinate of the entity.
+     * @param width  The width of the entity's sprite.
+     * @param height The height of the entity's sprite.
+     */
     public Entity(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
-        this.hitBox = new Rectangle(x, y, width, height);
+        this.hitBox = new Rectangle(x + (int) (width/3), y, (int) (width/3), height/2);
     }
 
+    // Getters & Setters
     public Texture getSprite() {
         return sprite;
     }
@@ -24,15 +36,15 @@ public abstract class Entity {
         this.sprite = sprite;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
@@ -47,5 +59,7 @@ public abstract class Entity {
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
     }
+
+
 
 }

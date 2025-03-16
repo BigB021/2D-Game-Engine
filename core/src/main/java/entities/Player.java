@@ -2,10 +2,13 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import utilities.Constants;
 
+/**
+ * Represents the player entity in the game, handling movement, actions, and animations.
+ */
 public class Player extends Entity {
+
     private int playerAction;
     private boolean isMoving;
     private boolean isDead;
@@ -15,11 +18,26 @@ public class Player extends Entity {
     private double playerSpeed;
     private double cooldown;
     private long lastAttackTime = 0;
+    private int animation_index;
 
 
+    // Cached textures for animations
+    private Texture idleTexture;
+    private Texture walkTexture;
+    private Texture runTexture;
+    private Texture jumpTexture;
+    private Texture attack1Texture;
 
 
-
+    /**
+     * Constructs a Player object with specified position, size, and speed.
+     *
+     * @param x           Initial x-coordinate of the player.
+     * @param y           Initial y-coordinate of the player.
+     * @param width       Width of the player.
+     * @param height      Height of the player.
+     * @param playerSpeed Movement speed of the player.
+     */
     public Player(int x, int y, int width, int height, double playerSpeed) {
         super(x, y, width, height);
         this.playerSpeed = playerSpeed;
@@ -27,33 +45,66 @@ public class Player extends Entity {
         this.isDead = false;
         this.playerAction = Constants.IDLE;
         this.playerDirection = Constants.RIGHT;
+        this.animation_index = 0;
+
+        loadTextures();
+        // Initialize sprite with the idle texture
+        setSprite(idleTexture);
     }
 
-    public void setPlayerAction(int playerAction) {
-        this.playerAction = playerAction;
+    /**
+     * Loads animation textures once and caches them.
+     */
+    private void loadTextures() {
+        idleTexture = new Texture(Constants.IDLE_ANIMATION);
+        walkTexture = new Texture(Constants.WALK_ANIMATION);
+        runTexture = new Texture(Constants.RUN_ANIMATION);
+        jumpTexture = new Texture(Constants.JUMP_ANIMATION);
+        attack1Texture = new Texture(Constants.ATTACK_1_ANIMATION);
     }
 
-    public void setAnimation() {
+    /**
+     * Updates the player's animation based on the current action.
+     */
+    public void updateAnimation() {
         switch (playerAction) {
             case Constants.IDLE:
-                this.setSprite(new Texture(Constants.IDLE_ANIMATION));
+                if (getSprite() != idleTexture) {
+                    setSprite(idleTexture);
+                }
                 break;
             case Constants.WALK:
-                this.setSprite(new Texture(Constants.WALK_ANIMATION));
+                if (getSprite() != walkTexture) {
+                    setSprite(walkTexture);
+                }
                 break;
             case Constants.RUN:
-                this.setSprite(new Texture(Constants.RUN_ANIMATION));
+                if (getSprite() != runTexture) {
+                    setSprite(runTexture);
+                }
                 break;
             case Constants.JUMP:
-                this.setSprite(new Texture(Constants.JUMP_ANIMATION));
+                if (getSprite() != jumpTexture) {
+                    setSprite(jumpTexture);
+                }
                 break;
             case Constants.ATTACK_1:
-                this.setSprite(new Texture(Constants.ATTACK_1_ANIMATION));
+                if (getSprite() != attack1Texture) {
+                    setSprite(attack1Texture);
+                }
+                break;
         }
-
     }
 
-
+    /**
+     * Loads and returns the appropriate animation frame based on direction.
+     *
+     * @param x      X-coordinate of the animation frame.
+     * @param y      Y-coordinate of the animation frame.
+     * @param width  Width of the animation frame.
+     * @param height Height of the animation frame.
+     * @return TextureRegion containing the selected frame.
+     */
     public  TextureRegion loadAnimation(int x,int y,int width,int height) {
         if (getPlayerDirection() == Constants.RIGHT) {
 
@@ -62,17 +113,37 @@ public class Player extends Entity {
         return new TextureRegion(getSprite() ,x + width,y,getPlayerDirection() * width,height);
     }
 
+    /**
+     * Moves the player based on their current state and updates their hitbox.
+     */
     public void movePlayer() {
-        this.setAnimation();
+        this.updateAnimation();
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
-            this.setX(this.getX() + speed * getPlayerDirection());
+            this.setX(this.getX() + (int)speed * getPlayerDirection());
+            updateHitbox();
         }
     }
 
+    /**
+     * Updates the player's hitbox position to match the player's movement.
+     */
+    public void updateHitbox(){
+        this.getHitBox().x = this.getX() + 40 ;
+        this.getHitBox().y = this.getY();
+    }
 
+    /**
+     * Calculates and returns the duration of the attack animation.
+     *
+     * @return Duration of attack animation in seconds.
+     */
+    public float getAttackAnimationDuration() {
+        return 0.1f;//Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY; // Returns seconds
 
+    }
 
+    // Getters and Setters
     public void setPlayerDirection(int playerDirection) {
         this.playerDirection = playerDirection;
     }
@@ -84,44 +155,52 @@ public class Player extends Entity {
     public double getPlayerSpeed() {
         return playerSpeed;
     }
-    public void setPlayerSpeed(double playerSpeed) {
-        this.playerSpeed = playerSpeed;
-    }
+
     public boolean isMoving() {
         return isMoving;
-    }
-
-    public void setMoving(boolean moving) {
-        isMoving = moving;
     }
 
     public boolean isAttacking() {
         return isAttacking;
     }
-    public void setAttacking(boolean attacking) {
-        isAttacking = attacking;
-    }
 
     public double getCooldown() {
         return cooldown;
-    }
-    public void setCooldown(double cooldown) {
-        this.cooldown = cooldown;
     }
 
     public long getLastAttackTime() {
         return lastAttackTime;
     }
 
+    public int getAnimation_index() {
+        return animation_index;
+    }
+
+    public void setPlayerSpeed(double playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
+    }
+
+    public void setAttacking(boolean attacking) {
+        isAttacking = attacking;
+    }
+
+    public void setCooldown(double cooldown) {
+        this.cooldown = cooldown;
+    }
+
     public void setLastAttackTime(long lastAttackTime) {
         this.lastAttackTime = lastAttackTime;
     }
 
-    public float getAttackAnimationDuration() {
-        int frameCount = Constants.ATTACK_1_FRAMES; // Total frames in attack animation
-        float frameDelay = Constants.FRAME_DELAY;   // Delay per frame in seconds
-        return frameCount * frameDelay; // Total animation duration in seconds
+    public void setPlayerAction(int playerAction) {
+        this.playerAction = playerAction;
     }
 
-
+    public void setAnimation_index(int animation_index) {
+        this.animation_index = animation_index;
+    }
 }
