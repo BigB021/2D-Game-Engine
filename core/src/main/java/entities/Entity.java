@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public abstract class Entity {
     protected Texture sprite;
-    protected int x, y;
+    protected float x, y;
     protected Rectangle hitBox;
 
     /**
@@ -21,7 +21,7 @@ public abstract class Entity {
      * @param width  The width of the entity's sprite.
      * @param height The height of the entity's sprite.
      */
-    public Entity(int x, int y, int width, int height) {
+    public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
@@ -44,15 +44,15 @@ public abstract class Entity {
         this.sprite = sprite;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
@@ -67,6 +67,7 @@ public abstract class Entity {
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
     }
+
 
 
 

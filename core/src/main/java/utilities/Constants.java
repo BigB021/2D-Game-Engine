@@ -52,8 +52,8 @@ public final class Constants {
     public static final int FRAME_WIDTH = 128;
     public static final int FRAME_HEIGHT = 128;
 
-    public static int WIDTH = 1920;
-    public static int HEIGHT = 1080;
+    public static int WIDTH = 960;
+    public static int HEIGHT = 540;
 
 
 

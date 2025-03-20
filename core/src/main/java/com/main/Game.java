@@ -23,12 +23,11 @@ public class Game extends ApplicationAdapter {
     // Testing hitBox
     private ShapeRenderer shape;
 
-
     @Override
     public void create() {
         int x = 140, y = 210;
-        player = new Player(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.);
-        enemy = new Enemy(x+1000,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.);
+        player = new Player(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5);
+        enemy = new Enemy(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
@@ -40,15 +39,13 @@ public class Game extends ApplicationAdapter {
 
         // Init enemy
         enemy.setSprite(new Texture(Constants.IDLE_ANIMATION));
-
-
+        System.out.println("Create Call");
 
         // Init ShapeRenderer
         shape = new ShapeRenderer();
 
         // Init batch
         batch = new SpriteBatch();
-
 
     }
 
@@ -60,10 +57,11 @@ public class Game extends ApplicationAdapter {
         player.movePlayer();
         enemy.moveEnemy();
 
-
+        // Set animation timer to current time
         animationTimer += Gdx.graphics.getDeltaTime();
 
-        if (animationTimer >= FRAME_DELAY) {  // Check if enough time has passed
+        // Check if enough time has passed
+        if (animationTimer >= FRAME_DELAY) {
             player.setAnimation_index(player.getAnimation_index()+ Constants.FRAME_WIDTH);
             if (player.getAnimation_index() > player.getSprite().getWidth() - Constants.FRAME_WIDTH) player.setAnimation_index(0);
             enemy.setAnimation_index(enemy.getAnimation_index()+ Constants.FRAME_WIDTH);
@@ -85,11 +83,10 @@ public class Game extends ApplicationAdapter {
         shape.rect(player.getHitBox().x, player.getHitBox().y, player.getHitBox().width, player.getHitBox().height);
         shape.end();
 
-        // Draw Enemy hitbox rect
+        // Debug: Draw Enemy hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.RED);
         shape.rect(enemy.getHitBox().x, enemy.getHitBox().y, enemy.getHitBox().width, enemy.getHitBox().height);
-
         shape.end();
 
 

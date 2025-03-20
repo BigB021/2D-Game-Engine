@@ -2,6 +2,7 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import utilities.Constants;
 
 public class Enemy extends Entity {
@@ -25,7 +26,7 @@ public class Enemy extends Entity {
     private Texture jumpTexture;
     private Texture attack1Texture;
 
-    public Enemy(int x, int y, int width, int height,double enemySpeed) {
+    public Enemy(int x, int y, int width, int height,double enemySpeed, Player player) {
         super(x, y, width, height);
         this.enemyAction = Constants.IDLE;
         this.isMoving = false;
@@ -33,6 +34,7 @@ public class Enemy extends Entity {
         this.enemyDirection = Constants.RIGHT; //player.getPlayerDirection();
         this.enemySpeed = enemySpeed;
         this.animation_index = 0;
+        this.player = player;
 
         loadTextures();
         // Initialize sprite with the idle texture
@@ -103,19 +105,50 @@ public class Enemy extends Entity {
     // Move enemy
     // todo: implement path finding algorithm or calculate distat Player-Enemy to pursue player
     public void moveEnemy(){
+
         this.setEnemyAction(Constants.RUN);
         this.updateAnimation();
 
-        if(this.getX() >= (Constants.WIDTH - Constants.FRAME_WIDTH)){
+        // Checking collision with screen borders
+
+        if(this.getHitBox().getX() >= (Constants.WIDTH - Constants.FRAME_WIDTH * 0.3f)){
             this.setEnemyDirection(Constants.LEFT);
         }
-        if(this.getX() <= 0){
+        if(this.getHitBox().getX()<= 0){
             this.setEnemyDirection(Constants.RIGHT);
 
         }
-        double speed = (enemyAction == Constants.RUN) ? enemySpeed * 2 : enemySpeed;
-        this.setX(this.getX() + (int)speed * getEnemyDirection());
+        checkCollision();
+        float speed = (float) ((enemyAction == Constants.RUN) ? enemySpeed * 2 : enemySpeed);
+        this.setX(this.getX() + speed * getEnemyDirection());
         updateHitbox();
+    }
+
+    public void calculateDistance() {
+        float epsilon = 0.05f;
+        if (Math.abs((player.getHitBox().x + player.hitBox.width) - this.getHitBox().x) <= epsilon) {
+            this.setEnemyDirection(Constants.LEFT);
+        }
+        if(Math.abs((this.getHitBox().x + this.hitBox.width) - player.getHitBox().x) <= epsilon){
+            this.setEnemyDirection(Constants.RIGHT);
+
+        }
+
+    }
+
+    // Check collision with player
+    public void checkCollision() {
+        float epsilon = 0.05f;
+
+        if ((this.getHitBox().x + this.hitBox.width) - player.getHitBox().x  >= epsilon && this.getEnemyDirection() == Constants.RIGHT) {
+            // todo: Should implement attackinhg Player
+            this.setX(getX() - 10);
+        }else if((player.getHitBox().x + player.hitBox.width) - this.getHitBox().x >= epsilon && this.getEnemyDirection() == Constants.LEFT){
+            // todo: Should implement attackinhg Player
+            this.setX(getX() + 10);
+
+
+        }
     }
 
     // Getters & Setters
