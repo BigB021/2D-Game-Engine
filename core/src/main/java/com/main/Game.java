@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import entities.Enemy;
 import entities.Player;
 import inputs.InputsManager;
 import utilities.Constants;
@@ -15,6 +16,7 @@ import utilities.Constants;
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
     private  Player player;
+    private Enemy enemy;
     private float animationTimer = 0f;
     private final float FRAME_DELAY = 0.1f;
 
@@ -26,6 +28,7 @@ public class Game extends ApplicationAdapter {
     public void create() {
         int x = 140, y = 210;
         player = new Player(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.);
+        enemy = new Enemy(x+1000,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
@@ -34,6 +37,11 @@ public class Game extends ApplicationAdapter {
         // Init player
         player.setSprite(new Texture(Constants.IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
+
+        // Init enemy
+        enemy.setSprite(new Texture(Constants.IDLE_ANIMATION));
+
+
 
         // Init ShapeRenderer
         shape = new ShapeRenderer();
@@ -50,25 +58,38 @@ public class Game extends ApplicationAdapter {
         ScreenUtils.clear(0.5f, 0.15f, 0.2f, 1f);
 
         player.movePlayer();
+        enemy.moveEnemy();
+
 
         animationTimer += Gdx.graphics.getDeltaTime();
 
         if (animationTimer >= FRAME_DELAY) {  // Check if enough time has passed
             player.setAnimation_index(player.getAnimation_index()+ Constants.FRAME_WIDTH);
-            if (player.getAnimation_index() > player.getSprite().getWidth() - Constants.FRAME_WIDTH) player.setAnimation_index(0);  // Reset to first frame
+            if (player.getAnimation_index() > player.getSprite().getWidth() - Constants.FRAME_WIDTH) player.setAnimation_index(0);
+            enemy.setAnimation_index(enemy.getAnimation_index()+ Constants.FRAME_WIDTH);
+            if (enemy.getAnimation_index() > enemy.getSprite().getWidth() - Constants.FRAME_WIDTH) enemy.setAnimation_index(0);
             animationTimer = 0f;  // Reset timer
         }
 
         batch.begin();
-        TextureRegion region = player.loadAnimation(player.getAnimation_index(), 0, Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
-        batch.draw(region, (int)player.getX(),(int) player.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(),0,Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        batch.draw(playerRegion, (int)player.getX(),(int) player.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
 
         batch.end();
 
-        // Debug: Draw hitBox rect
+        // Debug: Draw player hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.BLUE);
         shape.rect(player.getHitBox().x, player.getHitBox().y, player.getHitBox().width, player.getHitBox().height);
+        shape.end();
+
+        // Draw Enemy hitbox rect
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.setColor(Color.RED);
+        shape.rect(enemy.getHitBox().x, enemy.getHitBox().y, enemy.getHitBox().width, enemy.getHitBox().height);
+
         shape.end();
 
 

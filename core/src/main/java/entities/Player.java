@@ -120,18 +120,20 @@ public class Player extends Entity {
         this.updateAnimation();
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
-            this.setX(this.getX() + (int)speed * getPlayerDirection());
-            updateHitbox();
+            if(this.getX() >= (Constants.WIDTH - Constants.FRAME_WIDTH)){
+                this.setX(this.getX()-1);
+
+            }else if(this.getX() <= 0){
+                this.setX(this.getX()+1);
+            }
+            else {
+                this.setX(this.getX() + (int) speed * getPlayerDirection());
+                updateHitbox();
+            }
         }
     }
 
-    /**
-     * Updates the player's hitbox position to match the player's movement.
-     */
-    public void updateHitbox(){
-        this.getHitBox().x = this.getX() + 40 ;
-        this.getHitBox().y = this.getY();
-    }
+
 
     /**
      * Calculates and returns the duration of the attack animation.
@@ -139,7 +141,7 @@ public class Player extends Entity {
      * @return Duration of attack animation in seconds.
      */
     public float getAttackAnimationDuration() {
-        return 0.1f;//Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY; // Returns seconds
+        return Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY; // Returns seconds
 
     }
 

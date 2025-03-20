@@ -24,7 +24,15 @@ public abstract class Entity {
     public Entity(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
-        this.hitBox = new Rectangle(x + (int) (width/3), y, (int) (width/3), height/2);
+        this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
+    }
+
+    /**
+     * Updates the player's hitbox position to match the player's movement.
+     */
+    public void updateHitbox(){
+        this.getHitBox().x = this.getX() + 40 ;
+        this.getHitBox().y = this.getY();
     }
 
     // Getters & Setters
