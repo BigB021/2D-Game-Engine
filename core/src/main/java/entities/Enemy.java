@@ -151,6 +151,8 @@ public class Enemy extends Entity {
         }
     }
 
+    //NEW CHANGE blbla
+
     // Getters & Setters
 
     public int getEnemyAction() {
