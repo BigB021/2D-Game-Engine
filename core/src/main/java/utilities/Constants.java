@@ -28,9 +28,9 @@ public final class Constants {
 
     ///////
     public static final int originaltilesise=16;
-    public static final int scale =4;
+    public static final int scale =1;
     public static final int tileSize=originaltilesise*scale;
-    public static final int maxScreenCol=56;//800/48
+    public static final int maxScreenCol=81;//800/48
     public static final int maxScreenrow=48;
     public static final int screenWidth=tileSize*maxScreenCol;
     public static final int screenHeight=tileSize*maxScreenrow;
@@ -52,8 +52,6 @@ public final class Constants {
     public static final int FRAME_WIDTH = 128;
     public static final int FRAME_HEIGHT = 128;
 
-    public static int WIDTH = 960;
-    public static int HEIGHT = 540;
 
 
 

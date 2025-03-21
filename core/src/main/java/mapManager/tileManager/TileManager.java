@@ -1,6 +1,7 @@
 package mapManager.tileManager;
 import java.io.File;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import utilities.Constants;
@@ -18,8 +19,7 @@ public class TileManager {
 
     public TileManager() throws IOException {
         tile=new Tile[85];
-        getTilesFromFolder();
-        gettileimage();
+//
         mapTilenum= new int [Constants.maxScreenCol][Constants.maxScreenrow];
         loadMap();
     }
@@ -70,11 +70,12 @@ public class TileManager {
 
         }
     }
-    private void gettileimage() {
+    public void gettileimage() {
 
         for (Map.Entry<String,String> entry :Constants.tilesMap.entrySet()) {
             tile[Integer.parseInt(entry.getKey())] = new Tile();
             tile[Integer.parseInt(entry.getKey())].image = new Texture(entry.getValue());
+
             System.out.println(entry.getValue());
 //            tile[1] = new Tile();
 //            tile[1].image = new Texture(Constants.tile1);
@@ -84,25 +85,44 @@ public class TileManager {
 
     }
 
-    public void render (SpriteBatch batch) {
-        int col = 0;
-        int row = 0;
-        int x = 0;
-        int y = 0;
-        while (col < Constants.maxScreenCol && row < Constants.maxScreenrow) {
-            int tilenum = mapTilenum[col][row];
-            int flippedY = (Constants.maxScreenrow - 1 - row) * tile[tilenum].image.getHeight();
+    public void render (SpriteBatch batch, Camera camera) {
+        int tilesize=Constants.tileSize;
+        int colstart=Math.max(0,(int)(camera.position.x-camera.viewportWidth/2)/tilesize);
+        int colend=Math.min(Constants.maxScreenCol,(int)(camera.position.x+camera.viewportWidth/2)/tilesize+1);
+        int rowstart=Math.max(0,(int)(camera.position.y-camera.viewportHeight/2)/tilesize);
+        int rowend=Math.min(Constants.maxScreenrow,(int)(camera.position.y+camera.viewportWidth/2)/tilesize+1);
 
-            batch.draw(tile[tilenum].image, x, flippedY);
-            col++;
-            x += tile[tilenum].image.getWidth();
-            if (col == Constants.maxScreenCol) {
-                col = 0;
-                x = 0;
-                row++;
-                y += tile[tilenum].image.getHeight();
+        int row = rowstart;
+        while (row<rowend){
+            int col=colstart;
+            while(col<colend){
+                int tilenum = mapTilenum[col][row];
+                if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null) {
+                    batch.draw(tile[tilenum].image,col*tilesize,row*tilesize);
+                }
+                col++;
             }
+            row++;
         }
+        ///old version
+//        int col = 0;
+//        int row = 0;
+//        int x = 0;
+//        int y = 0;
+//        while (col < Constants.maxScreenCol && row < Constants.maxScreenrow) {
+//            int tilenum = mapTilenum[col][row];
+//            int flippedY = (Constants.maxScreenrow - 1 - row) * tile[tilenum].image.getHeight();
+//
+//            batch.draw(tile[tilenum].image, Constants.tileSize*col, row*Constants.tileSize);
+//            col++;
+//            x += tile[tilenum].image.getWidth();
+//            if (col == Constants.maxScreenCol) {
+//                col = 0;
+//                x = 0;
+//                row++;
+//                y += tile[tilenum].image.getHeight();
+//            }
+//        }
 
 //
 //        batch.draw(tile[0].image,tile[0].image.getWidth()*2,0);

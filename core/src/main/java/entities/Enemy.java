@@ -111,7 +111,7 @@ public class Enemy extends Entity {
 
         // Checking collision with screen borders
 
-        if(this.getHitBox().getX() >= (Constants.WIDTH - Constants.FRAME_WIDTH * 0.3f)){
+        if(this.getHitBox().getX() >= (Constants.screenWidth - Constants.FRAME_WIDTH * 0.3f)){
             this.setEnemyDirection(Constants.LEFT);
         }
         if(this.getHitBox().getX()<= 0){
