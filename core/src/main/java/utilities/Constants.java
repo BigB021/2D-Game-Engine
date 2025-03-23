@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Constants {
+    // Texture Constants
     public static  final String IDLE_ANIMATION = "assets/Idle.png";
     public static final String WALK_ANIMATION = "assets/Walk.png";
     public static final String RUN_ANIMATION = "assets/Run.png";
@@ -13,7 +14,7 @@ public final class Constants {
     public static final String tile0 = "assets/assets/tiles/1.png";
     public static final String tile59 = "assets/assets/tiles/59.png";
     public static final String tileFolder = "assets/assets/tiles";
-///////
+
     public static final Map<String, String> tilesMap = new HashMap<>();
     // add tile
     public static void addTile(String key, String value) {
@@ -26,16 +27,17 @@ public final class Constants {
     }
 
 
-    ///////
-    public static final int originaltilesise=16;
-    public static final int scale =1;
-    public static final int tileSize=originaltilesise*scale;
-    public static final int maxScreenCol=81;//800/48
-    public static final int maxScreenrow=48;
-    public static final int screenWidth=tileSize*maxScreenCol;
-    public static final int screenHeight=tileSize*maxScreenrow;
-    public static final String Map1="assets/maps/map1.txt";
+    // Map Tiles Constants
+    public static final int ORIGINAL_TILE_SIZE = 16;
+    public static final int SCALE = 1;
+    public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
+    public static final int MAX_SCREEN_COL = 81;//800/48
+    public static final int MAX_SCREEN_ROWS = 48;
+    public static final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COL;
+    public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROWS;
+    public static final String MAP_1 = "assets/maps/map1.txt";
 
+    // Entity movements Constants
     public  static final int IDLE = 0;
     public  static final int WALK = 1;
     public  static final int RUN = 2;
@@ -45,8 +47,12 @@ public final class Constants {
     public  static final int RIGHT = 1;
     public  static final int LEFT = -1;
 
+    // Enemy pursue distance
+    public  static final int DISTANCE = 200;
 
-    public static final float FRAME_DELAY = 0.03f; // 30ms per frame
+
+    // Frame Constants
+    public static final float FRAME_DELAY = 0.1f; // 30ms per frame
     public static final int ATTACK_1_FRAMES = 6;
 
     public static final int FRAME_WIDTH = 128;

@@ -114,14 +114,14 @@ public class Player extends Entity {
     }
 
     /**
-     * Moves the player based on their current state and updates their hitbox.
+     * Moves the player based on their current state and updates their hitBox.
      */
     public void movePlayer() {
         this.updateAnimation();
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
             // Checking collision with screen borders
-            if(this.getX() >= (Constants.screenWidth - Constants.FRAME_WIDTH * 0.6f)){
+            if(this.getX() >= (Constants.SCREEN_WIDTH - Constants.FRAME_WIDTH * 0.6f)){
                 this.setX(this.getX() - 1);
 
             }else if(this.getX()<= 0){
@@ -133,7 +133,6 @@ public class Player extends Entity {
             }
         }
     }
-
 
 
     /**
@@ -195,9 +194,7 @@ public class Player extends Entity {
         this.cooldown = cooldown;
     }
 
-    public void setLastAttackTime(long lastAttackTime) {
-        this.lastAttackTime = lastAttackTime;
-    }
+    public void setLastAttackTime(long lastAttackTime) { this.lastAttackTime = lastAttackTime; }
 
     public void setPlayerAction(int playerAction) {
         this.playerAction = playerAction;
@@ -206,4 +203,5 @@ public class Player extends Entity {
     public void setAnimation_index(int animation_index) {
         this.animation_index = animation_index;
     }
+
 }

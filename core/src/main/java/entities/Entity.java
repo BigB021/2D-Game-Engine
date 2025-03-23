@@ -31,7 +31,7 @@ public abstract class Entity {
      * Updates the player's hitbox position to match the player's movement.
      */
     public void updateHitbox(){
-        this.getHitBox().x = this.getX() + 40 ;
+        this.getHitBox().x = this.getX() + getHitBox().width ;
         this.getHitBox().y = this.getY();
     }
 

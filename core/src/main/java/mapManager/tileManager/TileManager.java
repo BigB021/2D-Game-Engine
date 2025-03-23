@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import utilities.Constants;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.io.File;
 import java.util.Map;
 
 public class TileManager {
@@ -20,27 +18,27 @@ public class TileManager {
     public TileManager() throws IOException {
         tile=new Tile[85];
 //
-        mapTilenum= new int [Constants.maxScreenCol][Constants.maxScreenrow];
+        mapTilenum= new int [Constants.MAX_SCREEN_COL][Constants.MAX_SCREEN_ROWS];
         loadMap();
     }
     public void loadMap() throws IOException {
         try{
 
-            FileReader is = new FileReader(Constants.Map1);
+            FileReader is = new FileReader(Constants.MAP_1);
             BufferedReader br = new BufferedReader(is);
             int col=0;
             int row=0;
 
-            while(col<Constants.maxScreenCol && row<Constants.maxScreenrow) {
+            while(col<Constants.MAX_SCREEN_COL && row<Constants.MAX_SCREEN_ROWS) {
                 String line = br.readLine();
                 System.out.println(col+":"+row);
-                while (col < Constants.maxScreenCol) {
+                while (col < Constants.MAX_SCREEN_COL) {
                     String[] numbers = line.split(" ");
                     int num = Integer.parseInt(numbers[col]);
                     mapTilenum[col][row] = num;
                     col++;
                 }
-                if (col == Constants.maxScreenCol) {
+                if (col == Constants.MAX_SCREEN_COL) {
                     col = 0;
                     row++;
                 }
@@ -86,11 +84,11 @@ public class TileManager {
     }
 
     public void render (SpriteBatch batch, Camera camera) {
-        int tilesize=Constants.tileSize;
+        int tilesize=Constants.TILE_SIZE;
         int colstart=Math.max(0,(int)(camera.position.x-camera.viewportWidth/2)/tilesize);
-        int colend=Math.min(Constants.maxScreenCol,(int)(camera.position.x+camera.viewportWidth/2)/tilesize+1);
+        int colend=Math.min(Constants.MAX_SCREEN_COL,(int)(camera.position.x+camera.viewportWidth/2)/tilesize+1);
         int rowstart=Math.max(0,(int)(camera.position.y-camera.viewportHeight/2)/tilesize);
-        int rowend=Math.min(Constants.maxScreenrow,(int)(camera.position.y+camera.viewportWidth/2)/tilesize+1);
+        int rowend=Math.min(Constants.MAX_SCREEN_ROWS,(int)(camera.position.y+camera.viewportWidth/2)/tilesize+1);
 
         int row = rowstart;
         while (row<rowend){
