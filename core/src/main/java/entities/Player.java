@@ -148,7 +148,7 @@ public class Player extends Entity {
                 updateHitbox();
             }
         }
-        if(isDead){
+        else if(isDead){
             setPlayerAction(Constants.DEAD);
 
             // todo: improve respawning
