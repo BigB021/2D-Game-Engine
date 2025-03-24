@@ -148,6 +148,19 @@ public class Player extends Entity {
                 updateHitbox();
             }
         }
+        if(isDead){
+            setPlayerAction(Constants.DEAD);
+
+            // todo: improve respawning
+            this.setX(500); // respawn player
+            this.updateAnimation();
+            this.updateHitbox();
+            isDead = false;
+        }
+        else {
+            setPlayerAction(Constants.IDLE);
+
+        }
     }
 
 
@@ -165,9 +178,7 @@ public class Player extends Entity {
     public void isDead() {
         if(this.getPlayerHealth() == 0){
             isDead = true;
-            setPlayerAction(Constants.DEAD);
-            // todo: fix respawning
-            this.setX(500); // respawn player
+
         }
     }
 
