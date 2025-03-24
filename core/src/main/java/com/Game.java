@@ -25,7 +25,7 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         int x = 140, y = 210;
-        player = new Player(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5);
+        player = new Player(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5,10);
         enemy = new Enemy(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., player);
 
         // Inputs initialization

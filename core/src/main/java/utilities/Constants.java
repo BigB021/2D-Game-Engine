@@ -5,11 +5,15 @@ import java.util.Map;
 
 public final class Constants {
     // Texture Constants
+    // Player Assest
     public static  final String IDLE_ANIMATION = "assets/Idle.png";
     public static final String WALK_ANIMATION = "assets/Walk.png";
     public static final String RUN_ANIMATION = "assets/Run.png";
     public static final String JUMP_ANIMATION = "assets/Jump.png";
     public static final String ATTACK_1_ANIMATION = "assets/Attack_1.png";
+    public static final String HURT_ANIMATION = "assets/Hurt.png";
+    public static  final String DEAD_ANIMATION = "assets/Dead.png";
+    // Map Assets
     public static final String tile1 = "assets/assets/tiles/2.png";
     public static final String tile0 = "assets/assets/tiles/1.png";
     public static final String tile59 = "assets/assets/tiles/59.png";
@@ -43,6 +47,8 @@ public final class Constants {
     public  static final int RUN = 2;
     public  static final int JUMP = 3;
     public  static final int ATTACK_1 = 4;
+    public  static final int HURT = 5;
+    public  static final int DEAD = 6;
 
     public  static final int RIGHT = 1;
     public  static final int LEFT = -1;
@@ -52,8 +58,8 @@ public final class Constants {
 
 
     // Frame Constants
-    public static final float FRAME_DELAY = 0.1f; // 30ms per frame
-    public static final int ATTACK_1_FRAMES = 6;
+    public static final float FRAME_DELAY = 0.12f;
+    public static final int ATTACK_1_FRAMES = 3;
 
     public static final int FRAME_WIDTH = 128;
     public static final int FRAME_HEIGHT = 128;

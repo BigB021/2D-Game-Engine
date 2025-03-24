@@ -159,4 +159,3 @@ assets/tiles/80.png
 assets/tiles/81.png
 assets/tiles/9.png
 maps/map1.txt
-test.png

@@ -108,11 +108,10 @@ public class Enemy extends Entity {
     // todo: implement path finding algorithm or calculate distance Player-Enemy to pursue player
     public void moveEnemy(){
 
-        //this.setEnemyAction(Constants.IDLE);
+        //private final lo
 
         if(CollisionSystem.checkScreenCollision(this)){
             System.out.println("Collision Detected"); // Debug SysLog
-
         }
 
         // Horizontal distance between player and enemy
@@ -127,9 +126,23 @@ public class Enemy extends Entity {
 
             // Check for collision with player
             if(CollisionSystem.checkPlayerCollision(player, this)){
-                // Should attack player
-                System.out.println("Collision with player Detected");// Debug SysLog
+                long currentTime = System.currentTimeMillis();
                 this.setEnemyAction(Constants.ATTACK_1);
+                this.setMoving(false);
+                this.setAttacking(true);
+                if(currentTime - this.lastAttackTime >= getAttackAnimationDuration()){
+                    System.out.println("Cooldown Detected:"+player.getCooldown());
+                    this.lastAttackTime = currentTime;
+
+                    this.setAnimation_index(3*Constants.FRAME_WIDTH);
+
+                    player.setPlayerAction(Constants.HURT);
+                    player.updateAnimation();
+                    System.out.println("Health: "+ player.getPlayerHealth());
+                    player.setPlayerHealth(player.getPlayerHealth() - 1);
+                    player.isDead();
+                }
+
 
             }
         }else{
@@ -139,6 +152,16 @@ public class Enemy extends Entity {
 
         updateHitbox();
     }
+
+    /**
+     * Calculates the total duration of the attack animation in milliseconds.
+     *
+     * @return the attack duration in milliseconds.
+     */
+    public long getAttackAnimationDuration() {
+        return (long)(Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY * 1000);
+    }
+
 
 
     // Getters & Setters

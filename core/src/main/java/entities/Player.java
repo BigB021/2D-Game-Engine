@@ -19,6 +19,7 @@ public class Player extends Entity {
     private double cooldown;
     private long lastAttackTime = 0;
     private int animation_index;
+    private int playerHealth;
 
 
     // Cached textures for animations
@@ -27,6 +28,8 @@ public class Player extends Entity {
     private Texture runTexture;
     private Texture jumpTexture;
     private Texture attack1Texture;
+    private Texture hurtTexture;
+    private Texture deadTexture;
 
 
     /**
@@ -38,7 +41,7 @@ public class Player extends Entity {
      * @param height      Height of the player.
      * @param playerSpeed Movement speed of the player.
      */
-    public Player(int x, int y, int width, int height, double playerSpeed) {
+    public Player(int x, int y, int width, int height, double playerSpeed, int playerHealth) {
         super(x, y, width, height);
         this.playerSpeed = playerSpeed;
         this.isMoving = false;
@@ -46,6 +49,7 @@ public class Player extends Entity {
         this.playerAction = Constants.IDLE;
         this.playerDirection = Constants.RIGHT;
         this.animation_index = 0;
+        this.playerHealth = playerHealth;
 
         loadTextures();
         // Initialize sprite with the idle texture
@@ -61,6 +65,8 @@ public class Player extends Entity {
         runTexture = new Texture(Constants.RUN_ANIMATION);
         jumpTexture = new Texture(Constants.JUMP_ANIMATION);
         attack1Texture = new Texture(Constants.ATTACK_1_ANIMATION);
+        hurtTexture = new Texture(Constants.HURT_ANIMATION);
+        deadTexture = new Texture(Constants.DEAD_ANIMATION);
     }
 
     /**
@@ -91,6 +97,16 @@ public class Player extends Entity {
             case Constants.ATTACK_1:
                 if (getSprite() != attack1Texture) {
                     setSprite(attack1Texture);
+                }
+                break;
+            case Constants.HURT:
+                if (getSprite() != hurtTexture) {
+                    setSprite(hurtTexture);
+                }
+                break;
+            case Constants.DEAD:
+                if (getSprite() != deadTexture) {
+                    setSprite(deadTexture);
                 }
                 break;
         }
@@ -145,6 +161,16 @@ public class Player extends Entity {
 
     }
 
+    // Check if player is Dead
+    public void isDead() {
+        if(this.getPlayerHealth() == 0){
+            isDead = true;
+            setPlayerAction(Constants.DEAD);
+            // todo: fix respawning
+            this.setX(500); // respawn player
+        }
+    }
+
     // Getters and Setters
     public void setPlayerDirection(int playerDirection) {
         this.playerDirection = playerDirection;
@@ -178,6 +204,8 @@ public class Player extends Entity {
         return animation_index;
     }
 
+    public int getPlayerHealth() { return playerHealth; }
+
     public void setPlayerSpeed(double playerSpeed) {
         this.playerSpeed = playerSpeed;
     }
@@ -203,5 +231,9 @@ public class Player extends Entity {
     public void setAnimation_index(int animation_index) {
         this.animation_index = animation_index;
     }
+
+    public void setPlayerHealth(int playerHealth) { this.playerHealth = playerHealth; }
+
+
 
 }
