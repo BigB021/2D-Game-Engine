@@ -5,14 +5,22 @@ import java.util.Map;
 
 public final class Constants {
     // Texture Constants
-    // Player Assest
-    public static  final String IDLE_ANIMATION = "assets/Idle.png";
-    public static final String WALK_ANIMATION = "assets/Walk.png";
-    public static final String RUN_ANIMATION = "assets/Run.png";
-    public static final String JUMP_ANIMATION = "assets/Jump.png";
-    public static final String ATTACK_1_ANIMATION = "assets/Attack_1.png";
-    public static final String HURT_ANIMATION = "assets/Hurt.png";
-    public static  final String DEAD_ANIMATION = "assets/Dead.png";
+    // Player Assets
+    public static  final String PLAYER_IDLE_ANIMATION = "assets/playerTextures/Idle.png";
+    public static final String PLAYER_WALK_ANIMATION = "assets/playerTextures/Walk.png";
+    public static final String PLAYER_RUN_ANIMATION = "assets/playerTextures/Run.png";
+    public static final String PLAYER_JUMP_ANIMATION = "assets/playerTextures/Jump.png";
+    public static final String PLAYER_ATTACK_1_ANIMATION = "assets/playerTextures/Attack_1.png";
+    public static final String PLAYER_HURT_ANIMATION = "assets/playerTextures/Hurt.png";
+    public static  final String PLAYER_DEAD_ANIMATION = "assets/playerTextures/Dead.png";
+    // Enemy Assets
+    public static  final String ENEMY_IDLE_ANIMATION = "assets/enemyTextures/Idle.png";
+    public static final String ENEMY_WALK_ANIMATION = "assets/enemyTextures/Walk.png";
+    public static final String ENEMY_RUN_ANIMATION = "assets/enemyTextures/Run.png";
+    public static final String ENEMY_JUMP_ANIMATION = "assets/enemyTextures/Jump.png";
+    public static final String ENEMY_ATTACK_1_ANIMATION = "assets/enemyTextures/Attack_1.png";
+    public static final String ENEMY_HURT_ANIMATION = "assets/enemyTextures/Hurt.png";
+    public static  final String ENEMY_DEAD_ANIMATION = "assets/enemyTextures/Dead.png";
     // Map Assets
     public static final String tile1 = "assets/assets/tiles/2.png";
     public static final String tile0 = "assets/assets/tiles/1.png";
@@ -53,6 +61,8 @@ public final class Constants {
     public  static final int RIGHT = 1;
     public  static final int LEFT = -1;
 
+    // Gravity Speed
+    public  static final int GRAVITY_SPEED = 5;
     // Enemy pursue distance
     public  static final int DISTANCE = 200;
 

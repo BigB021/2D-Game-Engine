@@ -2,6 +2,7 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import physics.JumpPhysics;
 import utilities.Constants;
 
 /**
@@ -10,16 +11,18 @@ import utilities.Constants;
 public class Player extends Entity {
 
     private int playerAction;
-    private boolean isMoving;
-    private boolean isDead;
-    private boolean isAttacking;
-    private boolean isJumping;
     private int playerDirection;
     private double playerSpeed;
     private double cooldown;
     private long lastAttackTime = 0;
     private int animation_index;
-    private int playerHealth;
+
+    // Jumping physics
+    private float jumpVelocity;
+    private static final float JUMP_FORCE = 15f;
+    private static final float GRAVITY = 0.5f;
+    private static final int GROUND_Y = 210;
+
 
 
     // Cached textures for animations
@@ -42,14 +45,15 @@ public class Player extends Entity {
      * @param playerSpeed Movement speed of the player.
      */
     public Player(int x, int y, int width, int height, double playerSpeed, int playerHealth) {
-        super(x, y, width, height);
+        super(x, y, width, height, playerHealth);
         this.playerSpeed = playerSpeed;
         this.isMoving = false;
         this.isDead = false;
         this.playerAction = Constants.IDLE;
         this.playerDirection = Constants.RIGHT;
         this.animation_index = 0;
-        this.playerHealth = playerHealth;
+        this.isJumping = false;
+        this.jumpVelocity = 0;
 
         loadTextures();
         // Initialize sprite with the idle texture
@@ -60,13 +64,13 @@ public class Player extends Entity {
      * Loads animation textures once and caches them.
      */
     private void loadTextures() {
-        idleTexture = new Texture(Constants.IDLE_ANIMATION);
-        walkTexture = new Texture(Constants.WALK_ANIMATION);
-        runTexture = new Texture(Constants.RUN_ANIMATION);
-        jumpTexture = new Texture(Constants.JUMP_ANIMATION);
-        attack1Texture = new Texture(Constants.ATTACK_1_ANIMATION);
-        hurtTexture = new Texture(Constants.HURT_ANIMATION);
-        deadTexture = new Texture(Constants.DEAD_ANIMATION);
+        idleTexture = new Texture(Constants.PLAYER_IDLE_ANIMATION);
+        walkTexture = new Texture(Constants.PLAYER_WALK_ANIMATION);
+        runTexture = new Texture(Constants.PLAYER_RUN_ANIMATION);
+        jumpTexture = new Texture(Constants.PLAYER_JUMP_ANIMATION);
+        attack1Texture = new Texture(Constants.PLAYER_ATTACK_1_ANIMATION);
+        hurtTexture = new Texture(Constants.PLAYER_HURT_ANIMATION);
+        deadTexture = new Texture(Constants.PLAYER_DEAD_ANIMATION);
     }
 
     /**
@@ -133,7 +137,14 @@ public class Player extends Entity {
      * Moves the player based on their current state and updates their hitBox.
      */
     public void movePlayer() {
+
         this.updateAnimation();
+        // Apply jump physics if the player is in jump state
+        JumpPhysics.applyJumpPhysics(this);
+
+        if(this.playerDirection == Constants.JUMP){
+            this.setY((int) (this.getY() + Constants.GRAVITY_SPEED));
+        }
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
             // Checking collision with screen borders
@@ -152,17 +163,17 @@ public class Player extends Entity {
             setPlayerAction(Constants.DEAD);
 
             // todo: improve respawning
-            this.setX(500); // respawn player
+            this.setX(1000); // respawn player
             this.updateAnimation();
             this.updateHitbox();
+            this.setEntityHealth(10);
             isDead = false;
         }
-        else {
+        else if (!this.isAttacking && !this.isJumping) {
             setPlayerAction(Constants.IDLE);
 
         }
     }
-
 
     /**
      * Calculates and returns the duration of the attack animation.
@@ -174,15 +185,10 @@ public class Player extends Entity {
 
     }
 
-    // Check if player is Dead
-    public void isDead() {
-        if(this.getPlayerHealth() == 0){
-            isDead = true;
 
-        }
-    }
 
     // Getters and Setters
+
     public void setPlayerDirection(int playerDirection) {
         this.playerDirection = playerDirection;
     }
@@ -193,14 +199,6 @@ public class Player extends Entity {
 
     public double getPlayerSpeed() {
         return playerSpeed;
-    }
-
-    public boolean isMoving() {
-        return isMoving;
-    }
-
-    public boolean isAttacking() {
-        return isAttacking;
     }
 
     public double getCooldown() {
@@ -215,19 +213,11 @@ public class Player extends Entity {
         return animation_index;
     }
 
-    public int getPlayerHealth() { return playerHealth; }
-
     public void setPlayerSpeed(double playerSpeed) {
         this.playerSpeed = playerSpeed;
     }
 
-    public void setMoving(boolean moving) {
-        isMoving = moving;
-    }
 
-    public void setAttacking(boolean attacking) {
-        isAttacking = attacking;
-    }
 
     public void setCooldown(double cooldown) {
         this.cooldown = cooldown;
@@ -239,12 +229,19 @@ public class Player extends Entity {
         this.playerAction = playerAction;
     }
 
+    public int getPlayerAction() {
+        return playerAction;
+    }
+
     public void setAnimation_index(int animation_index) {
         this.animation_index = animation_index;
     }
 
-    public void setPlayerHealth(int playerHealth) { this.playerHealth = playerHealth; }
-
-
+    public float getJumpVelocity() {
+        return jumpVelocity;
+    }
+    public void setJumpVelocity(float jumpVelocity) {
+        this.jumpVelocity = jumpVelocity;
+    }
 
 }

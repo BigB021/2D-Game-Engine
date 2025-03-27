@@ -1,14 +1,3 @@
-Attack_1.png
-Attack_2.png
-Attack_3.png
-Background.png
-Dead.png
-Hurt.png
-Idle.png
-Jump.png
-Run.png
-Shield.png
-Walk.png
 assets/2 Background/1.png
 assets/2 Background/2.png
 assets/2 Background/3.png
@@ -158,4 +147,25 @@ assets/tiles/8.png
 assets/tiles/80.png
 assets/tiles/81.png
 assets/tiles/9.png
+enemyTextures/Attack_1.png
+enemyTextures/Attack_2.png
+enemyTextures/Attack_3.png
+enemyTextures/Dead.png
+enemyTextures/Hurt.png
+enemyTextures/Idle.png
+enemyTextures/Jump.png
+enemyTextures/Run.png
+enemyTextures/Shield.png
+enemyTextures/Walk.png
 maps/map1.txt
+playerTextures/Attack_1.png
+playerTextures/Attack_2.png
+playerTextures/Attack_3.png
+playerTextures/Background.png
+playerTextures/Dead.png
+playerTextures/Hurt.png
+playerTextures/Idle.png
+playerTextures/Jump.png
+playerTextures/Run.png
+playerTextures/Shield.png
+playerTextures/Walk.png

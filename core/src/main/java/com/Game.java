@@ -24,20 +24,20 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
-        int x = 140, y = 210;
-        player = new Player(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5,10);
-        enemy = new Enemy(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., player);
+        int x = 200, y = 210;
+        player = new Player(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5,10);
+        enemy = new Enemy(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., 5,player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
         Gdx.input.setInputProcessor(playerInput);
 
         // Init player
-        player.setSprite(new Texture(Constants.IDLE_ANIMATION));
+        player.setSprite(new Texture(Constants.PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
 
         // Init enemy
-        enemy.setSprite(new Texture(Constants.IDLE_ANIMATION));
+        enemy.setSprite(new Texture(Constants.PLAYER_IDLE_ANIMATION));
         System.out.println("Create Call");
 
         // Init ShapeRenderer

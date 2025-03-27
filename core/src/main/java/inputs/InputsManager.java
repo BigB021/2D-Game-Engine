@@ -1,5 +1,6 @@
 package inputs;
 
+import physics.JumpPhysics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Timer;
@@ -118,6 +119,14 @@ public class InputsManager implements InputProcessor {
             return true;
         }
 
+        // Handle jumping
+        if (pressedKeys.contains(Input.Keys.SPACE)) {
+            //player.jump();
+            JumpPhysics.jumpPlayer(player);
+            return true;
+        }
+
+
         return false;
     }
 
@@ -152,6 +161,8 @@ public class InputsManager implements InputProcessor {
             player.setPlayerAction(Constants.IDLE);
             player.updateAnimation();
         }
+
+
 
         return false;
     }
