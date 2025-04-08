@@ -10,7 +10,7 @@ public class GameLauncher {
     public static void main(String[] args) throws IOException {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Test Game"); // Window title
-        config.setWindowedMode((int)Constants.screenWidth, (int)Constants.screenHeight); // full screen
+        config.setWindowedMode(Constants.screenWidth, Constants.screenHeight); // full screen??
         config.setForegroundFPS(120); // Target FPS
 
         // Start the game

@@ -30,7 +30,7 @@ public class Game extends ApplicationAdapter {
     // Testing hitBox
     private ShapeRenderer shape;
 
-    public Game() throws IOException {
+    public Game()  {
     }
     OrthographicCamera camera;
     Viewport viewport;
@@ -38,13 +38,15 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         camera = new OrthographicCamera();
+        camera.zoom =1f;
         camera.setToOrtho(false,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         viewport = new FitViewport(Constants.screenWidth,Constants.screenHeight,camera);
 
         tileManager.getTilesFromFolder();
         tileManager.gettileimage();
-        int x = 140, y = 210;
-        player = new Player(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5);
+        tileManager.loadbackgroundimg();
+        int x = 1, y = 17;
+        player = new Player(viewport.getScreenWidth(), y,(Constants.FRAME_WIDTH),Constants.FRAME_HEIGHT,3.5);
         enemy = new Enemy(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., player);
 
         // Inputs initialization
@@ -71,16 +73,22 @@ public class Game extends ApplicationAdapter {
     public void render() {
         float mapWidth = Constants.maxScreenCol * Constants.tileSize;
         float mapHeight = Constants.maxScreenrow * Constants.tileSize;
-        camera.position.x = Math.max(camera.viewportWidth / 2, Math.min(player.getX(), mapWidth - camera.viewportWidth / 2));
-        camera.position.y = Math.max(camera.viewportHeight / 2, Math.min(player.getY(), mapHeight - camera.viewportHeight / 2));
+
+        float screenwidth=camera.zoom*mapWidth;//912
+        float screenheight=camera.zoom*mapHeight;//912
+        camera.position.x =Math.max(screenwidth/2,Math.min(player.getHitBox().x, mapWidth - (screenwidth / 2)+Constants.FRAME_WIDTH/4-16));
+//        if (player.getX()>=mapWidth-(screenwidth/2)){
+//            camera.position.x=mapWidth-(screenwidth/2);
+//
+//        } else
+//            camera.position.x = Math.max(player.getX(), mapWidth + (screenwidth / 2));
+        camera.position.y =Math.max(screenheight / 2, Math.min(player.getHitBox().y, mapHeight - screenheight / 2));
 
         camera.update();
 ////// we can implement a camera but for now we stick to this
-        System.out.println(player.getX());
-        camera.zoom = 1f;
+        System.out.println("playerX"+player.getX()+"Hitbox X :"+player.getHitBox().x);
 
         batch.setProjectionMatrix(camera.combined);
-        ScreenUtils.clear(0.5f, 0.15f, 0.2f, 1f);
 
         player.movePlayer();
         enemy.moveEnemy();
@@ -96,13 +104,14 @@ public class Game extends ApplicationAdapter {
             if (enemy.getAnimation_index() > enemy.getSprite().getWidth() - Constants.FRAME_WIDTH) enemy.setAnimation_index(0);
             animationTimer = 0f;  // Reset timer
         }
+        ScreenUtils.clear(0.8f, 0.85f, 0.8f, 0.00f);
 
         batch.begin();
         tileManager.render(batch,camera);
-        TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, (Constants.FRAME_WIDTH), Constants.FRAME_HEIGHT);
         TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(),0,Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
-        batch.draw(playerRegion, (int)player.getX(),(int) player.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
-        batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        batch.draw(playerRegion, player.getX(),player.getY(), Constants.FRAME_WIDTH*camera.zoom, Constants.FRAME_HEIGHT*camera.zoom);
+        batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), Constants.FRAME_WIDTH*camera.zoom, Constants.FRAME_HEIGHT*camera.zoom);
 
         batch.end();
 

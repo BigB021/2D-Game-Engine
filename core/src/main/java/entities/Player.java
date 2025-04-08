@@ -1,5 +1,7 @@
 package entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import utilities.Constants;
@@ -56,7 +58,9 @@ public class Player extends Entity {
      * Loads animation textures once and caches them.
      */
     private void loadTextures() {
+
         idleTexture = new Texture(Constants.IDLE_ANIMATION);
+
         walkTexture = new Texture(Constants.WALK_ANIMATION);
         runTexture = new Texture(Constants.RUN_ANIMATION);
         jumpTexture = new Texture(Constants.JUMP_ANIMATION);

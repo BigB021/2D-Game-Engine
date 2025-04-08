@@ -1,6 +1,8 @@
 package mapManager.tileManager;
+import java.awt.*;
 import java.io.File;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,49 +15,56 @@ import java.util.Map;
 
 public class TileManager {
     Tile[] tile;
-    int mapTilenum[][];
+    int mapTileLayers[][][];
+    private Texture backgroundImage;
 
 
+    public TileManager() {
+        tile=new Tile[360];
 
-    public TileManager() throws IOException {
-        tile=new Tile[85];
-//
-        mapTilenum= new int [Constants.maxScreenCol][Constants.maxScreenrow];
-        loadMap();
+//        mapTilenum= new int [Constants.maxScreenCol][Constants.maxScreenrow];
+        mapTileLayers = new int[3][Constants.maxScreenCol][Constants.maxScreenrow];
+
+        loadMap(Constants.Map1,0);
+        loadMap(Constants.Map2,1);
     }
-    public void loadMap() throws IOException {
-        try{
+    public void loadbackgroundimg(){
+        backgroundImage = new Texture(Gdx.files.internal(Constants.backgoundImg));
+    }
+    public void loadMap(String mapname,int layer)  {
+        int[][]mapData= new int[Constants.maxScreenCol][Constants.maxScreenrow];
+        try(BufferedReader br = new BufferedReader( new FileReader(mapname))){
+            String line;
 
-            FileReader is = new FileReader(Constants.Map1);
-            BufferedReader br = new BufferedReader(is);
-            int col=0;
+
             int row=0;
 
-            while(col<Constants.maxScreenCol && row<Constants.maxScreenrow) {
-                String line = br.readLine();
-                System.out.println(col+":"+row);
-                while (col < Constants.maxScreenCol) {
-                    String[] numbers = line.split(" ");
-                    int num = Integer.parseInt(numbers[col]);
-                    mapTilenum[col][row] = num;
-                    col++;
+            while ((line = br.readLine()) != null && row < Constants.maxScreenrow) {
+                    line=line.trim();
+                    if(line.isEmpty()){
+                        System.out.println("⚠ Skipped empty line at row " + row);
+                continue;}
+
+                    String[] numbers = line.split("\\s+");
+
+                if (numbers.length != Constants.maxScreenCol) {
+                    System.out.println("❌ Invalid number of columns at row " + row + ": " + numbers.length);
+                    System.out.println("   Line content: \"" + line + "\"");
+                    throw new RuntimeException("Invalid map file format.");
                 }
-                if (col == Constants.maxScreenCol) {
-                    col = 0;
+                    for (int col = 0; col < Constants.maxScreenCol; col++) {
+                    mapTileLayers[layer][col][row] = Integer.parseInt(numbers[col]);
+                }
                     row++;
-                }
+
 
             }
             br.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
-        }
+        } }
 
-    }
-
-    public  void getTilesFromFolder(){
+        public  void getTilesFromFolder(){
         File dir = new File(Constants.tileFolder);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
@@ -73,8 +82,16 @@ public class TileManager {
     public void gettileimage() {
 
         for (Map.Entry<String,String> entry :Constants.tilesMap.entrySet()) {
-            tile[Integer.parseInt(entry.getKey())] = new Tile();
-            tile[Integer.parseInt(entry.getKey())].image = new Texture(entry.getValue());
+//            tile[Integer.parseInt(entry.getKey())] = null;
+
+            if(Integer.parseInt(entry.getKey())==0){
+                tile[Integer.parseInt(entry.getKey())]= null;
+            }
+            else {
+                tile[Integer.parseInt(entry.getKey())]=new Tile();
+                tile[Integer.parseInt(entry.getKey())].image = new Texture(entry.getValue());
+            }
+
 
             System.out.println(entry.getValue());
 //            tile[1] = new Tile();
@@ -86,24 +103,30 @@ public class TileManager {
     }
 
     public void render (SpriteBatch batch, Camera camera) {
+        float bgX = (camera.position.x - camera.viewportWidth / 2)*1.1f;
+        float bgY = (camera.position.y - camera.viewportHeight / 2)*1.1f;
+
+        batch.draw(backgroundImage, bgX, bgY, camera.viewportWidth, camera.viewportHeight);
+
         int tilesize=Constants.tileSize;
         int colstart=Math.max(0,(int)(camera.position.x-camera.viewportWidth/2)/tilesize);
         int colend=Math.min(Constants.maxScreenCol,(int)(camera.position.x+camera.viewportWidth/2)/tilesize+1);
         int rowstart=Math.max(0,(int)(camera.position.y-camera.viewportHeight/2)/tilesize);
         int rowend=Math.min(Constants.maxScreenrow,(int)(camera.position.y+camera.viewportWidth/2)/tilesize+1);
-
+        int w=colend-colstart;
+        System.out.println("col end - colstart "+ w);
         int row = rowstart;
-        while (row<rowend){
-            int col=colstart;
-            while(col<colend){
-                int tilenum = mapTilenum[col][row];
-                if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null) {
-                    batch.draw(tile[tilenum].image,col*tilesize,row*tilesize);
+        for (int layer = 0; layer < mapTileLayers.length; layer++) {
+            for (row = rowstart; row < rowend; row++) {
+                for (int col = colstart; col < colend; col++) {
+                    int tilenum = mapTileLayers[layer][col][row];
+                    if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null && tile[tilenum].image != null) {
+                        batch.draw(tile[tilenum].image, col * tilesize, row * tilesize);
+                    }
                 }
-                col++;
             }
-            row++;
         }
+
         ///old version
 //        int col = 0;
 //        int row = 0;
@@ -132,6 +155,8 @@ public class TileManager {
 
     public void dispose(){
         tile[0].image.dispose();
+        if (backgroundImage != null) backgroundImage.dispose();
+
     }
 
 

@@ -15,6 +15,7 @@ assets/2 Background/3.png
 assets/2 Background/4.png
 assets/2 Background/5.png
 assets/2 Background/Background.png
+assets/2 Background/level_bckground.png
 assets/3 Objects/0.png
 assets/3 Objects/1.png
 assets/3 Objects/2.png
@@ -157,6 +158,8 @@ assets/tiles/79.png
 assets/tiles/8.png
 assets/tiles/80.png
 assets/tiles/81.png
+assets/tiles/82.png
 assets/tiles/9.png
 maps/map1.txt
+maps/map2.txt
 test.png
