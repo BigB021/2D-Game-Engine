@@ -119,7 +119,8 @@ public class TileManager {
         for (int layer = 0; layer < mapTileLayers.length; layer++) {
             for (row = rowstart; row < rowend; row++) {
                 for (int col = colstart; col < colend; col++) {
-                    int tilenum = mapTileLayers[layer][col][row];
+                    int renderRow = Constants.maxScreenrow - 1 - row;
+                    int tilenum = mapTileLayers[layer][col][renderRow];
                     if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null && tile[tilenum].image != null) {
                         batch.draw(tile[tilenum].image, col * tilesize, row * tilesize);
                     }
