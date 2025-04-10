@@ -38,14 +38,14 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         camera = new OrthographicCamera();
-        camera.zoom =1f;
+        camera.zoom =0.4f;
         camera.setToOrtho(false,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         viewport = new FitViewport(Constants.screenWidth,Constants.screenHeight,camera);
 
         tileManager.getTilesFromFolder();
         tileManager.gettileimage();
         tileManager.loadbackgroundimg();
-        int x = 1, y = 17;
+        int x = 1, y = 192;
         player = new Player(viewport.getScreenWidth(), y,(Constants.FRAME_WIDTH),Constants.FRAME_HEIGHT,3.5);
         enemy = new Enemy(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., player);
 
@@ -76,14 +76,14 @@ public class Game extends ApplicationAdapter {
 
         float screenwidth=camera.zoom*mapWidth;//912
         float screenheight=camera.zoom*mapHeight;//912
-        camera.position.x =Math.max(screenwidth/2,Math.min(player.getHitBox().x, mapWidth - (screenwidth / 2)+Constants.FRAME_WIDTH/4-16));
-//        if (player.getX()>=mapWidth-(screenwidth/2)){
-//            camera.position.x=mapWidth-(screenwidth/2);
-//
-//        } else
-//            camera.position.x = Math.max(player.getX(), mapWidth + (screenwidth / 2));
-        camera.position.y =Math.max(screenheight / 2, Math.min(player.getHitBox().y, mapHeight - screenheight / 2));
+        float playerCenterX = player.getHitBox().x + player.getHitBox().width / 2f;
+        float playerCenterY = player.getHitBox().y + player.getHitBox().height / 2f;
 
+           float halfViewportWidth = camera.viewportWidth * camera.zoom / 2f;
+          float halfViewportHeight = camera.viewportHeight * camera.zoom / 2f;
+
+        camera.position.x = Math.max(halfViewportWidth, Math.min(playerCenterX, mapWidth - halfViewportWidth));
+        camera.position.y = Math.max(halfViewportHeight, Math.min(playerCenterY, mapHeight - halfViewportHeight));
         camera.update();
 ////// we can implement a camera but for now we stick to this
         System.out.println("playerX"+player.getX()+"Hitbox X :"+player.getHitBox().x);

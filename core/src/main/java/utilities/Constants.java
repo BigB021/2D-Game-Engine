@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class Constants {
@@ -32,11 +33,14 @@ public final class Constants {
 
 
     ///////
-    public static final int originaltilesise = 16;
+    public static final int originaltilesise = 32;
     public static final int scale = 1;
     public static final int tileSize = originaltilesise * scale;
-    public static final int maxScreenCol = 81;//800/48
-    public static final int maxScreenrow = 45;
+    public static final int maxScreenCol = 90;//800/48
+    public static final int maxScreenrow = 70;
+    public static final int NUM_LAYERS = 3;
+    public static final List<Integer> animateditems = List.of();
+
     public static final int screenWidth = tileSize * maxScreenCol;
     public static final int screenHeight = tileSize * maxScreenrow;
     public static final String Map1 = "assets/maps/map1.txt";

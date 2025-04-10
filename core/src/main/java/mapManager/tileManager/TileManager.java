@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import utilities.Constants;
 
 import java.awt.image.BufferedImage;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class TileManager {
     Tile[] tile;
-    int mapTileLayers[][][];
+    public static int  mapTileLayers[][][];
     private Texture backgroundImage;
 
 
@@ -23,7 +24,7 @@ public class TileManager {
         tile=new Tile[360];
 
 //        mapTilenum= new int [Constants.maxScreenCol][Constants.maxScreenrow];
-        mapTileLayers = new int[3][Constants.maxScreenCol][Constants.maxScreenrow];
+        mapTileLayers = new int [Constants.NUM_LAYERS][Constants.maxScreenCol][Constants.maxScreenrow];
 
         loadMap(Constants.Map1,0);
         loadMap(Constants.Map2,1);
@@ -48,7 +49,7 @@ public class TileManager {
                     String[] numbers = line.split("\\s+");
 
                 if (numbers.length != Constants.maxScreenCol) {
-                    System.out.println("❌ Invalid number of columns at row " + row + ": " + numbers.length);
+                    System.out.println("  Invalid number of columns at row " + row + ": " + numbers.length);
                     System.out.println("   Line content: \"" + line + "\"");
                     throw new RuntimeException("Invalid map file format.");
                 }
@@ -83,8 +84,12 @@ public class TileManager {
 
         for (Map.Entry<String,String> entry :Constants.tilesMap.entrySet()) {
 //            tile[Integer.parseInt(entry.getKey())] = null;
-
-            if(Integer.parseInt(entry.getKey())==0){
+            //animatedtiles
+            if(Constants.animateditems.contains(Integer.parseInt(entry.getKey()))){
+                tile[Integer.parseInt(entry.getKey())]=new AnimatedTile(new Texture(entry.getValue()),8,1,5);
+//                tile[Integer.parseInt(entry.getKey())].image = new Texture(entry.getValue());
+            }
+            else if(Integer.parseInt(entry.getKey())==0){
                 tile[Integer.parseInt(entry.getKey())]= null;
             }
             else {
@@ -121,9 +126,20 @@ public class TileManager {
                 for (int col = colstart; col < colend; col++) {
                     int renderRow = Constants.maxScreenrow - 1 - row;
                     int tilenum = mapTileLayers[layer][col][renderRow];
-                    if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null && tile[tilenum].image != null) {
+//                    if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null && tile[tilenum].image != null) {
+                    if (tile[tilenum] instanceof AnimatedTile) {
+                        System.out.println("Tilenum: " + tilenum + " | Class: " + tile[tilenum].getClass().getSimpleName());
+                        TextureRegion frame = ((AnimatedTile) tile[tilenum]).getCurrentFrame(Gdx.graphics.getDeltaTime());
+                        System.out.println("Drawing frame: " + frame.getRegionX() + ", " + frame.getRegionY());
+                        batch.draw(frame, col * tilesize, row * tilesize);
+
+//                    batch.draw(frame, col * tilesize, row * tilesize);
+                    } else if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null && tile[tilenum].image != null) {
                         batch.draw(tile[tilenum].image, col * tilesize, row * tilesize);
                     }
+
+
+
                 }
             }
         }
@@ -155,9 +171,9 @@ public class TileManager {
        }
 
     public void dispose(){
-        tile[0].image.dispose();
-        if (backgroundImage != null) backgroundImage.dispose();
-
+        for (Tile t : tile) {
+            if (t != null && t.image != null) t.image.dispose();
+        }
     }
 
 

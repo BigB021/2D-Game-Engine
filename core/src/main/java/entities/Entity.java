@@ -3,6 +3,7 @@ package entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import utilities.Constants;
 
 /**
  * Abstract class that represents base entity in the game.
@@ -31,7 +32,7 @@ public abstract class Entity {
      * Updates the player's hitbox position to match the player's movement.
      */
     public void updateHitbox(){
-        this.getHitBox().x = this.getX()  ;
+        this.getHitBox().x = this.getX();
         this.getHitBox().y = this.getY();
     }
 
