@@ -1,11 +1,6 @@
 package utilities;
 
-import com.main.Game;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +11,7 @@ public final class Constants {
     public static final String RUN_ANIMATION = "assets/Run.png";
     public static final String JUMP_ANIMATION = "assets/Jump.png";
     public static final String ATTACK_1_ANIMATION = "assets/Attack_1.png";
-    public static final String tile1 = "assets/assets/tiles/2.png";
-    public static final String tile0 = "assets/assets/tiles/1.png";
-    public static final String tile59 = "assets/assets/tiles/59.png";
+
     public static final String tileFolder = "assets/assets/tiles";
     ///////
     public static final Map<String, String> tilesMap = new HashMap<>();
