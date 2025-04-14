@@ -46,8 +46,10 @@ public class Game extends ApplicationAdapter {
         tileManager.gettileimage();
         tileManager.loadbackgroundimg();
         int x = 1, y = 192;
-        player = new Player(viewport.getScreenWidth(), y,(Constants.FRAME_WIDTH),Constants.FRAME_HEIGHT,3.5);
-        enemy = new Enemy(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., player);
+        int CalculatedHeight=(int)(Constants.FRAME_HEIGHT*camera.zoom);
+        int CalculatedWidth=(int)(Constants.FRAME_WIDTH*camera.zoom);
+        player = new Player(x, y,CalculatedWidth,CalculatedHeight,3.5);
+        enemy = new Enemy(x,y,CalculatedWidth,CalculatedHeight,1., player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
@@ -76,17 +78,18 @@ public class Game extends ApplicationAdapter {
 
         float screenwidth=camera.zoom*mapWidth;//912
         float screenheight=camera.zoom*mapHeight;//912
-        float playerCenterX = player.getHitBox().x + player.getHitBox().width / 2f;
+        float playerCenterX = player.getX() + player.getHitBox().width / 2f;
         float playerCenterY = player.getHitBox().y + player.getHitBox().height / 2f;
 
-           float halfViewportWidth = camera.viewportWidth * camera.zoom / 2f;
+          float halfViewportWidth = camera.viewportWidth * camera.zoom / 2f;
           float halfViewportHeight = camera.viewportHeight * camera.zoom / 2f;
 
         camera.position.x = Math.max(halfViewportWidth, Math.min(playerCenterX, mapWidth - halfViewportWidth));
         camera.position.y = Math.max(halfViewportHeight, Math.min(playerCenterY, mapHeight - halfViewportHeight));
         camera.update();
+
 ////// we can implement a camera but for now we stick to this
-        System.out.println("playerX"+player.getX()+"Hitbox X :"+player.getHitBox().x);
+        System.out.println("centerX "+playerCenterX+ "CAMERAx "+ camera.position.x+"viewport "+viewport.getScreenWidth());
 
         batch.setProjectionMatrix(camera.combined);
 
@@ -114,6 +117,7 @@ public class Game extends ApplicationAdapter {
         batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), Constants.FRAME_WIDTH*camera.zoom, Constants.FRAME_HEIGHT*camera.zoom);
 
         batch.end();
+        shape.setProjectionMatrix(camera.combined);
 
         // Debug: Draw player hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
