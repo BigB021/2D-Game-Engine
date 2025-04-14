@@ -1,23 +1,20 @@
 package entities;
 
+import collision.CollisionSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import utilities.Constants;
 
 public class Enemy extends Entity {
+
     private int enemyAction;
-    private boolean isMoving;
-    private boolean isDead;
-    private boolean isAttacking;
-    //private boolean isJumping;
     private int enemyDirection;
     private double enemySpeed;
     private double cooldown;
     private long lastAttackTime = 0;
     private int animation_index;
 
-    private Player player;
+    private final Player player;
 
     // Cached textures for animations
     private Texture idleTexture;
@@ -25,13 +22,15 @@ public class Enemy extends Entity {
     private Texture runTexture;
     private Texture jumpTexture;
     private Texture attack1Texture;
+    private Texture hurtTexture;
+    private Texture deadTexture;
 
-    public Enemy(int x, int y, int width, int height,double enemySpeed, Player player) {
-        super(x, y, width, height);
+    public Enemy(int x, int y, int width, int height,double enemySpeed,int health ,Player player) {
+        super(x, y, width, height,health);
         this.enemyAction = Constants.IDLE;
         this.isMoving = false;
         this.isDead = false;
-        this.enemyDirection = Constants.RIGHT; //player.getPlayerDirection();
+        this.enemyDirection = Constants.RIGHT;
         this.enemySpeed = enemySpeed;
         this.animation_index = 0;
         this.player = player;
@@ -45,11 +44,13 @@ public class Enemy extends Entity {
      * Loads animation textures once and caches them.
      */
     private void loadTextures() {
-        idleTexture = new Texture(Constants.IDLE_ANIMATION);
-        walkTexture = new Texture(Constants.WALK_ANIMATION);
-        runTexture = new Texture(Constants.RUN_ANIMATION);
-        jumpTexture = new Texture(Constants.JUMP_ANIMATION);
-        attack1Texture = new Texture(Constants.ATTACK_1_ANIMATION);
+        idleTexture = new Texture(Constants.ENEMY_IDLE_ANIMATION);
+        walkTexture = new Texture(Constants.ENEMY_WALK_ANIMATION);
+        runTexture = new Texture(Constants.ENEMY_RUN_ANIMATION);
+        jumpTexture = new Texture(Constants.ENEMY_JUMP_ANIMATION);
+        attack1Texture = new Texture(Constants.ENEMY_ATTACK_1_ANIMATION);
+        hurtTexture = new Texture(Constants.ENEMY_HURT_ANIMATION);
+        deadTexture = new Texture(Constants.ENEMY_DEAD_ANIMATION);
     }
 
     /**
@@ -82,6 +83,16 @@ public class Enemy extends Entity {
                     setSprite(attack1Texture);
                 }
                 break;
+            case Constants.DEAD:
+                if (getSprite() != deadTexture) {
+                    setSprite(deadTexture);
+                }
+                break;
+            case Constants.HURT:
+                if (getSprite() != hurtTexture) {
+                    setSprite(hurtTexture);
+                }
+                break;
         }
     }
 
@@ -103,55 +114,90 @@ public class Enemy extends Entity {
     }
 
     // Move enemy
-    // todo: implement path finding algorithm or calculate distat Player-Enemy to pursue player
+    // todo: fix fighting mechanism & fix death animation not loading properly
     public void moveEnemy(){
+        if(this.getEntityHealth() <= 0){
+            this.setX(200);
+            this.setEnemyAction(Constants.DEAD);
+            this.setEntityHealth(10);
+            this.setDead(true);
 
-        this.setEnemyAction(Constants.RUN);
+
+        }
+
+        if(CollisionSystem.checkScreenCollision(this)){
+            System.out.println("Collision Detected"); // Debug SysLog
+        }
+
+        // Horizontal distance between player and enemy
+        float distance = Math.abs(this.getHitBox().x - player.getHitBox().x);
+
+        // Pursue player within a specific zone
+        if ( distance <= Constants.DISTANCE) {
+
+            if(this.getHitBox().x - player.getHitBox().x >= 0){
+                this.setEnemyDirection(Constants.LEFT);
+            }
+            else if(this.getHitBox().x - player.getHitBox().x <= 0){
+                this.setEnemyDirection(Constants.RIGHT);
+            }
+            this.setEnemyAction(Constants.RUN);
+            float speed = (float) ((enemyAction == Constants.RUN) ? enemySpeed * 2 : enemySpeed);
+            this.setX(this.getX() + speed * getEnemyDirection());
+
+            // Check for collision with player
+            if(CollisionSystem.checkPlayerCollision(player, this)){
+
+                long currentTime = System.currentTimeMillis();
+                this.setEnemyAction(Constants.ATTACK_1);
+                this.setMoving(false);
+                this.setAttacking(true);
+                if (currentTime - this.lastAttackTime >= getAttackAnimationDuration()) {
+                    // check if enemy is attacked by player
+                    if(player.getPlayerAction() == Constants.ATTACK_1){
+                        this.setEntityHealth(this.getEntityHealth() - 1);
+                        this.setEnemyAction(Constants.HURT);
+                        this.setAttacking(false);
+                        this.updateAnimation();
+                        System.out.println("Enemy health:"+ this.getEntityHealth());
+
+
+                    }else {
+                    System.out.println("Cooldown Detected:" + player.getCooldown());
+
+                    this.lastAttackTime = currentTime;
+                    this.setAnimation_index(3 * Constants.FRAME_WIDTH);
+
+                    player.setPlayerAction(Constants.HURT);
+                    player.updateAnimation();
+                    //System.out.println("Health: " + player.getEntityHealth());
+
+                    player.setEntityHealth(player.getEntityHealth() - 1);
+                    // Check if player is dead
+                    if (player.getEntityHealth() <= 0) {
+                        player.setDead(true);
+                    }
+                    }
+                }
+
+
+            }
+        }else{
+            this.setEnemyAction(Constants.IDLE);
+        }
         this.updateAnimation();
 
-        // Checking collision with screen borders
-
-        if(this.getHitBox().getX() >= (Constants.screenWidth - Constants.FRAME_WIDTH * 0.3f)){
-            this.setEnemyDirection(Constants.LEFT);
-        }
-        if(this.getHitBox().getX()<= 0){
-            this.setEnemyDirection(Constants.RIGHT);
-
-        }
-        checkCollision();
-        float speed = (float) ((enemyAction == Constants.RUN) ? enemySpeed * 2 : enemySpeed);
-        this.setX(this.getX() + speed * getEnemyDirection());
         updateHitbox();
     }
 
-    public void calculateDistance() {
-        float epsilon = 0.05f;
-        if (Math.abs((player.getHitBox().x + player.hitBox.width) - this.getHitBox().x) <= epsilon) {
-            this.setEnemyDirection(Constants.LEFT);
-        }
-        if(Math.abs((this.getHitBox().x + this.hitBox.width) - player.getHitBox().x) <= epsilon){
-            this.setEnemyDirection(Constants.RIGHT);
-
-        }
-
+    /**
+     * Calculates the total duration of the attack animation in milliseconds.
+     *
+     * @return the attack duration in milliseconds.
+     */
+    public long getAttackAnimationDuration() {
+        return (long)(Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY * 1000);
     }
-
-    // Check collision with player
-    public void checkCollision() {
-        float epsilon = 0.05f;
-
-        if ((this.getHitBox().x + this.hitBox.width) - player.getHitBox().x  >= epsilon && this.getEnemyDirection() == Constants.RIGHT) {
-            // todo: Should implement attackinhg Player
-            this.setX(getX() - 10);
-        }else if((player.getHitBox().x + player.hitBox.width) - this.getHitBox().x >= epsilon && this.getEnemyDirection() == Constants.LEFT){
-            // todo: Should implement attackinhg Player
-            this.setX(getX() + 10);
-
-
-        }
-    }
-
-    //NEW CHANGE blbla
 
     // Getters & Setters
 
@@ -161,30 +207,6 @@ public class Enemy extends Entity {
 
     public void setEnemyAction(int enemyAction) {
         this.enemyAction = enemyAction;
-    }
-
-    public boolean isMoving() {
-        return isMoving;
-    }
-
-    public void setMoving(boolean moving) {
-        isMoving = moving;
-    }
-
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public void setDead(boolean dead) {
-        isDead = dead;
-    }
-
-    public boolean isAttacking() {
-        return isAttacking;
-    }
-
-    public void setAttacking(boolean attacking) {
-        isAttacking = attacking;
     }
 
     public int getEnemyDirection() {

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import utilities.Constants;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.io.File;
 import java.util.Map;
@@ -141,7 +140,9 @@ public class TileManager {
 
 
                 }
+                col++;
             }
+            row++;
         }
 
         ///old version

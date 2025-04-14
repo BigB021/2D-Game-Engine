@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import physics.JumpPhysics;
 import utilities.Constants;
 
 /**
@@ -22,6 +23,13 @@ public class Player extends Entity {
     private long lastAttackTime = 0;
     private int animation_index;
 
+    // Jumping physics
+    private float jumpVelocity;
+    private static final float JUMP_FORCE = 15f;
+    private static final float GRAVITY = 0.5f;
+    private static final int GROUND_Y = 210;
+
+
 
     // Cached textures for animations
     private Texture idleTexture;
@@ -29,6 +37,8 @@ public class Player extends Entity {
     private Texture runTexture;
     private Texture jumpTexture;
     private Texture attack1Texture;
+    private Texture hurtTexture;
+    private Texture deadTexture;
 
 
     /**
@@ -40,14 +50,16 @@ public class Player extends Entity {
      * @param height      Height of the player.
      * @param playerSpeed Movement speed of the player.
      */
-    public Player(int x, int y, int width, int height, double playerSpeed) {
-        super(x, y, width, height);
+    public Player(int x, int y, int width, int height, double playerSpeed, int playerHealth) {
+        super(x, y, width, height, playerHealth);
         this.playerSpeed = playerSpeed;
         this.isMoving = false;
         this.isDead = false;
         this.playerAction = Constants.IDLE;
         this.playerDirection = Constants.RIGHT;
         this.animation_index = 0;
+        this.isJumping = false;
+        this.jumpVelocity = 0;
 
         loadTextures();
         // Initialize sprite with the idle texture
@@ -58,13 +70,13 @@ public class Player extends Entity {
      * Loads animation textures once and caches them.
      */
     private void loadTextures() {
-
-        idleTexture = new Texture(Constants.IDLE_ANIMATION);
-
-        walkTexture = new Texture(Constants.WALK_ANIMATION);
-        runTexture = new Texture(Constants.RUN_ANIMATION);
-        jumpTexture = new Texture(Constants.JUMP_ANIMATION);
-        attack1Texture = new Texture(Constants.ATTACK_1_ANIMATION);
+        idleTexture = new Texture(Constants.PLAYER_IDLE_ANIMATION);
+        walkTexture = new Texture(Constants.PLAYER_WALK_ANIMATION);
+        runTexture = new Texture(Constants.PLAYER_RUN_ANIMATION);
+        jumpTexture = new Texture(Constants.PLAYER_JUMP_ANIMATION);
+        attack1Texture = new Texture(Constants.PLAYER_ATTACK_1_ANIMATION);
+        hurtTexture = new Texture(Constants.PLAYER_HURT_ANIMATION);
+        deadTexture = new Texture(Constants.PLAYER_DEAD_ANIMATION);
     }
 
     /**
@@ -97,6 +109,16 @@ public class Player extends Entity {
                     setSprite(attack1Texture);
                 }
                 break;
+            case Constants.HURT:
+                if (getSprite() != hurtTexture) {
+                    setSprite(hurtTexture);
+                }
+                break;
+            case Constants.DEAD:
+                if (getSprite() != deadTexture) {
+                    setSprite(deadTexture);
+                }
+                break;
         }
     }
 
@@ -118,14 +140,21 @@ public class Player extends Entity {
     }
 
     /**
-     * Moves the player based on their current state and updates their hitbox.
+     * Moves the player based on their current state and updates their hitBox.
      */
     public void movePlayer() {
+
         this.updateAnimation();
+        // Apply jump physics if the player is in jump state
+        JumpPhysics.applyJumpPhysics(this);
+
+        if(this.playerDirection == Constants.JUMP){
+            this.setY((int) (this.getY() + Constants.GRAVITY_SPEED));
+        }
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
             // Checking collision with screen borders
-            if(this.getX() >= (Constants.screenWidth - Constants.FRAME_WIDTH * 0.6f)){
+            if(this.getX() >= (Constants.SCREEN_WIDTH - Constants.FRAME_WIDTH * 0.6f)){
                 this.setX(this.getX() - 1);
 
             }else if(this.getX()<= 0){
@@ -136,9 +165,21 @@ public class Player extends Entity {
                 updateHitbox();
             }
         }
+        else if(isDead){
+            setPlayerAction(Constants.DEAD);
+
+            // todo: improve respawning
+            this.setX(1000); // respawn player
+            this.updateAnimation();
+            this.updateHitbox();
+            this.setEntityHealth(10);
+            isDead = false;
+        }
+        else if (!this.isAttacking && !this.isJumping) {
+            setPlayerAction(Constants.IDLE);
+
+        }
     }
-
-
 
     /**
      * Calculates and returns the duration of the attack animation.
@@ -150,7 +191,10 @@ public class Player extends Entity {
 
     }
 
+
+
     // Getters and Setters
+
     public void setPlayerDirection(int playerDirection) {
         this.playerDirection = playerDirection;
     }
@@ -199,15 +243,25 @@ public class Player extends Entity {
         this.cooldown = cooldown;
     }
 
-    public void setLastAttackTime(long lastAttackTime) {
-        this.lastAttackTime = lastAttackTime;
-    }
+    public void setLastAttackTime(long lastAttackTime) { this.lastAttackTime = lastAttackTime; }
 
     public void setPlayerAction(int playerAction) {
         this.playerAction = playerAction;
     }
 
+    public int getPlayerAction() {
+        return playerAction;
+    }
+
     public void setAnimation_index(int animation_index) {
         this.animation_index = animation_index;
     }
+
+    public float getJumpVelocity() {
+        return jumpVelocity;
+    }
+    public void setJumpVelocity(float jumpVelocity) {
+        this.jumpVelocity = jumpVelocity;
+    }
+
 }

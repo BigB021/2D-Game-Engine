@@ -12,8 +12,30 @@ public final class Constants {
     public static final String JUMP_ANIMATION = "assets/Jump.png";
     public static final String ATTACK_1_ANIMATION = "assets/Attack_1.png";
 
+    // Texture Constants
+    // Player Assets
+    public static  final String PLAYER_IDLE_ANIMATION = "assets/playerTextures/Idle.png";
+    public static final String PLAYER_WALK_ANIMATION = "assets/playerTextures/Walk.png";
+    public static final String PLAYER_RUN_ANIMATION = "assets/playerTextures/Run.png";
+    public static final String PLAYER_JUMP_ANIMATION = "assets/playerTextures/Jump.png";
+    public static final String PLAYER_ATTACK_1_ANIMATION = "assets/playerTextures/Attack_1.png";
+    public static final String PLAYER_HURT_ANIMATION = "assets/playerTextures/Hurt.png";
+    public static  final String PLAYER_DEAD_ANIMATION = "assets/playerTextures/Dead.png";
+    // Enemy Assets
+    public static  final String ENEMY_IDLE_ANIMATION = "assets/enemyTextures/Idle.png";
+    public static final String ENEMY_WALK_ANIMATION = "assets/enemyTextures/Walk.png";
+    public static final String ENEMY_RUN_ANIMATION = "assets/enemyTextures/Run.png";
+    public static final String ENEMY_JUMP_ANIMATION = "assets/enemyTextures/Jump.png";
+    public static final String ENEMY_ATTACK_1_ANIMATION = "assets/enemyTextures/Attack_1.png";
+    public static final String ENEMY_HURT_ANIMATION = "assets/enemyTextures/Hurt.png";
+    public static  final String ENEMY_DEAD_ANIMATION = "assets/enemyTextures/Dead.png";
+    // Map Assets
+    public static final String tile1 = "assets/assets/tiles/2.png";
+    public static final String tile0 = "assets/assets/tiles/1.png";
+    public static final String tile59 = "assets/assets/tiles/59.png";
     public static final String tileFolder = "assets/assets/tiles";
     ///////
+
     public static final Map<String, String> tilesMap = new HashMap<>();
 
     // add tile
@@ -27,6 +49,15 @@ public final class Constants {
     }
 
 
+    // Map Tiles Constants
+    public static final int ORIGINAL_TILE_SIZE = 16;
+    public static final int SCALE = 1;
+    public static final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
+    public static final int MAX_SCREEN_COL = 81;//800/48
+    public static final int MAX_SCREEN_ROWS = 48;
+    public static final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COL;
+    public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROWS;
+    public static final String MAP_1 = "assets/maps/map1.txt";
     ///////
     public static final int originaltilesise = 32;
     public static final int scale = 1;
@@ -42,6 +73,14 @@ public final class Constants {
     public static final String Map2 = "assets/maps/map2.txt";
     public static final String backgoundImg = "assets/assets/2 Background/level_bckground.png";
 
+    // Entity movements Constants
+    public  static final int IDLE = 0;
+    public  static final int WALK = 1;
+    public  static final int RUN = 2;
+    public  static final int JUMP = 3;
+    public  static final int ATTACK_1 = 4;
+    public  static final int HURT = 5;
+    public  static final int DEAD = 6;
     public static final int IDLE = 0;
     public static final int WALK = 1;
     public static final int RUN = 2;
@@ -51,9 +90,15 @@ public final class Constants {
     public static final int RIGHT = 1;
     public static final int LEFT = -1;
 
+    // Gravity Speed
+    public  static final int GRAVITY_SPEED = 5;
+    // Enemy pursue distance
+    public  static final int DISTANCE = 200;
 
-    public static final float FRAME_DELAY = 0.03f; // 30ms per frame
-    public static final int ATTACK_1_FRAMES = 6;
+
+    // Frame Constants
+    public static final float FRAME_DELAY = 0.12f;
+    public static final int ATTACK_1_FRAMES = 3;
 
     public static final int FRAME_WIDTH = 128;
     public static final int FRAME_HEIGHT = 128;

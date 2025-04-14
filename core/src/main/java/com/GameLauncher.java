@@ -1,4 +1,4 @@
-package com.main;
+package com;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -11,7 +11,7 @@ public class GameLauncher {
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Test Game"); // Window title
-        config.setWindowedMode(1600, 760); // full screen??
+        config.setWindowedMode(1600,760); // full screen
         config.setForegroundFPS(120); // Target FPS
 
         // Start the game

@@ -1,4 +1,4 @@
-package com.main;
+package com;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,7 +30,7 @@ public class Game extends ApplicationAdapter {
     // Testing hitBox
     private ShapeRenderer shape;
 
-    public Game()  {
+    public Game() throws IOException {
     }
     OrthographicCamera camera;
     Viewport viewport;
@@ -48,19 +48,19 @@ public class Game extends ApplicationAdapter {
         int x = 1, y = 192;
         int CalculatedHeight=(int)(Constants.FRAME_HEIGHT*camera.zoom);
         int CalculatedWidth=(int)(Constants.FRAME_WIDTH*camera.zoom);
-        player = new Player(x, y,CalculatedWidth,CalculatedHeight,3.5);
-        enemy = new Enemy(x,y,CalculatedWidth,CalculatedHeight,1., player);
+        player = new Player(x, y,CalculatedWidth,CalculatedHeight,3.5,10);
+        enemy = new Enemy(x,y,CalculatedWidth,CalculatedHeight,1., 5,player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
         Gdx.input.setInputProcessor(playerInput);
 
         // Init player
-        player.setSprite(new Texture(Constants.IDLE_ANIMATION));
+        player.setSprite(new Texture(Constants.PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
 
         // Init enemy
-        enemy.setSprite(new Texture(Constants.IDLE_ANIMATION));
+        enemy.setSprite(new Texture(Constants.PLAYER_IDLE_ANIMATION));
         System.out.println("Create Call");
 
         // Init ShapeRenderer
@@ -100,6 +100,7 @@ public class Game extends ApplicationAdapter {
         animationTimer += Gdx.graphics.getDeltaTime();
 
         // Check if enough time has passed
+        float FRAME_DELAY = 0.1f;
         if (animationTimer >= FRAME_DELAY) {
             player.setAnimation_index(player.getAnimation_index()+ Constants.FRAME_WIDTH);
             if (player.getAnimation_index() > player.getSprite().getWidth() - Constants.FRAME_WIDTH) player.setAnimation_index(0);
