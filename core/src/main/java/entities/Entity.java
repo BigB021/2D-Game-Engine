@@ -2,15 +2,17 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import utilities.Constants;
 
 /**
  * Abstract class that represents base entity in the game.
  * Provides common properties and methods for all game entities.
  */
 public abstract class Entity {
-    protected Texture sprite;
     protected float x, y;
+    protected Texture sprite;
     protected Rectangle hitBox;
+    protected Rectangle attackHitBox;
 
     private int entityHealth;
 
@@ -35,15 +37,22 @@ public abstract class Entity {
         this.x = x;
         this.y = y;
         this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
+        this.attackHitBox = new Rectangle(x + width * 0.4f, y+ (height * 0.2f), width * .5f, height * 0.2f);
         this.entityHealth = health;
     }
 
     /**
      * Updates the player's hitbox position to match the player's movement.
      */
-    public void updateHitbox(){
+    public void updateHitboxes(){
         this.getHitBox().x = this.getX() + getHitBox().width ;
         this.getHitBox().y = this.getY();
+
+        // todo: handle positioning of attack hitbox according to entity direction (+ it can have different offsets/sizes)
+        this.attackHitBox.x = this.getX() + (Constants.FRAME_WIDTH * 0.4f);
+        this.attackHitBox.y = this.getY() + (Constants.FRAME_HEIGHT * 0.2f);
+
+
     }
 
     // Getters & Setters
@@ -74,6 +83,8 @@ public abstract class Entity {
     public Rectangle getHitBox() {
         return hitBox;
     }
+
+    public Rectangle getAttackHitBox() { return attackHitBox; }
 
     public void setHitBox(Rectangle hitBox) {
         this.hitBox = hitBox;
@@ -114,6 +125,9 @@ public abstract class Entity {
     public void setDead(boolean dead) {
         isDead = dead;
     }
+
+    public void setAttackHitBox(Rectangle hitBox) { this.attackHitBox = hitBox; }
+
 
 
 

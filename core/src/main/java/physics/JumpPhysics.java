@@ -9,7 +9,8 @@ public class JumpPhysics {
     // Jumping physics
     private static final float JUMP_FORCE = 15f;
     private static final float GRAVITY = 0.9f;
-    private static final int GROUND_Y = 210;
+    // todo : find a way to find landing y position
+    private static final int GROUND_Y = Constants.ENEMY_SPAWN_Y;
 
 
     /**
@@ -46,7 +47,7 @@ public class JumpPhysics {
                     ((Player)entity).setJumpVelocity(0);
                     ((Player)entity).setPlayerAction(Constants.IDLE);
                 }
-                entity.updateHitbox();
+                entity.updateHitboxes();
                 ((Player)entity).updateAnimation();
             }
         }

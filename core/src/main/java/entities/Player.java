@@ -18,6 +18,7 @@ public class Player extends Entity {
     private int animation_index;
 
     // Jumping physics
+
     private float jumpVelocity;
     private static final float JUMP_FORCE = 15f;
     private static final float GRAVITY = 0.5f;
@@ -156,16 +157,17 @@ public class Player extends Entity {
             }
             else {
                 this.setX(this.getX() + (int) speed * getPlayerDirection());
-                updateHitbox();
+                updateHitboxes();
             }
         }
         else if(isDead){
             setPlayerAction(Constants.DEAD);
 
             // todo: improve respawning
-            this.setX(1000); // respawn player
+            this.setX(Constants.PLAYER_SPAWN_X); // respawn player
+            this.setY(Constants.PLAYER_SPAWN_Y);
             this.updateAnimation();
-            this.updateHitbox();
+            this.updateHitboxes();
             this.setEntityHealth(10);
             isDead = false;
         }

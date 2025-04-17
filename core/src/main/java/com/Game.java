@@ -25,8 +25,8 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         int x = 200, y = 210;
-        player = new Player(x,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5,10);
-        enemy = new Enemy(x+500,y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., 5,player);
+        player = new Player(Constants.PLAYER_SPAWN_X,Constants.ENEMY_SPAWN_Y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5,10);
+        enemy = new Enemy(Constants.ENEMY_SPAWN_X,Constants.ENEMY_SPAWN_Y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., 5,player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
@@ -83,11 +83,20 @@ public class Game extends ApplicationAdapter {
         shape.rect(player.getHitBox().x, player.getHitBox().y, player.getHitBox().width, player.getHitBox().height);
         shape.end();
 
+        // Debug: Draw player's attack hitbox
+        if(player.isAttacking()){
+            shape.begin(ShapeRenderer.ShapeType.Line);
+            shape.setColor(Color.YELLOW);
+            shape.rect(player.getAttackHitBox().x,player.getAttackHitBox().y,player.getAttackHitBox().width,player.getAttackHitBox().height);
+            shape.end();
+        }
+
         // Debug: Draw Enemy hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.RED);
         shape.rect(enemy.getHitBox().x, enemy.getHitBox().y, enemy.getHitBox().width, enemy.getHitBox().height);
         shape.end();
+
 
 
 

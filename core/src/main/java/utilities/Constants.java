@@ -74,6 +74,13 @@ public final class Constants {
     public static final int FRAME_WIDTH = 128;
     public static final int FRAME_HEIGHT = 128;
 
+    // Respawn Constants
+    public static final int PLAYER_SPAWN_X = 200;
+    public static final int PLAYER_SPAWN_Y = 200;
+    public static final int ENEMY_SPAWN_X = 700;
+    public static final int ENEMY_SPAWN_Y = 200;
+
+
 
 
 

@@ -22,7 +22,7 @@ public class CollisionSystem {
             else if (enemy.getEnemyDirection() == Constants.LEFT) {
                 enemy.setX(enemy.getX() + intersection.width);
             }
-            enemy.updateHitbox();
+            enemy.updateHitboxes();
             return true;
         }
         return false;
