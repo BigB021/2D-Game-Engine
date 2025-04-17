@@ -50,7 +50,6 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-
         ScreenUtils.clear(0.5f, 0.15f, 0.2f, 1f);
 
         player.movePlayer();

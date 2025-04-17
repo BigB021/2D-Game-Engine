@@ -16,6 +16,9 @@ public abstract class Entity {
 
     private int entityHealth;
 
+    protected long deathStartTime = 0;   // <— new
+
+
     // Entity state
     protected boolean isMoving;
     protected boolean isDead;
@@ -39,6 +42,7 @@ public abstract class Entity {
         this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
         this.attackHitBox = new Rectangle(x + width * 0.4f, y+ (height * 0.2f), width * .5f, height * 0.2f);
         this.entityHealth = health;
+
     }
 
     /**
@@ -54,6 +58,7 @@ public abstract class Entity {
 
 
     }
+
 
     // Getters & Setters
     public Texture getSprite() {

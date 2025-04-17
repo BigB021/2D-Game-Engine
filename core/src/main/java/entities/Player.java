@@ -246,4 +246,6 @@ public class Player extends Entity {
         this.jumpVelocity = jumpVelocity;
     }
 
+
+
 }

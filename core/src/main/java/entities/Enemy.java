@@ -10,9 +10,8 @@ public class Enemy extends Entity {
     private int enemyAction;
     private int enemyDirection;
     private double enemySpeed;
-    private double cooldown;
     private long lastAttackTime = 0;
-    private long attackStartTime = 0;
+    private long hurtStartTime = 0;
     private int animation_index;
 
     private final Player player;
@@ -123,10 +122,28 @@ public class Enemy extends Entity {
     }
 
     // Move enemy
-    // todo: fix fighting mechanism & fix death animation not loading properly
+    // todo: OPTIMIZE fighting mechanism
     public void moveEnemy(){
         handleDeath();
-        checkScreenCollision();
+        if (isDeathAnimationOngoing()){
+            updateAnimation();
+            updateHitboxes();
+            return;
+        }
+
+        if(enemyAction == Constants.HURT){
+            long elapsed = System.currentTimeMillis() - hurtStartTime;
+            if (elapsed < getHurtDuration()){
+                updateAnimation();
+                updateHitboxes();
+                return;
+            }
+        }
+
+        if(enemyAction == Constants.DEAD ) {
+            respawnEnemy();
+        }
+
         if(shouldPursuePlayer()){
             updateMovementBasedOnPlayer();
             handleCombat();
@@ -138,25 +155,35 @@ public class Enemy extends Entity {
         updateHitboxes();
     }
 
-    // Move enemy Submethods
-    // ==================================================================
+    // =====================Move Enemy submethods=====================
+
+    private void respawnEnemy(){
+        this.setX(Constants.ENEMY_SPAWN_X);
+        this.setY(Constants.ENEMY_SPAWN_Y);
+        setEntityHealth(10);
+        setDead(false);
+        initDirection();
+        setEnemyAction(Constants.IDLE);
+    }
+
+    private boolean isDeathAnimationOngoing() {
+        if (enemyAction == Constants.DEAD) {
+            long elapsed = System.currentTimeMillis() - deathStartTime;
+            return elapsed < getDeathDuration();
+        }
+        return false;
+    }
+
     private void handleDeath() {
-        if(this.getEntityHealth() <= 0){
-            this.setX(Constants.ENEMY_SPAWN_X);
-            this.setY(Constants.ENEMY_SPAWN_Y);
+        if(getEntityHealth() <= 0 && enemyAction != Constants.DEAD){
             setEnemyAction(Constants.DEAD);
-            this.setEntityHealth(10);
             this.setDead(true);
+            deathStartTime = System.currentTimeMillis();
+            // todo : drop sound and loot
         }
     }
 
-    public void checkScreenCollision(){
-        if(CollisionSystem.checkScreenCollision(this)){
-            System.out.println("Collision Detected");
-        }
-    }
-
-
+    
     private void updateDirectionTowardsPlayer(){
 
         if(this.getHitBox().x - player.getHitBox().x >= 0){
@@ -188,17 +215,17 @@ public class Enemy extends Entity {
         this.setAttacking(true);
 
         if (currentTime - this.lastAttackTime >= getAttackAnimationDuration()) {
-            handlePlayerAttack(currentTime);
+            handlePlayerAttack();
             handleEnemyAttack(currentTime);
         }
     }
 
-    private void handlePlayerAttack(long currentTime){
-        if(player.getPlayerAction() == Constants.ATTACK_1){
+    private void handlePlayerAttack(){
+        if(player.isAttacking && player.getAttackHitBox().overlaps(this.getHitBox())){
             this.setEntityHealth(this.getEntityHealth() - 1);
             this.setEnemyAction(Constants.HURT);
+            this.hurtStartTime = System.currentTimeMillis();
             this.setAttacking(false);
-            this.updateAnimation();
             // debug System.out
             System.out.println("Enemy health:"+ this.getEntityHealth());
         }
@@ -223,7 +250,7 @@ public class Enemy extends Entity {
         this.setX(this.getX() + speed * getEnemyDirection());
     }
 
-    // ==================================================================
+    // =============================================================
 
     /**
      * Calculates the total duration of the attack animation in milliseconds.
@@ -231,10 +258,27 @@ public class Enemy extends Entity {
      * @return the attack duration in milliseconds.
      */
     public long getAttackAnimationDuration() {
-        return (long)(Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY * 1000);
+        int frames = attack1Texture.getWidth() / Constants.FRAME_WIDTH;
+        return (long)(frames * Constants.FRAME_DELAY * 1000);
     }
 
-    // Getters & Setters
+    public long getHurtDuration() {
+        int frames = hurtTexture.getWidth() / Constants.FRAME_WIDTH;
+        return (long)(frames * Constants.FRAME_DELAY * 1000);
+    }
+
+    /**
+     * Calculate total duration of the death animation in ms.
+     * Derives frame count from sprite width / FRAME_WIDTH.
+     */
+    public long getDeathDuration() {
+        // number of frames in the death sprite sheet:
+        int frames = deadTexture.getWidth() / Constants.FRAME_WIDTH;
+        return (long)(frames * Constants.FRAME_DELAY * 1000);
+    }
+
+
+    //=====================Getters & Setters=====================
 
     public int getEnemyAction() {
         return enemyAction;
@@ -276,4 +320,8 @@ public class Enemy extends Entity {
     private void setIdleState() {
         this.setEnemyAction(Constants.IDLE);
     }
+
+
+
+
 }
