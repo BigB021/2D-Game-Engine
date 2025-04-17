@@ -17,7 +17,7 @@ public class Player extends Entity {
     private boolean isDead;
     private boolean isAttacking;
     private boolean isJumping;
-    private int playerDirection;
+    //private int playerDirection;
     private double playerSpeed;
     private double cooldown;
     private long lastAttackTime = 0;
@@ -28,7 +28,8 @@ public class Player extends Entity {
     private float jumpVelocity;
     private static final float JUMP_FORCE = 15f;
     private static final float GRAVITY = 0.5f;
-    private static final int GROUND_Y = 210;
+    // todo: get the y coordinates of the ground
+    private static final int GROUND_Y = 192;
 
 
 
@@ -57,7 +58,7 @@ public class Player extends Entity {
         this.isMoving = false;
         this.isDead = false;
         this.playerAction = Constants.IDLE;
-        this.playerDirection = Constants.RIGHT;
+        //this.playerDirection = Constants.RIGHT;
         this.animation_index = 0;
         this.isJumping = false;
         this.jumpVelocity = 0;
@@ -133,11 +134,11 @@ public class Player extends Entity {
      * @return TextureRegion containing the selected frame.
      */
     public  TextureRegion loadAnimation(int x,int y,int width,int height) {
-        if (getPlayerDirection() == Constants.RIGHT) {
+        if (getEntityDirection() == Constants.RIGHT) {
 
-            return new TextureRegion(getSprite() ,x,y,getPlayerDirection() * width,height);
+            return new TextureRegion(getSprite() ,x,y,getEntityDirection() * width,height);
         }
-        return new TextureRegion(getSprite() ,x + width,y,getPlayerDirection() * width,height);
+        return new TextureRegion(getSprite() ,x + width,y,getEntityDirection() * width,height);
     }
 
     /**
@@ -149,7 +150,7 @@ public class Player extends Entity {
         // Apply jump physics if the player is in jump state
         JumpPhysics.applyJumpPhysics(this);
 
-        if(this.playerDirection == Constants.JUMP){
+        if(this.getEntityDirection() == Constants.JUMP){
             this.setY((int) (this.getY() + Constants.GRAVITY_SPEED));
         }
         if (isMoving) {
@@ -162,7 +163,7 @@ public class Player extends Entity {
                 this.setX(this.getX() + 1);
             }
             else {
-                this.setX(this.getX() + (int) speed * getPlayerDirection());
+                this.setX(this.getX() + (int) speed * getEntityDirection());
                 updateHitboxes();
             }
         }
@@ -196,14 +197,6 @@ public class Player extends Entity {
 
 
     // Getters and Setters
-
-    public void setPlayerDirection(int playerDirection) {
-        this.playerDirection = playerDirection;
-    }
-
-    public int getPlayerDirection() {
-        return playerDirection;
-    }
 
     public double getPlayerSpeed() {
         return playerSpeed;

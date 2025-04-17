@@ -16,10 +16,10 @@ public class CollisionSystem {
 
         // Determines whether the given rectangles intersect and, if they do, sets the supplied intersection rectangle to the area of overlap (libGdx documentation)
         if (Intersector.intersectRectangles(enemy.getHitBox(),player.getHitBox(),intersection)) {
-            if(enemy.getEnemyDirection() == Constants.RIGHT) {
+            if(enemy.getEntityDirection() == Constants.RIGHT) {
                 enemy.setX(enemy.getX() - intersection.width);
             }
-            else if (enemy.getEnemyDirection() == Constants.LEFT) {
+            else if (enemy.getEntityDirection() == Constants.LEFT) {
                 enemy.setX(enemy.getX() + intersection.width);
             }
             enemy.updateHitboxes();
@@ -32,12 +32,12 @@ public class CollisionSystem {
     public static boolean checkScreenCollision(Entity entity) {
         if (entity.getHitBox().x >= Constants.SCREEN_WIDTH) {
             if(entity instanceof Enemy){
-                ((Enemy)entity).setEnemyDirection(Constants.LEFT);
+                ((Enemy)entity).setEntityDirection(Constants.LEFT);
             }
             return true;
         }else if (entity.getHitBox().x <= 0) {
             if(entity instanceof Enemy){
-                ((Enemy)entity).setEnemyDirection(Constants.RIGHT);
+                ((Enemy)entity).setEntityDirection(Constants.RIGHT);
             }
             return true;
         }

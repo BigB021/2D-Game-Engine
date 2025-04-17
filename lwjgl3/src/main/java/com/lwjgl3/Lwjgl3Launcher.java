@@ -4,14 +4,16 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.Game;
 
+import java.io.IOException;
+
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
     }
 
-    private static Lwjgl3Application createApplication() {
+    private static Lwjgl3Application createApplication() throws IOException {
         return new Lwjgl3Application(new Game(), getDefaultConfiguration());
     }
 

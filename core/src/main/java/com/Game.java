@@ -25,7 +25,6 @@ public class Game extends ApplicationAdapter {
     private  Player player;
     private Enemy enemy;
     private float animationTimer = 0f;
-    private final float FRAME_DELAY = 0.1f;
     public TileManager tileManager = new TileManager();
     // Testing hitBox
     private ShapeRenderer shape;
@@ -45,11 +44,10 @@ public class Game extends ApplicationAdapter {
         tileManager.getTilesFromFolder();
         tileManager.gettileimage();
         tileManager.loadbackgroundimg();
-        int x = 1, y = 192;
         int CalculatedHeight=(int)(Constants.FRAME_HEIGHT*camera.zoom);
         int CalculatedWidth=(int)(Constants.FRAME_WIDTH*camera.zoom);
-        player = new Player(x, y,CalculatedWidth,CalculatedHeight,3.5,10);
-        enemy = new Enemy(x+200,y,CalculatedWidth,CalculatedHeight,1., 5,player);
+        player = new Player(Constants.PLAYER_SPAWN_X, Constants.PLAYER_SPAWN_Y,CalculatedWidth,CalculatedHeight,3.5,10);
+        enemy = new Enemy(Constants.ENEMY_SPAWN_X,Constants.ENEMY_SPAWN_Y,CalculatedWidth,CalculatedHeight,1., 5,player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
@@ -130,6 +128,18 @@ public class Game extends ApplicationAdapter {
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.RED);
         shape.rect(enemy.getHitBox().x, enemy.getHitBox().y, enemy.getHitBox().width, enemy.getHitBox().height);
+        shape.end();
+
+        // Debug: Draw Player attack hitBox
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.setColor(Color.YELLOW);
+        shape.rect(player.getAttackHitBox().x, player.getAttackHitBox().y, player.getAttackHitBox().width, player.getAttackHitBox().height);
+        shape.end();
+
+        // Debug: Draw Enemy attack hitBox
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.setColor(Color.GREEN);
+        shape.rect(enemy.getAttackHitBox().x, enemy.getAttackHitBox().y, enemy.getAttackHitBox().width, enemy.getAttackHitBox().height);
         shape.end();
 
 

@@ -90,7 +90,7 @@ public final class Constants {
     // Gravity Speed
     public  static final int GRAVITY_SPEED = 5;
     // Enemy pursue distance
-    public  static final int DISTANCE = 200;
+    public  static final int DISTANCE = 50;
 
 
     // Frame Constants
@@ -101,10 +101,10 @@ public final class Constants {
     public static final int FRAME_HEIGHT = 128;
 
     // Respawn Constants
-    public static final int PLAYER_SPAWN_X = 200;
-    public static final int PLAYER_SPAWN_Y = 200;
-    public static final int ENEMY_SPAWN_X = 700;
-    public static final int ENEMY_SPAWN_Y = 200;
+    public static final int PLAYER_SPAWN_X = 1;
+    public static final int PLAYER_SPAWN_Y = 192;
+    public static final int ENEMY_SPAWN_X = 400;
+    public static final int ENEMY_SPAWN_Y = 192;
 
 
 

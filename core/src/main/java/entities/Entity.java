@@ -14,6 +14,8 @@ public abstract class Entity {
     protected Rectangle hitBox;
     protected Rectangle attackHitBox;
 
+    protected int entityDirection;
+
     private int entityHealth;
 
     protected long deathStartTime = 0;   // <— new
@@ -42,6 +44,7 @@ public abstract class Entity {
         this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
         this.attackHitBox = new Rectangle(x + width * 0.4f, y+ (height * 0.2f), width * .5f, height * 0.2f);
         this.entityHealth = health;
+        this.entityDirection = Constants.RIGHT;
 
     }
 
@@ -53,9 +56,14 @@ public abstract class Entity {
         this.getHitBox().y = this.getY();
 
         // todo: handle positioning of attack hitbox according to entity direction (+ it can have different offsets/sizes)
-        this.attackHitBox.x = this.getX() + (Constants.FRAME_WIDTH * 0.4f);
-        this.attackHitBox.y = this.getY() + (Constants.FRAME_HEIGHT * 0.2f);
 
+        if(entityDirection == Constants.RIGHT){
+            this.attackHitBox.x = this.getX() + (Constants.FRAME_WIDTH * 0.2f);
+        }
+        else if(entityDirection == Constants.LEFT){
+            this.attackHitBox.x = this.getX() ;
+        }
+        this.attackHitBox.y = this.getY() + (Constants.FRAME_HEIGHT * 0.1f);
 
     }
 
@@ -132,6 +140,14 @@ public abstract class Entity {
     }
 
     public void setAttackHitBox(Rectangle hitBox) { this.attackHitBox = hitBox; }
+
+    public void setEntityDirection(int entityDirection) {
+        this.entityDirection = entityDirection;
+    }
+
+    public int getEntityDirection() {
+        return entityDirection;
+    }
 
 
 

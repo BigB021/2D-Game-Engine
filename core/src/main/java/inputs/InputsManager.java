@@ -52,7 +52,7 @@ public class InputsManager implements InputProcessor {
             } else {
                 player.setPlayerAction(Constants.WALK);
             }
-            player.setPlayerDirection(Constants.RIGHT);
+            player.setEntityDirection(Constants.RIGHT);
             player.setMoving(true);
             return true;
         }
@@ -64,7 +64,7 @@ public class InputsManager implements InputProcessor {
             } else {
                 player.setPlayerAction(Constants.WALK);
             }
-            player.setPlayerDirection(Constants.LEFT);
+            player.setEntityDirection(Constants.LEFT);
             player.setMoving(true);
             return true;
         }
@@ -91,7 +91,7 @@ public class InputsManager implements InputProcessor {
                         player.setAttacking(false);
                         boolean shouldMove = false;
                         int newAction = Constants.IDLE;
-                        int direction = player.getPlayerDirection();
+                        int direction = player.getEntityDirection();
 
                         if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A)) {
                             shouldMove = true;
@@ -109,7 +109,7 @@ public class InputsManager implements InputProcessor {
                         }
 
                         // Update the player's state after completing the attack.
-                        player.setPlayerDirection(direction);
+                        player.setEntityDirection(direction);
                         player.setPlayerAction(newAction);
                         player.setMoving(shouldMove);
                         player.updateAnimation();

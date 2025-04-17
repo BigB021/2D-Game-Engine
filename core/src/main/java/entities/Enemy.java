@@ -8,7 +8,6 @@ import utilities.Constants;
 public class Enemy extends Entity {
 
     private int enemyAction;
-    private int enemyDirection;
     private double enemySpeed;
     private long lastAttackTime = 0;
     private long hurtStartTime = 0;
@@ -43,9 +42,9 @@ public class Enemy extends Entity {
     // Set enemy's initial direction towards the player
     public void initDirection(){
         if (player.x - this.x > 0)
-            this.enemyDirection = Constants.RIGHT;
+            this.entityDirection = Constants.RIGHT;
         else
-            this.enemyDirection = Constants.LEFT;
+            this.entityDirection = Constants.LEFT;
     }
 
     /**
@@ -114,17 +113,18 @@ public class Enemy extends Entity {
      * @return TextureRegion containing the selected frame.
      */
     public TextureRegion loadAnimation(int x, int y, int width, int height) {
-        if (getEnemyDirection() == Constants.RIGHT) {
+        if (getEntityDirection() == Constants.RIGHT) {
 
-            return new TextureRegion(getSprite() ,x,y, getEnemyDirection() * width,height);
+            return new TextureRegion(getSprite() ,x,y, getEntityDirection() * width,height);
         }
-        return new TextureRegion(getSprite() ,x + width,y, getEnemyDirection() * width,height);
+        return new TextureRegion(getSprite() ,x + width,y, getEntityDirection() * width,height);
     }
 
     // Move enemy
     // todo: OPTIMIZE fighting mechanism
     public void moveEnemy(){
         handleDeath();
+        updateHitboxes();
         if (isDeathAnimationOngoing()){
             updateAnimation();
             updateHitboxes();
@@ -183,14 +183,14 @@ public class Enemy extends Entity {
         }
     }
 
-    
+
     private void updateDirectionTowardsPlayer(){
 
         if(this.getHitBox().x - player.getHitBox().x >= 0){
-            this.setEnemyDirection(Constants.LEFT);
+            this.setEntityDirection(Constants.LEFT);
         }
         else if(this.getHitBox().x - player.getHitBox().x <= 0){
-            this.setEnemyDirection(Constants.RIGHT);
+            this.setEntityDirection(Constants.RIGHT);
         }
     }
 
@@ -221,7 +221,7 @@ public class Enemy extends Entity {
     }
 
     private void handlePlayerAttack(){
-        if(player.isAttacking && player.getAttackHitBox().overlaps(this.getHitBox())){
+        if(player.isAttacking() && player.getAttackHitBox().overlaps(this.getHitBox())){
             this.setEntityHealth(this.getEntityHealth() - 1);
             this.setEnemyAction(Constants.HURT);
             this.hurtStartTime = System.currentTimeMillis();
@@ -239,7 +239,7 @@ public class Enemy extends Entity {
 
         player.setPlayerAction(Constants.HURT);
         player.updateAnimation();
-        player.setEntityHealth(player.getEntityHealth() - 1);
+        player.setEntityHealth(player.getEntityHealth() - 5);
         if (player.getEntityHealth() <= 0) {
             player.setDead(true);
         }
@@ -247,7 +247,7 @@ public class Enemy extends Entity {
 
     private void pursuePlayer(){
         float speed = (enemyAction == Constants.RUN) ? (float) (enemySpeed * 2) : (float) enemySpeed;
-        this.setX(this.getX() + speed * getEnemyDirection());
+        this.setX(this.getX() + speed * getEntityDirection());
     }
 
     // =============================================================
@@ -286,14 +286,6 @@ public class Enemy extends Entity {
 
     public void setEnemyAction(int enemyAction) {
         this.enemyAction = enemyAction;
-    }
-
-    public int getEnemyDirection() {
-        return enemyDirection;
-    }
-
-    public void setEnemyDirection(int enemyDirection) {
-        this.enemyDirection = enemyDirection;
     }
 
     public double getEnemySpeed() {
