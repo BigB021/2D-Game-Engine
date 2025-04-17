@@ -1,4 +1,4 @@
-package com;
+//package com;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -8,9 +8,10 @@ import java.io.IOException;
 
 public class GameLauncher {
     public static void main(String[] args) throws IOException {
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Test Game"); // Window title
-        config.setWindowedMode((int)Constants.SCREEN_WIDTH, (int)Constants.SCREEN_HEIGHT); // full screen
+        config.setWindowedMode(1600,760); // dimensions just for now
         config.setForegroundFPS(120); // Target FPS
 
         // Start the game

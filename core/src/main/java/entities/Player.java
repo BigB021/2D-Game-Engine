@@ -1,5 +1,7 @@
 package entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import physics.JumpPhysics;
@@ -11,6 +13,10 @@ import utilities.Constants;
 public class Player extends Entity {
 
     private int playerAction;
+    private boolean isMoving;
+    private boolean isDead;
+    private boolean isAttacking;
+    private boolean isJumping;
     private int playerDirection;
     private double playerSpeed;
     private double cooldown;
@@ -149,7 +155,7 @@ public class Player extends Entity {
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
             // Checking collision with screen borders
-            if(this.getX() >= (Constants.SCREEN_WIDTH - Constants.FRAME_WIDTH * 0.6f)){
+            if(this.getX() >= (Constants.maxScreenCol * Constants.tileSize - Constants.FRAME_WIDTH*Constants.camerazoom  )){
                 this.setX(this.getX() - 1);
 
             }else if(this.getX()<= 0){
@@ -203,6 +209,14 @@ public class Player extends Entity {
         return playerSpeed;
     }
 
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
     public double getCooldown() {
         return cooldown;
     }
@@ -219,7 +233,13 @@ public class Player extends Entity {
         this.playerSpeed = playerSpeed;
     }
 
+    public void setMoving(boolean moving) {
+        isMoving = moving;
+    }
 
+    public void setAttacking(boolean attacking) {
+        isAttacking = attacking;
+    }
 
     public void setCooldown(double cooldown) {
         this.cooldown = cooldown;

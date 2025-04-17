@@ -3,30 +3,53 @@ package com;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import entities.Enemy;
 import entities.Player;
 import inputs.InputsManager;
+import mapManager.tileManager.Tile;
+import mapManager.tileManager.TileManager;
 import utilities.Constants;
+
+import java.io.IOException;
 
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
     private  Player player;
     private Enemy enemy;
     private float animationTimer = 0f;
-
+    private final float FRAME_DELAY = 0.1f;
+    public TileManager tileManager = new TileManager();
     // Testing hitBox
     private ShapeRenderer shape;
 
+    public Game() throws IOException {
+    }
+    OrthographicCamera camera;
+    Viewport viewport;
+
     @Override
     public void create() {
-        int x = 200, y = 210;
-        player = new Player(Constants.PLAYER_SPAWN_X,Constants.ENEMY_SPAWN_Y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,3.5,10);
-        enemy = new Enemy(Constants.ENEMY_SPAWN_X,Constants.ENEMY_SPAWN_Y,Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT,1., 5,player);
+        camera = new OrthographicCamera();
+        camera.zoom =Constants.camerazoom;
+        camera.setToOrtho(false,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        viewport = new FitViewport(Constants.screenWidth,Constants.screenHeight,camera);
+
+        tileManager.getTilesFromFolder();
+        tileManager.gettileimage();
+        tileManager.loadbackgroundimg();
+        int x = 1, y = 192;
+        int CalculatedHeight=(int)(Constants.FRAME_HEIGHT*camera.zoom);
+        int CalculatedWidth=(int)(Constants.FRAME_WIDTH*camera.zoom);
+        player = new Player(x, y,CalculatedWidth,CalculatedHeight,3.5,10);
+        enemy = new Enemy(x+200,y,CalculatedWidth,CalculatedHeight,1., 5,player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
@@ -50,7 +73,25 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.5f, 0.15f, 0.2f, 1f);
+        float mapWidth = Constants.maxScreenCol * Constants.tileSize;
+        float mapHeight = Constants.maxScreenrow * Constants.tileSize;
+
+        float screenwidth=camera.zoom*mapWidth;//912
+        float screenheight=camera.zoom*mapHeight;//912
+        float playerCenterX = player.getX() + player.getHitBox().width / 2f;
+        float playerCenterY = player.getHitBox().y + player.getHitBox().height / 2f;
+
+          float halfViewportWidth = camera.viewportWidth * camera.zoom / 2f;
+          float halfViewportHeight = camera.viewportHeight * camera.zoom / 2f;
+
+        camera.position.x = Math.max(halfViewportWidth, Math.min(playerCenterX, mapWidth - halfViewportWidth));
+        camera.position.y = Math.max(halfViewportHeight, Math.min(playerCenterY, mapHeight - halfViewportHeight));
+        camera.update();
+
+////// we can implement a camera but for now we stick to this
+        System.out.println("centerX "+playerCenterX+ "CAMERAx "+ camera.position.x+"viewport "+viewport.getScreenWidth());
+
+        batch.setProjectionMatrix(camera.combined);
 
         player.movePlayer();
         enemy.moveEnemy();
@@ -67,14 +108,17 @@ public class Game extends ApplicationAdapter {
             if (enemy.getAnimation_index() > enemy.getSprite().getWidth() - Constants.FRAME_WIDTH) enemy.setAnimation_index(0);
             animationTimer = 0f;  // Reset timer
         }
+        ScreenUtils.clear(0.8f, 0.85f, 0.8f, 0.00f);
 
         batch.begin();
-        TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        tileManager.render(batch,camera);
+        TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, (Constants.FRAME_WIDTH), Constants.FRAME_HEIGHT);
         TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(),0,Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
-        batch.draw(playerRegion, player.getX(),player.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
-        batch.draw(enemyRegion,enemy.getX(), enemy.getY(), Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT);
+        batch.draw(playerRegion, player.getX(),player.getY(), Constants.FRAME_WIDTH*camera.zoom, Constants.FRAME_HEIGHT*camera.zoom);
+        batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), Constants.FRAME_WIDTH*camera.zoom, Constants.FRAME_HEIGHT*camera.zoom);
 
         batch.end();
+        shape.setProjectionMatrix(camera.combined);
 
         // Debug: Draw player hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
@@ -82,20 +126,11 @@ public class Game extends ApplicationAdapter {
         shape.rect(player.getHitBox().x, player.getHitBox().y, player.getHitBox().width, player.getHitBox().height);
         shape.end();
 
-        // Debug: Draw player's attack hitbox
-        if(player.isAttacking()){
-            shape.begin(ShapeRenderer.ShapeType.Line);
-            shape.setColor(Color.YELLOW);
-            shape.rect(player.getAttackHitBox().x,player.getAttackHitBox().y,player.getAttackHitBox().width,player.getAttackHitBox().height);
-            shape.end();
-        }
-
         // Debug: Draw Enemy hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.RED);
         shape.rect(enemy.getHitBox().x, enemy.getHitBox().y, enemy.getHitBox().width, enemy.getHitBox().height);
         shape.end();
-
 
 
 
