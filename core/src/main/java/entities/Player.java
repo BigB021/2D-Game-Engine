@@ -154,7 +154,7 @@ public class Player extends Entity {
         if (isMoving) {
             double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
             // Checking collision with screen borders
-            if(this.getX() >= (Constants.SCREEN_WIDTH - Constants.FRAME_WIDTH * 0.6f)){
+            if(this.getX() >= (Constants.maxScreenCol * Constants.tileSize - Constants.FRAME_WIDTH*Constants.camerazoom  )){
                 this.setX(this.getX() - 1);
 
             }else if(this.getX()<= 0){

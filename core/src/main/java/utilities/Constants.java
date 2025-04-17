@@ -65,7 +65,8 @@ public final class Constants {
     public static final int maxScreenCol = 90;//800/48
     public static final int maxScreenrow = 70;
     public static final int NUM_LAYERS = 3;
-    public static final List<Integer> animateditems = List.of();
+    public static final float camerazoom = 0.4f;
+    public static final List<Integer> animateditems = List.of(22);
 
     public static final int screenWidth = tileSize * maxScreenCol;
     public static final int screenHeight = tileSize * maxScreenrow;
@@ -81,11 +82,7 @@ public final class Constants {
     public  static final int ATTACK_1 = 4;
     public  static final int HURT = 5;
     public  static final int DEAD = 6;
-    public static final int IDLE = 0;
-    public static final int WALK = 1;
-    public static final int RUN = 2;
-    public static final int JUMP = 3;
-    public static final int ATTACK_1 = 4;
+
 
     public static final int RIGHT = 1;
     public static final int LEFT = -1;

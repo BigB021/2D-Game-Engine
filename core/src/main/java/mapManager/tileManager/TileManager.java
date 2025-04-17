@@ -85,9 +85,14 @@ public class TileManager {
 //            tile[Integer.parseInt(entry.getKey())] = null;
             //animatedtiles
             if(Constants.animateditems.contains(Integer.parseInt(entry.getKey()))){
+                if(Integer.parseInt(entry.getKey())==22){
+                    //22
+                    tile[Integer.parseInt(entry.getKey())]=new AnimatedTile(new Texture(entry.getValue()),4,1,5);
+                }
+                else {
                 tile[Integer.parseInt(entry.getKey())]=new AnimatedTile(new Texture(entry.getValue()),8,1,5);
 //                tile[Integer.parseInt(entry.getKey())].image = new Texture(entry.getValue());
-            }
+            }}
             else if(Integer.parseInt(entry.getKey())==0){
                 tile[Integer.parseInt(entry.getKey())]= null;
             }
@@ -138,11 +143,8 @@ public class TileManager {
                     }
 
 
-
                 }
-                col++;
             }
-            row++;
         }
 
         ///old version

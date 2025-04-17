@@ -38,7 +38,7 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         camera = new OrthographicCamera();
-        camera.zoom =0.4f;
+        camera.zoom =Constants.camerazoom;
         camera.setToOrtho(false,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         viewport = new FitViewport(Constants.screenWidth,Constants.screenHeight,camera);
 
@@ -49,7 +49,7 @@ public class Game extends ApplicationAdapter {
         int CalculatedHeight=(int)(Constants.FRAME_HEIGHT*camera.zoom);
         int CalculatedWidth=(int)(Constants.FRAME_WIDTH*camera.zoom);
         player = new Player(x, y,CalculatedWidth,CalculatedHeight,3.5,10);
-        enemy = new Enemy(x,y,CalculatedWidth,CalculatedHeight,1., 5,player);
+        enemy = new Enemy(x+200,y,CalculatedWidth,CalculatedHeight,1., 5,player);
 
         // Inputs initialization
         InputsManager playerInput = new InputsManager(player);
