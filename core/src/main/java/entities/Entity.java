@@ -2,7 +2,10 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import mapManager.tileManager.Tile;
+import mapManager.tileManager.TileManager;
 import utilities.Constants;
+
 
 /**
  * Abstract class that represents base entity in the game.
@@ -27,8 +30,7 @@ public abstract class Entity {
     protected boolean isAttacking;
     protected boolean isJumping;
 
-
-
+    public TileManager tileManager;
 
     /**
      * Constructs an entity with a specified position and hitbox dimensions.
@@ -38,13 +40,14 @@ public abstract class Entity {
      * @param width  The width of the entity's sprite.
      * @param height The height of the entity's sprite.
      */
-    public Entity(float x, float y, int width, int height, int health) {
+    public Entity(float x, float y, int width, int height, int health,TileManager tileManager) {
         this.x = x;
         this.y = y;
         this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
         this.attackHitBox = new Rectangle(x + width * 0.4f, y+ (height * 0.2f), width * .5f, height * 0.2f);
         this.entityHealth = health;
         this.entityDirection = Constants.RIGHT;
+        this.tileManager = tileManager;
 
     }
 
@@ -65,6 +68,27 @@ public abstract class Entity {
         }
         this.attackHitBox.y = this.getY() + (Constants.FRAME_HEIGHT * 0.1f);
 
+    }
+
+    // check if entity can move
+    public void canMove(){
+        // because when tile is rendered row is calculated via formula renderRow = Constant.maxScreenrow - 1 - row
+        int worldY = -(int)hitBox.y  + (Constants.maxScreenrow - 1) * Constants.TILE_SIZE;
+        Tile tile = tileManager.getTile((int)hitBox.x,worldY,0);
+
+        // Escape if tile is empty
+        if(tile == null){
+            return;
+        }
+
+        // debug:
+        System.out.println("tile image "+ tile.image.toString());
+        System.out.println("collision box x:" + tile.collisionBox.x);
+
+        if (hitBox.overlaps(tile.collisionBox)){
+            // todo : handle collision with tile
+            System.out.println("overlapping with tile"+ tile.image.toString());
+        }
     }
 
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import mapManager.tileManager.TileManager;
 import physics.JumpPhysics;
 import utilities.Constants;
 
@@ -52,8 +53,8 @@ public class Player extends Entity {
      * @param height      Height of the player.
      * @param playerSpeed Movement speed of the player.
      */
-    public Player(int x, int y, int width, int height, double playerSpeed, int playerHealth) {
-        super(x, y, width, height, playerHealth);
+    public Player(int x, int y, int width, int height, double playerSpeed, int playerHealth, TileManager tileManager) {
+        super(x, y, width, height, playerHealth, tileManager);
         this.playerSpeed = playerSpeed;
         this.isMoving = false;
         this.isDead = false;
@@ -146,6 +147,7 @@ public class Player extends Entity {
      */
     public void movePlayer() {
 
+        canMove();
         this.updateAnimation();
         // Apply jump physics if the player is in jump state
         JumpPhysics.applyJumpPhysics(this);

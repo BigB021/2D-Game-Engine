@@ -3,6 +3,7 @@ package entities;
 import collision.CollisionSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import mapManager.tileManager.TileManager;
 import utilities.Constants;
 
 public class Enemy extends Entity {
@@ -24,8 +25,8 @@ public class Enemy extends Entity {
     private Texture hurtTexture;
     private Texture deadTexture;
 
-    public Enemy(int x, int y, int width, int height,double enemySpeed,int health ,Player player) {
-        super(x, y, width, height,health);
+    public Enemy(int x, int y, int width, int height,double enemySpeed,int health ,Player player, TileManager tileManager) {
+        super(x, y, width, height,health,tileManager);
         this.player = player;
         this.enemyAction = Constants.IDLE;
         this.isMoving = false;
