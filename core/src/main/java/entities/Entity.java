@@ -72,9 +72,7 @@ public abstract class Entity {
 
     // check if entity can move
     public void canMove(){
-        // because when tile is rendered row is calculated via formula renderRow = Constant.maxScreenrow - 1 - row
-        int worldY = -(int)hitBox.y  + (Constants.maxScreenrow - 1) * Constants.TILE_SIZE;
-        Tile tile = tileManager.getTile((int)hitBox.x,worldY,0);
+        Tile tile = tileManager.getTile((int)hitBox.x,(int)hitBox.y,0);
 
         // Escape if tile is empty
         if(tile == null){
@@ -85,9 +83,12 @@ public abstract class Entity {
         System.out.println("tile image "+ tile.image.toString());
         System.out.println("collision box x:" + tile.collisionBox.x);
 
-        if (hitBox.overlaps(tile.collisionBox)){
+        // check collision with tile
+        if (hitBox.overlaps(tile.collisionBox) && tile.collision){
             // todo : handle collision with tile
+            System.out.println("collision!!");
             System.out.println("overlapping with tile"+ tile.image.toString());
+            setMoving(false);
         }
     }
 

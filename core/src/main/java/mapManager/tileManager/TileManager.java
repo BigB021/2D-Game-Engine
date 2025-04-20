@@ -214,7 +214,8 @@ public class TileManager {
             layer < 0 || layer >= mapTileLayers.length) {
             return null;
         }
-        int tileNum = mapTileLayers[layer][col][row];
+        int renderRow = Constants.maxScreenrow - 1 - row;
+        int tileNum = mapTileLayers[layer][col][renderRow];
         return tile[tileNum];
     }
 
