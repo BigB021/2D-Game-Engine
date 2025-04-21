@@ -1,3 +1,4 @@
+META-INF/MANIFEST.MF
 assets/2 Background/1.png
 assets/2 Background/2.png
 assets/2 Background/3.png

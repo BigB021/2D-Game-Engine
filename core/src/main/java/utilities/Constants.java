@@ -108,18 +108,7 @@ public final class Constants {
 
 
 
-//    public static final int mapsize() throws FileNotFoundException {
-//        try(BufferedReader br = new BufferedReader(new FileReader(Map1))){
-//            String line=br.readLine();
-//            String [] l=null;
-//            while (line!=null){
-//
-//                l=line.split(" ");
-//            }
-//            int len=l.length;
-//            return len;
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//}
+
+
+
 }

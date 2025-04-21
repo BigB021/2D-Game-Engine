@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import entities.Enemy;
 import entities.Player;
 import inputs.InputsManager;
-import mapManager.tileManager.Tile;
 import mapManager.tileManager.TileManager;
 import utilities.Constants;
 
@@ -42,8 +41,8 @@ public class Game extends ApplicationAdapter {
         viewport = new FitViewport(Constants.screenWidth,Constants.screenHeight,camera);
 
         tileManager.getTilesFromFolder();
-        tileManager.gettileimage();
-        tileManager.loadbackgroundimg();
+        tileManager.getTileImage();
+        tileManager.loadBackgroundImage();
         int CalculatedHeight=(int)(Constants.FRAME_HEIGHT*camera.zoom);
         int CalculatedWidth=(int)(Constants.FRAME_WIDTH*camera.zoom);
         player = new Player(Constants.PLAYER_SPAWN_X, Constants.PLAYER_SPAWN_Y,CalculatedWidth,CalculatedHeight,3.5,10,tileManager);
