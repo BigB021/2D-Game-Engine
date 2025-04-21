@@ -2,7 +2,8 @@ package physics;
 
 import entities.Entity;
 import entities.Player;
-import utilities.Constants;
+
+import static constants.EntityConstants.*;
 
 public class JumpPhysics {
 
@@ -10,7 +11,7 @@ public class JumpPhysics {
     private static final float JUMP_FORCE = 15f;
     private static final float GRAVITY = 0.9f;
     // todo : find a way to find landing y position
-    private static final int GROUND_Y = Constants.ENEMY_SPAWN_Y;
+    private static final int GROUND_Y = ENEMY_SPAWN_Y;
 
 
     /**
@@ -22,7 +23,7 @@ public class JumpPhysics {
             player.setJumping(true);
             // Set jump velocity to initiate upward movement
             player.setJumpVelocity(JUMP_FORCE);
-            player.setPlayerAction(Constants.JUMP);
+            player.setPlayerAction(JUMP);
             player.updateAnimation();
         }
     }
@@ -45,7 +46,7 @@ public class JumpPhysics {
                     entity.setY(GROUND_Y);
                     entity.setJumping(false);
                     ((Player)entity).setJumpVelocity(0);
-                    ((Player)entity).setPlayerAction(Constants.IDLE);
+                    ((Player)entity).setPlayerAction(IDLE);
                 }
                 entity.updateHitboxes();
                 ((Player)entity).updateAnimation();

@@ -1,12 +1,14 @@
 package entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import mapManager.tileManager.TileManager;
 import physics.JumpPhysics;
-import utilities.Constants;
+
+import static constants.EntityConstants.*;
+import static constants.FramesConstants.*;
+import static constants.MapTilesConstants.*;
+import static constants.TextureConstants.*;
 
 /**
  * Represents the player entity in the game, handling movement, actions, and animations.
@@ -58,8 +60,7 @@ public class Player extends Entity {
         this.playerSpeed = playerSpeed;
         this.isMoving = false;
         this.isDead = false;
-        this.playerAction = Constants.IDLE;
-        //this.playerDirection = Constants.RIGHT;
+        this.playerAction = IDLE;
         this.animation_index = 0;
         this.isJumping = false;
         this.jumpVelocity = 0;
@@ -73,13 +74,13 @@ public class Player extends Entity {
      * Loads animation textures once and caches them.
      */
     private void loadTextures() {
-        idleTexture = new Texture(Constants.PLAYER_IDLE_ANIMATION);
-        walkTexture = new Texture(Constants.PLAYER_WALK_ANIMATION);
-        runTexture = new Texture(Constants.PLAYER_RUN_ANIMATION);
-        jumpTexture = new Texture(Constants.PLAYER_JUMP_ANIMATION);
-        attack1Texture = new Texture(Constants.PLAYER_ATTACK_1_ANIMATION);
-        hurtTexture = new Texture(Constants.PLAYER_HURT_ANIMATION);
-        deadTexture = new Texture(Constants.PLAYER_DEAD_ANIMATION);
+        idleTexture = new Texture(PLAYER_IDLE_ANIMATION);
+        walkTexture = new Texture(PLAYER_WALK_ANIMATION);
+        runTexture = new Texture(PLAYER_RUN_ANIMATION);
+        jumpTexture = new Texture(PLAYER_JUMP_ANIMATION);
+        attack1Texture = new Texture(PLAYER_ATTACK_1_ANIMATION);
+        hurtTexture = new Texture(PLAYER_HURT_ANIMATION);
+        deadTexture = new Texture(PLAYER_DEAD_ANIMATION);
     }
 
     /**
@@ -87,37 +88,37 @@ public class Player extends Entity {
      */
     public void updateAnimation() {
         switch (playerAction) {
-            case Constants.IDLE:
+            case IDLE:
                 if (getSprite() != idleTexture) {
                     setSprite(idleTexture);
                 }
                 break;
-            case Constants.WALK:
+            case WALK:
                 if (getSprite() != walkTexture) {
                     setSprite(walkTexture);
                 }
                 break;
-            case Constants.RUN:
+            case RUN:
                 if (getSprite() != runTexture) {
                     setSprite(runTexture);
                 }
                 break;
-            case Constants.JUMP:
+            case JUMP:
                 if (getSprite() != jumpTexture) {
                     setSprite(jumpTexture);
                 }
                 break;
-            case Constants.ATTACK_1:
+            case ATTACK_1:
                 if (getSprite() != attack1Texture) {
                     setSprite(attack1Texture);
                 }
                 break;
-            case Constants.HURT:
+            case HURT:
                 if (getSprite() != hurtTexture) {
                     setSprite(hurtTexture);
                 }
                 break;
-            case Constants.DEAD:
+            case DEAD:
                 if (getSprite() != deadTexture) {
                     setSprite(deadTexture);
                 }
@@ -135,7 +136,7 @@ public class Player extends Entity {
      * @return TextureRegion containing the selected frame.
      */
     public  TextureRegion loadAnimation(int x,int y,int width,int height) {
-        if (getEntityDirection() == Constants.RIGHT) {
+        if (getEntityDirection() == RIGHT) {
 
             return new TextureRegion(getSprite() ,x,y,getEntityDirection() * width,height);
         }
@@ -152,13 +153,13 @@ public class Player extends Entity {
         // Apply jump physics if the player is in jump state
         JumpPhysics.applyJumpPhysics(this);
 
-        if(this.getEntityDirection() == Constants.JUMP){
-            this.setY((int) (this.getY() + Constants.GRAVITY_SPEED));
+        if(this.getEntityDirection() == JUMP){
+            this.setY((int) (this.getY() + GRAVITY_SPEED));
         }
         if (isMoving) {
-            double speed = (playerAction == Constants.RUN) ? playerSpeed * 2 : playerSpeed;
+            double speed = (playerAction == RUN) ? playerSpeed * 2 : playerSpeed;
             // Checking collision with screen borders
-            if(this.getX() >= (Constants.maxScreenCol * Constants.tileSize - Constants.FRAME_WIDTH*Constants.camerazoom  )){
+            if(this.getX() >= (MAX_SCREEN_COL * TILE_SIZE - FRAME_WIDTH*CAMERA_ZOOM)){
                 this.setX(this.getX() - 1);
 
             }else if(this.getX()<= 0){
@@ -170,18 +171,18 @@ public class Player extends Entity {
             }
         }
         else if(isDead){
-            setPlayerAction(Constants.DEAD);
+            setPlayerAction(DEAD);
 
             // todo: improve respawning
-            this.setX(Constants.PLAYER_SPAWN_X); // respawn player
-            this.setY(Constants.PLAYER_SPAWN_Y);
+            this.setX(PLAYER_SPAWN_X); // respawn player
+            this.setY(PLAYER_SPAWN_Y);
             this.updateAnimation();
             this.updateHitboxes();
             this.setEntityHealth(10);
             isDead = false;
         }
         else if (!this.isAttacking && !this.isJumping) {
-            setPlayerAction(Constants.IDLE);
+            setPlayerAction(IDLE);
 
         }
     }
@@ -192,7 +193,7 @@ public class Player extends Entity {
      * @return Duration of attack animation in seconds.
      */
     public float getAttackAnimationDuration() {
-        return Constants.ATTACK_1_FRAMES * Constants.FRAME_DELAY; // Returns seconds
+        return ATTACK_1_FRAMES * FRAME_DELAY; // Returns seconds
 
     }
 

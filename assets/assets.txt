@@ -1,237 +1,4 @@
 META-INF/MANIFEST.MF
-assets/2 Background/1.png
-assets/2 Background/2.png
-assets/2 Background/3.png
-assets/2 Background/4.png
-assets/2 Background/5.png
-assets/2 Background/Background.png
-assets/2 Background/level_bckground.png
-assets/3 Objects/0.png
-assets/3 Objects/1.png
-assets/3 Objects/2.png
-assets/3 Objects/3.png
-assets/3 Objects/4.png
-assets/3 Objects/5.png
-assets/3 Objects/6.png
-assets/3 Objects/7.png
-assets/3 Objects/8.png
-assets/3 Objects/9.png
-assets/3 Objects/Barrel1.png
-assets/3 Objects/Barrel2.png
-assets/3 Objects/Barrel3.png
-assets/3 Objects/Barrel4.png
-assets/3 Objects/Bench.png
-assets/3 Objects/Board1.png
-assets/3 Objects/Board2.png
-assets/3 Objects/Board3.png
-assets/3 Objects/Box1.png
-assets/3 Objects/Box2.png
-assets/3 Objects/Box3.png
-assets/3 Objects/Box4.png
-assets/3 Objects/Box5.png
-assets/3 Objects/Box6.png
-assets/3 Objects/Box7.png
-assets/3 Objects/Box8.png
-assets/3 Objects/Bucket.png
-assets/3 Objects/Fence1.png
-assets/3 Objects/Fence2.png
-assets/3 Objects/Fence3.png
-assets/3 Objects/Fire-extinguisher1.png
-assets/3 Objects/Fire-extinguisher2.png
-assets/3 Objects/Fire-extinguisher3.png
-assets/3 Objects/Flag.png
-assets/3 Objects/Ladder1.png
-assets/3 Objects/Ladder2.png
-assets/3 Objects/Ladder3.png
-assets/3 Objects/Locker1.png
-assets/3 Objects/Locker2.png
-assets/3 Objects/Locker3.png
-assets/3 Objects/Locker4.png
-assets/3 Objects/Mop.png
-assets/3 Objects/Pointer1.png
-assets/3 Objects/Pointer2.png
-assets/4 Animated objects/Card.png
-assets/4 Animated objects/Chest.png
-assets/4 Animated objects/Entry.png
-assets/4 Animated objects/Hammer.png
-assets/4 Animated objects/Money.png
-assets/4 Animated objects/Platform.png
-assets/4 Animated objects/Screen1.png
-assets/4 Animated objects/Screen2.png
-assets/4 Animated objects/Transporter.png
-assets/4 Animated objects/Transporter1.png
-assets/4 Animated objects/Transporter2.png
-assets/4 Animated objects/Transporter3.png
-assets/Font.txt
-assets/PSD/Animated_objects.psd
-assets/PSD/Background.psd
-assets/PSD/Objects.psd
-assets/PSD/Tiles.psd
-assets/tiles/1.png
-assets/tiles/10.png
-assets/tiles/100.png
-assets/tiles/101.png
-assets/tiles/102.png
-assets/tiles/103.png
-assets/tiles/104.png
-assets/tiles/105.png
-assets/tiles/106.png
-assets/tiles/107.png
-assets/tiles/108.png
-assets/tiles/109.png
-assets/tiles/11.png
-assets/tiles/110.png
-assets/tiles/111.png
-assets/tiles/112.png
-assets/tiles/113.png
-assets/tiles/114.png
-assets/tiles/115.png
-assets/tiles/116.png
-assets/tiles/117.png
-assets/tiles/118.png
-assets/tiles/119.png
-assets/tiles/12.png
-assets/tiles/120.png
-assets/tiles/121.png
-assets/tiles/122.png
-assets/tiles/123.png
-assets/tiles/124.png
-assets/tiles/125.png
-assets/tiles/126.png
-assets/tiles/127.png
-assets/tiles/128.png
-assets/tiles/129.png
-assets/tiles/13.png
-assets/tiles/130.png
-assets/tiles/131.png
-assets/tiles/132.png
-assets/tiles/133.png
-assets/tiles/134.png
-assets/tiles/135.png
-assets/tiles/136.png
-assets/tiles/137.png
-assets/tiles/138.png
-assets/tiles/139.png
-assets/tiles/14.png
-assets/tiles/140.png
-assets/tiles/141.png
-assets/tiles/142.png
-assets/tiles/143.png
-assets/tiles/144.png
-assets/tiles/145.png
-assets/tiles/146.png
-assets/tiles/147.png
-assets/tiles/148.png
-assets/tiles/149.png
-assets/tiles/15.png
-assets/tiles/150.png
-assets/tiles/151.png
-assets/tiles/152.png
-assets/tiles/153.png
-assets/tiles/154.png
-assets/tiles/155.png
-assets/tiles/156.png
-assets/tiles/157.png
-assets/tiles/158.png
-assets/tiles/159.png
-assets/tiles/16.png
-assets/tiles/160.png
-assets/tiles/161.png
-assets/tiles/162.png
-assets/tiles/163.png
-assets/tiles/164.png
-assets/tiles/165.png
-assets/tiles/17.png
-assets/tiles/18.png
-assets/tiles/19.png
-assets/tiles/2.png
-assets/tiles/20.png
-assets/tiles/21.png
-assets/tiles/22.png
-assets/tiles/23.png
-assets/tiles/24.png
-assets/tiles/25.png
-assets/tiles/26.png
-assets/tiles/27.png
-assets/tiles/28.png
-assets/tiles/29.png
-assets/tiles/3.png
-assets/tiles/30.png
-assets/tiles/31.png
-assets/tiles/32.png
-assets/tiles/33.png
-assets/tiles/34.png
-assets/tiles/35.png
-assets/tiles/36.png
-assets/tiles/37.png
-assets/tiles/38.png
-assets/tiles/39.png
-assets/tiles/4.png
-assets/tiles/40.png
-assets/tiles/41.png
-assets/tiles/42.png
-assets/tiles/43.png
-assets/tiles/44.png
-assets/tiles/45.png
-assets/tiles/46.png
-assets/tiles/47.png
-assets/tiles/48.png
-assets/tiles/49.png
-assets/tiles/5.png
-assets/tiles/50.png
-assets/tiles/51.png
-assets/tiles/52.png
-assets/tiles/53.png
-assets/tiles/54.png
-assets/tiles/55.png
-assets/tiles/56.png
-assets/tiles/57.png
-assets/tiles/58.png
-assets/tiles/59.png
-assets/tiles/6.png
-assets/tiles/60.png
-assets/tiles/61.png
-assets/tiles/62.png
-assets/tiles/63.png
-assets/tiles/64.png
-assets/tiles/65.png
-assets/tiles/66.png
-assets/tiles/67.png
-assets/tiles/68.png
-assets/tiles/69.png
-assets/tiles/7.png
-assets/tiles/70.png
-assets/tiles/71.png
-assets/tiles/72.png
-assets/tiles/73.png
-assets/tiles/74.png
-assets/tiles/75.png
-assets/tiles/76.png
-assets/tiles/77.png
-assets/tiles/78.png
-assets/tiles/79.png
-assets/tiles/8.png
-assets/tiles/80.png
-assets/tiles/81.png
-assets/tiles/82.png
-assets/tiles/83.png
-assets/tiles/84.png
-assets/tiles/85.png
-assets/tiles/86.png
-assets/tiles/87.png
-assets/tiles/88.png
-assets/tiles/89.png
-assets/tiles/9.png
-assets/tiles/90.png
-assets/tiles/91.png
-assets/tiles/92.png
-assets/tiles/93.png
-assets/tiles/94.png
-assets/tiles/95.png
-assets/tiles/96.png
-assets/tiles/97.png
-assets/tiles/98.png
-assets/tiles/99.png
 enemyTextures/Attack_1.png
 enemyTextures/Attack_2.png
 enemyTextures/Attack_3.png
@@ -255,3 +22,236 @@ playerTextures/Jump.png
 playerTextures/Run.png
 playerTextures/Shield.png
 playerTextures/Walk.png
+tilesAssets/2 Background/1.png
+tilesAssets/2 Background/2.png
+tilesAssets/2 Background/3.png
+tilesAssets/2 Background/4.png
+tilesAssets/2 Background/5.png
+tilesAssets/2 Background/Background.png
+tilesAssets/2 Background/level_bckground.png
+tilesAssets/3 Objects/0.png
+tilesAssets/3 Objects/1.png
+tilesAssets/3 Objects/2.png
+tilesAssets/3 Objects/3.png
+tilesAssets/3 Objects/4.png
+tilesAssets/3 Objects/5.png
+tilesAssets/3 Objects/6.png
+tilesAssets/3 Objects/7.png
+tilesAssets/3 Objects/8.png
+tilesAssets/3 Objects/9.png
+tilesAssets/3 Objects/Barrel1.png
+tilesAssets/3 Objects/Barrel2.png
+tilesAssets/3 Objects/Barrel3.png
+tilesAssets/3 Objects/Barrel4.png
+tilesAssets/3 Objects/Bench.png
+tilesAssets/3 Objects/Board1.png
+tilesAssets/3 Objects/Board2.png
+tilesAssets/3 Objects/Board3.png
+tilesAssets/3 Objects/Box1.png
+tilesAssets/3 Objects/Box2.png
+tilesAssets/3 Objects/Box3.png
+tilesAssets/3 Objects/Box4.png
+tilesAssets/3 Objects/Box5.png
+tilesAssets/3 Objects/Box6.png
+tilesAssets/3 Objects/Box7.png
+tilesAssets/3 Objects/Box8.png
+tilesAssets/3 Objects/Bucket.png
+tilesAssets/3 Objects/Fence1.png
+tilesAssets/3 Objects/Fence2.png
+tilesAssets/3 Objects/Fence3.png
+tilesAssets/3 Objects/Fire-extinguisher1.png
+tilesAssets/3 Objects/Fire-extinguisher2.png
+tilesAssets/3 Objects/Fire-extinguisher3.png
+tilesAssets/3 Objects/Flag.png
+tilesAssets/3 Objects/Ladder1.png
+tilesAssets/3 Objects/Ladder2.png
+tilesAssets/3 Objects/Ladder3.png
+tilesAssets/3 Objects/Locker1.png
+tilesAssets/3 Objects/Locker2.png
+tilesAssets/3 Objects/Locker3.png
+tilesAssets/3 Objects/Locker4.png
+tilesAssets/3 Objects/Mop.png
+tilesAssets/3 Objects/Pointer1.png
+tilesAssets/3 Objects/Pointer2.png
+tilesAssets/4 Animated objects/Card.png
+tilesAssets/4 Animated objects/Chest.png
+tilesAssets/4 Animated objects/Entry.png
+tilesAssets/4 Animated objects/Hammer.png
+tilesAssets/4 Animated objects/Money.png
+tilesAssets/4 Animated objects/Platform.png
+tilesAssets/4 Animated objects/Screen1.png
+tilesAssets/4 Animated objects/Screen2.png
+tilesAssets/4 Animated objects/Transporter.png
+tilesAssets/4 Animated objects/Transporter1.png
+tilesAssets/4 Animated objects/Transporter2.png
+tilesAssets/4 Animated objects/Transporter3.png
+tilesAssets/Font.txt
+tilesAssets/PSD/Animated_objects.psd
+tilesAssets/PSD/Background.psd
+tilesAssets/PSD/Objects.psd
+tilesAssets/PSD/Tiles.psd
+tilesAssets/tiles/1.png
+tilesAssets/tiles/10.png
+tilesAssets/tiles/100.png
+tilesAssets/tiles/101.png
+tilesAssets/tiles/102.png
+tilesAssets/tiles/103.png
+tilesAssets/tiles/104.png
+tilesAssets/tiles/105.png
+tilesAssets/tiles/106.png
+tilesAssets/tiles/107.png
+tilesAssets/tiles/108.png
+tilesAssets/tiles/109.png
+tilesAssets/tiles/11.png
+tilesAssets/tiles/110.png
+tilesAssets/tiles/111.png
+tilesAssets/tiles/112.png
+tilesAssets/tiles/113.png
+tilesAssets/tiles/114.png
+tilesAssets/tiles/115.png
+tilesAssets/tiles/116.png
+tilesAssets/tiles/117.png
+tilesAssets/tiles/118.png
+tilesAssets/tiles/119.png
+tilesAssets/tiles/12.png
+tilesAssets/tiles/120.png
+tilesAssets/tiles/121.png
+tilesAssets/tiles/122.png
+tilesAssets/tiles/123.png
+tilesAssets/tiles/124.png
+tilesAssets/tiles/125.png
+tilesAssets/tiles/126.png
+tilesAssets/tiles/127.png
+tilesAssets/tiles/128.png
+tilesAssets/tiles/129.png
+tilesAssets/tiles/13.png
+tilesAssets/tiles/130.png
+tilesAssets/tiles/131.png
+tilesAssets/tiles/132.png
+tilesAssets/tiles/133.png
+tilesAssets/tiles/134.png
+tilesAssets/tiles/135.png
+tilesAssets/tiles/136.png
+tilesAssets/tiles/137.png
+tilesAssets/tiles/138.png
+tilesAssets/tiles/139.png
+tilesAssets/tiles/14.png
+tilesAssets/tiles/140.png
+tilesAssets/tiles/141.png
+tilesAssets/tiles/142.png
+tilesAssets/tiles/143.png
+tilesAssets/tiles/144.png
+tilesAssets/tiles/145.png
+tilesAssets/tiles/146.png
+tilesAssets/tiles/147.png
+tilesAssets/tiles/148.png
+tilesAssets/tiles/149.png
+tilesAssets/tiles/15.png
+tilesAssets/tiles/150.png
+tilesAssets/tiles/151.png
+tilesAssets/tiles/152.png
+tilesAssets/tiles/153.png
+tilesAssets/tiles/154.png
+tilesAssets/tiles/155.png
+tilesAssets/tiles/156.png
+tilesAssets/tiles/157.png
+tilesAssets/tiles/158.png
+tilesAssets/tiles/159.png
+tilesAssets/tiles/16.png
+tilesAssets/tiles/160.png
+tilesAssets/tiles/161.png
+tilesAssets/tiles/162.png
+tilesAssets/tiles/163.png
+tilesAssets/tiles/164.png
+tilesAssets/tiles/165.png
+tilesAssets/tiles/17.png
+tilesAssets/tiles/18.png
+tilesAssets/tiles/19.png
+tilesAssets/tiles/2.png
+tilesAssets/tiles/20.png
+tilesAssets/tiles/21.png
+tilesAssets/tiles/22.png
+tilesAssets/tiles/23.png
+tilesAssets/tiles/24.png
+tilesAssets/tiles/25.png
+tilesAssets/tiles/26.png
+tilesAssets/tiles/27.png
+tilesAssets/tiles/28.png
+tilesAssets/tiles/29.png
+tilesAssets/tiles/3.png
+tilesAssets/tiles/30.png
+tilesAssets/tiles/31.png
+tilesAssets/tiles/32.png
+tilesAssets/tiles/33.png
+tilesAssets/tiles/34.png
+tilesAssets/tiles/35.png
+tilesAssets/tiles/36.png
+tilesAssets/tiles/37.png
+tilesAssets/tiles/38.png
+tilesAssets/tiles/39.png
+tilesAssets/tiles/4.png
+tilesAssets/tiles/40.png
+tilesAssets/tiles/41.png
+tilesAssets/tiles/42.png
+tilesAssets/tiles/43.png
+tilesAssets/tiles/44.png
+tilesAssets/tiles/45.png
+tilesAssets/tiles/46.png
+tilesAssets/tiles/47.png
+tilesAssets/tiles/48.png
+tilesAssets/tiles/49.png
+tilesAssets/tiles/5.png
+tilesAssets/tiles/50.png
+tilesAssets/tiles/51.png
+tilesAssets/tiles/52.png
+tilesAssets/tiles/53.png
+tilesAssets/tiles/54.png
+tilesAssets/tiles/55.png
+tilesAssets/tiles/56.png
+tilesAssets/tiles/57.png
+tilesAssets/tiles/58.png
+tilesAssets/tiles/59.png
+tilesAssets/tiles/6.png
+tilesAssets/tiles/60.png
+tilesAssets/tiles/61.png
+tilesAssets/tiles/62.png
+tilesAssets/tiles/63.png
+tilesAssets/tiles/64.png
+tilesAssets/tiles/65.png
+tilesAssets/tiles/66.png
+tilesAssets/tiles/67.png
+tilesAssets/tiles/68.png
+tilesAssets/tiles/69.png
+tilesAssets/tiles/7.png
+tilesAssets/tiles/70.png
+tilesAssets/tiles/71.png
+tilesAssets/tiles/72.png
+tilesAssets/tiles/73.png
+tilesAssets/tiles/74.png
+tilesAssets/tiles/75.png
+tilesAssets/tiles/76.png
+tilesAssets/tiles/77.png
+tilesAssets/tiles/78.png
+tilesAssets/tiles/79.png
+tilesAssets/tiles/8.png
+tilesAssets/tiles/80.png
+tilesAssets/tiles/81.png
+tilesAssets/tiles/82.png
+tilesAssets/tiles/83.png
+tilesAssets/tiles/84.png
+tilesAssets/tiles/85.png
+tilesAssets/tiles/86.png
+tilesAssets/tiles/87.png
+tilesAssets/tiles/88.png
+tilesAssets/tiles/89.png
+tilesAssets/tiles/9.png
+tilesAssets/tiles/90.png
+tilesAssets/tiles/91.png
+tilesAssets/tiles/92.png
+tilesAssets/tiles/93.png
+tilesAssets/tiles/94.png
+tilesAssets/tiles/95.png
+tilesAssets/tiles/96.png
+tilesAssets/tiles/97.png
+tilesAssets/tiles/98.png
+tilesAssets/tiles/99.png

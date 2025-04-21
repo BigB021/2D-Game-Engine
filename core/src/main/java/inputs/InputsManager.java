@@ -5,9 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Timer;
 import entities.Player;
-import utilities.Constants;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import static constants.EntityConstants.*;
+import static constants.FramesConstants.FRAME_WIDTH;
 
 /**
  * Handles input processing for the game.
@@ -48,11 +51,11 @@ public class InputsManager implements InputProcessor {
         // Handle movement to the right
         if (pressedKeys.contains(Input.Keys.D)) {
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
-                player.setPlayerAction(Constants.RUN);
+                player.setPlayerAction(RUN);
             } else {
-                player.setPlayerAction(Constants.WALK);
+                player.setPlayerAction(WALK);
             }
-            player.setEntityDirection(Constants.RIGHT);
+            player.setEntityDirection(RIGHT);
             player.setMoving(true);
             return true;
         }
@@ -60,11 +63,11 @@ public class InputsManager implements InputProcessor {
         // Handle movement to the left
         if (pressedKeys.contains(Input.Keys.A)) {
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
-                player.setPlayerAction(Constants.RUN);
+                player.setPlayerAction(RUN);
             } else {
-                player.setPlayerAction(Constants.WALK);
+                player.setPlayerAction(WALK);
             }
-            player.setEntityDirection(Constants.LEFT);
+            player.setEntityDirection(LEFT);
             player.setMoving(true);
             return true;
         }
@@ -76,11 +79,11 @@ public class InputsManager implements InputProcessor {
             // Check for cooldown period
             if (currentTimeMs - player.getLastAttackTime() > player.getCooldown()) {
                 player.setLastAttackTime(currentTimeMs);
-                player.setPlayerAction(Constants.ATTACK_1);
+                player.setPlayerAction(ATTACK_1);
                 player.setMoving(false);
                 player.setAttacking(true);
                 player.updateAnimation();
-                player.setAnimation_index(3*Constants.FRAME_WIDTH);
+                player.setAnimation_index(3*FRAME_WIDTH);
 
                 float attackDuration = player.getAttackAnimationDuration();
 
@@ -90,21 +93,21 @@ public class InputsManager implements InputProcessor {
                     public void run() {
                         player.setAttacking(false);
                         boolean shouldMove = false;
-                        int newAction = Constants.IDLE;
+                        int newAction = IDLE;
                         int direction = player.getEntityDirection();
 
                         if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A)) {
                             shouldMove = true;
                             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
-                                newAction = Constants.RUN;
+                                newAction = RUN;
                             } else {
-                                newAction = Constants.WALK;
+                                newAction = WALK;
                             }
                             // Update direction based on currently pressed key
                             if (pressedKeys.contains(Input.Keys.D)) {
-                                direction = Constants.RIGHT;
+                                direction = RIGHT;
                             } else {
-                                direction = Constants.LEFT;
+                                direction = LEFT;
                             }
                         }
 
@@ -148,17 +151,17 @@ public class InputsManager implements InputProcessor {
         if (keycode == Input.Keys.SHIFT_RIGHT) {
             if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A)) {
                 // Switch to walk if shift is released
-                player.setPlayerAction(Constants.WALK);
+                player.setPlayerAction(WALK);
             }
         } else if (keycode == Input.Keys.D || keycode == Input.Keys.A) {
             // Stop movement if left or right keys are released.
             player.setMoving(false);
-            player.setPlayerAction(Constants.IDLE);
+            player.setPlayerAction(IDLE);
         }
 
         // Revert to idle state if attack key is released
         if (keycode == Input.Keys.X) {
-            player.setPlayerAction(Constants.IDLE);
+            player.setPlayerAction(IDLE);
             player.updateAnimation();
         }
 

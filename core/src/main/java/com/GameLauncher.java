@@ -1,9 +1,7 @@
 package com;//package com;
 
-import com.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import utilities.Constants;
 
 import java.io.IOException;
 

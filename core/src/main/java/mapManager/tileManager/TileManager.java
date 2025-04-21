@@ -10,11 +10,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import utilities.AnimatedConfig;
-import utilities.Constants;
 import utilities.TilesSet;
 
 import java.io.*;
 import java.util.Map;
+
+import static constants.MapTilesConstants.*;
+import static constants.TextureConstants.TILE_FOLDER;
 
 public class TileManager {
     public Tile[] tile;
@@ -25,21 +27,21 @@ public class TileManager {
     public TileManager() {
         tile=new Tile[360];
 
-        mapTileLayers = new int [Constants.NUM_LAYERS][Constants.maxScreenCol][Constants.maxScreenrow];
+        mapTileLayers = new int [NUM_LAYERS][MAX_SCREEN_COL][MAX_SCREEN_ROW];
 
-        loadMap(Constants.Map1,0);
-        loadMap(Constants.Map2,1);
+        loadMap(MAP_1,0);
+        loadMap(MAP_2,1);
     }
     public void loadBackgroundImage(){
-        backgroundImage = new Texture(Gdx.files.internal(Constants.backgoundImg));
+        backgroundImage = new Texture(Gdx.files.internal(BACKGROUND_IMAGE));
     }
     public void loadMap(String mapName,int layer)  {
-        int[][]mapData= new int[Constants.maxScreenCol][Constants.maxScreenrow];
+        int[][]mapData= new int[MAX_SCREEN_COL][MAX_SCREEN_ROW];
         try(BufferedReader br = new BufferedReader( new FileReader(mapName))){
             String line;
             int row = 0;
 
-            while ((line = br.readLine()) != null && row < Constants.maxScreenrow) {
+            while ((line = br.readLine()) != null && row < MAX_SCREEN_ROW) {
                     line = line.trim();
                     if(line.isEmpty()){
                         System.out.println("⚠ Skipped empty line at row " + row);
@@ -47,12 +49,12 @@ public class TileManager {
 
                     String[] numbers = line.split("\\s+");
 
-                if (numbers.length != Constants.maxScreenCol) {
+                if (numbers.length != MAX_SCREEN_COL) {
                     System.out.println("  Invalid number of columns at row " + row + ": " + numbers.length);
                     System.out.println("   Line content: \"" + line + "\"");
                     throw new RuntimeException("Invalid map file format.");
                 }
-                    for (int col = 0; col < Constants.maxScreenCol; col++) {
+                    for (int col = 0; col < MAX_SCREEN_COL; col++) {
                     mapTileLayers[layer][col][row] = Integer.parseInt(numbers[col]);
                 }
                     row++;
@@ -66,7 +68,7 @@ public class TileManager {
     }
 
     public void getTilesFromFolder(){
-        File folder = new File(Constants.tileFolder);
+        File folder = new File(TILE_FOLDER);
         File[] directoryListing = folder.listFiles();
 
         try {
@@ -74,7 +76,7 @@ public class TileManager {
                 for (File child : directoryListing) {
                     if (child.isFile()) {
                         String tileName = child.getName().replaceFirst("[.][^.]+$", "");
-                        Constants.addTile(tileName, child.getPath());
+                        addTile(tileName, child.getPath());
                     }
                 }
             } else {
@@ -87,9 +89,9 @@ public class TileManager {
     }
 
     public void getTileImage() {
-        final int tileSize      = Constants.tileSize;
-        final int defaultSpeed  = AnimatedConfig.DEFAULT_ANIMATION_SPEED;                  // fallback FPS
-        for (Map.Entry<String,String> entry : Constants.tilesMap.entrySet()) {
+        final int tileSize = TILE_SIZE;
+        final int defaultSpeed = AnimatedConfig.DEFAULT_ANIMATION_SPEED;                  // fallback FPS
+        for (Map.Entry<String,String> entry : TILES_MAP.entrySet()) {
             int   id   = Integer.parseInt(entry.getKey());
             String fn = entry.getValue();
 
@@ -108,7 +110,7 @@ public class TileManager {
                 tile[id] = new AnimatedTile(tex, cfg.getCols(), cfg.getRows(), cfg.getSpeed());
 
                 // 2) generic sprite‑sheet?
-            } else if (Constants.animateditems.contains(id)) {
+            } else if (ANIMATED_ITEMS.contains(id)) {
                 int cols = tex.getWidth()  / tileSize;
                 int rows = tex.getHeight() / tileSize;
                 tile[id] = new AnimatedTile(tex, cols, rows, defaultSpeed);
@@ -132,33 +134,33 @@ public class TileManager {
 
         batch.draw(backgroundImage, bgX, bgY, camera.viewportWidth, camera.viewportHeight);
 
-        int tileSize=Constants.tileSize;
+        int tileSize=TILE_SIZE;
         int colStart=Math.max(0,(int)(camera.position.x-camera.viewportWidth/2)/tileSize);
-        int colEnd=Math.min(Constants.maxScreenCol,(int)(camera.position.x+camera.viewportWidth/2)/tileSize+1);
+        int colEnd=Math.min(MAX_SCREEN_COL,(int)(camera.position.x+camera.viewportWidth/2)/tileSize+1);
         int rowStart=Math.max(0,(int)(camera.position.y-camera.viewportHeight/2)/tileSize);
-        int rowEnd=Math.min(Constants.maxScreenrow,(int)(camera.position.y+camera.viewportWidth/2)/tileSize+1);
+        int rowEnd=Math.min(MAX_SCREEN_ROW,(int)(camera.position.y+camera.viewportWidth/2)/tileSize+1);
         int w=colEnd-colStart;
         System.out.println("col end - colStart "+ w);
         int row = rowStart;
-        for (int layer = 0; layer < mapTileLayers.length; layer++) {
+        for (int[][] mapTileLayer : mapTileLayers) {
             for (row = rowStart; row < rowEnd; row++) {
                 for (int col = colStart; col < colEnd; col++) {
-                    int renderRow = Constants.maxScreenrow - 1 - row;
-                    int tilenum = mapTileLayers[layer][col][renderRow];
-                    if (tile[tilenum] instanceof AnimatedTile) {
-                        System.out.println("Tilenum: " + tilenum + " | Class: " + tile[tilenum].getClass().getSimpleName());
-                        TextureRegion frame = ((AnimatedTile) tile[tilenum]).getCurrentFrame(Gdx.graphics.getDeltaTime());
+                    int renderRow = MAX_SCREEN_ROW - 1 - row;
+                    int tileNumber = mapTileLayer[col][renderRow];
+                    if (tile[tileNumber] instanceof AnimatedTile) {
+                        System.out.println("Tilenum: " + tileNumber + " | Class: " + tile[tileNumber].getClass().getSimpleName());
+                        TextureRegion frame = ((AnimatedTile) tile[tileNumber]).getCurrentFrame(Gdx.graphics.getDeltaTime());
                         System.out.println("Drawing frame: " + frame.getRegionX() + ", " + frame.getRegionY());
                         batch.draw(frame, col * tileSize, row * tileSize);
 
-                    } else if (tilenum >= 0 && tilenum < tile.length && tile[tilenum] != null && tile[tilenum].image != null) {
-                        tile[tilenum].collisionBox = new Rectangle(col*tileSize, row*tileSize, tileSize, tileSize);
-                        batch.draw(tile[tilenum].image, col * tileSize, row * tileSize);
-                        if (tile[tilenum].collision) {
+                    } else if (tile[tileNumber] != null && tile[tileNumber].image != null) {
+                        tile[tileNumber].collisionBox = new Rectangle(col * tileSize, row * tileSize, tileSize, tileSize);
+                        batch.draw(tile[tileNumber].image, col * tileSize, row * tileSize);
+                        if (tile[tileNumber].collision) {
                             shape.setColor(Color.YELLOW);
-                        }else
+                        } else
                             shape.setColor(Color.RED);
-                        shape.rect(tile[tilenum].collisionBox.x, tile[tilenum].collisionBox.y, tile[tilenum].collisionBox.width, tile[tilenum].collisionBox.height);
+                        shape.rect(tile[tileNumber].collisionBox.x, tile[tileNumber].collisionBox.y, tile[tileNumber].collisionBox.width, tile[tileNumber].collisionBox.height);
 
                     }
 
@@ -197,16 +199,16 @@ public class TileManager {
      * @return        The Tile instance under that pixel, or null if out of bounds
      */
     public Tile getTile(int worldX, int worldY, int layer) {
-        int tileSize = Constants.tileSize;
+        int tileSize = TILE_SIZE;
         int col = worldX / tileSize;
         int row = worldY / tileSize;
         // safety check
-        if (col < 0 || col >= Constants.maxScreenCol ||
-            row < 0 || row >= Constants.maxScreenrow ||
+        if (col < 0 || col >= MAX_SCREEN_COL ||
+            row < 0 || row >= MAX_SCREEN_ROW ||
             layer < 0 || layer >= mapTileLayers.length) {
             return null;
         }
-        int renderRow = Constants.maxScreenrow - 1 - row;
+        int renderRow = MAX_SCREEN_ROW - 1 - row;
         int tileNum = mapTileLayers[layer][col][renderRow];
         return tile[tileNum];
     }

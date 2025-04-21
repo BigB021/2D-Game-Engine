@@ -4,7 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import mapManager.tileManager.Tile;
 import mapManager.tileManager.TileManager;
-import utilities.Constants;
+
+import static constants.EntityConstants.LEFT;
+import static constants.EntityConstants.RIGHT;
+import static constants.FramesConstants.FRAME_HEIGHT;
+import static constants.FramesConstants.FRAME_WIDTH;
 
 
 /**
@@ -46,7 +50,7 @@ public abstract class Entity {
         this.hitBox = new Rectangle(x + width * 0.4f, y, width * 0.3f, height * 0.5f);
         this.attackHitBox = new Rectangle(x + width * 0.4f, y+ (height * 0.2f), width * .5f, height * 0.2f);
         this.entityHealth = health;
-        this.entityDirection = Constants.RIGHT;
+        this.entityDirection = RIGHT;
         this.tileManager = tileManager;
 
     }
@@ -60,13 +64,13 @@ public abstract class Entity {
 
         // todo: handle positioning of attack hitbox according to entity direction (+ it can have different offsets/sizes)
 
-        if(entityDirection == Constants.RIGHT){
-            this.attackHitBox.x = this.getX() + (Constants.FRAME_WIDTH * 0.2f);
+        if(entityDirection == RIGHT){
+            this.attackHitBox.x = this.getX() + (FRAME_WIDTH * 0.2f);
         }
-        else if(entityDirection == Constants.LEFT){
+        else if(entityDirection == LEFT){
             this.attackHitBox.x = this.getX() ;
         }
-        this.attackHitBox.y = this.getY() + (Constants.FRAME_HEIGHT * 0.1f);
+        this.attackHitBox.y = this.getY() + (FRAME_HEIGHT * 0.1f);
 
     }
 
