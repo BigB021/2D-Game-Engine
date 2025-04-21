@@ -46,8 +46,8 @@ public class Game extends ApplicationAdapter {
         viewport = new FitViewport(SCREEN_WIDTH,SCREEN_HEIGHT,camera);
 
         tileManager.getTilesFromFolder();
-        tileManager.getTileImage();
-        tileManager.loadBackgroundImage();
+        tileManager.initTiles();
+        tileManager.loadBackground();
         int CalculatedHeight=(int)(FRAME_HEIGHT*camera.zoom);
         int CalculatedWidth=(int)(FRAME_WIDTH*camera.zoom);
         player = new Player(PLAYER_SPAWN_X, PLAYER_SPAWN_Y,CalculatedWidth,CalculatedHeight,3.5,10,tileManager);

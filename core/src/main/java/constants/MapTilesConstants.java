@@ -19,6 +19,7 @@ public class MapTilesConstants {
     public static final String BACKGROUND_IMAGE = "assets/tilesAssets/2 Background/level_bckground.png";
     public static final String MAP_1 = "assets/maps/map1.txt";
     public static final String MAP_2 = "assets/maps/map2.txt";
+    public static final int TOTAL_TILE_IDS = 360;
 
     public static final Map<String, String> TILES_MAP = new HashMap<>();
 

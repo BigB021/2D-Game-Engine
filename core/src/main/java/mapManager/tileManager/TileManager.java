@@ -11,33 +11,41 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import utilities.AnimatedConfig;
 import utilities.TilesSet;
-
 import java.io.*;
 import java.util.Map;
-
 import static constants.MapTilesConstants.*;
 import static constants.TextureConstants.TILE_FOLDER;
 
+
+/**
+ * Manages loading, storing, and rendering of tile-based maps and their associated textures.
+ * Supports static and animated tiles, multi-layer maps, and collision querying.
+ */
 public class TileManager {
-    public Tile[] tile;
+    /** Array of all Tile instances (indexed by tile ID). */
+    public Tile[] tiles;
+    /** Tensor holding map data: [layer][column][row]. */
     public static int[][][] mapTileLayers;
-    private Texture backgroundImage;
+    public Texture backgroundImage;
 
-
+    /**
+     * Constructs a TileManager and loads the default maps.
+     */
     public TileManager() {
-        tile=new Tile[360];
-
+        tiles =new Tile[TOTAL_TILE_IDS];
         mapTileLayers = new int [NUM_LAYERS][MAX_SCREEN_COL][MAX_SCREEN_ROW];
 
-        loadMap(MAP_1,0);
-        loadMap(MAP_2,1);
+        loadMapLayer(MAP_1,0);
+        loadMapLayer(MAP_2,1);
     }
-    public void loadBackgroundImage(){
-        backgroundImage = new Texture(Gdx.files.internal(BACKGROUND_IMAGE));
-    }
-    public void loadMap(String mapName,int layer)  {
-        int[][]mapData= new int[MAX_SCREEN_COL][MAX_SCREEN_ROW];
-        try(BufferedReader br = new BufferedReader( new FileReader(mapName))){
+
+    /**
+     * Loads a map file into the specified layer.
+     * @param mapPath path to the map text file
+     * @param layer   index of the layer to populate
+     */
+    private void loadMapLayer(String mapPath, int layer)  {
+        try(BufferedReader br = new BufferedReader( new FileReader(mapPath))){
             String line;
             int row = 0;
 
@@ -61,12 +69,21 @@ public class TileManager {
 
 
             }
-            br.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Loads the background image for rendering.
+     */
+    public void loadBackground(){
+        backgroundImage = new Texture(Gdx.files.internal(BACKGROUND_IMAGE));
+    }
+
+    /**
+     * Scans the TILE_FOLDER and populates the TILES_MAP with file paths.
+     */
     public void getTilesFromFolder(){
         File folder = new File(TILE_FOLDER);
         File[] directoryListing = folder.listFiles();
@@ -88,114 +105,101 @@ public class TileManager {
 
     }
 
-    public void getTileImage() {
-        final int tileSize = TILE_SIZE;
-        final int defaultSpeed = AnimatedConfig.DEFAULT_ANIMATION_SPEED;                  // fallback FPS
+    /**
+     * Initializes Tile instances (static and animated) based on TILES_MAP and config.
+     */
+    public void initTiles(){
+        final int defaultSpeed = AnimatedConfig.DEFAULT_ANIMATION_SPEED;
         for (Map.Entry<String,String> entry : TILES_MAP.entrySet()) {
-            int   id   = Integer.parseInt(entry.getKey());
-            String fn = entry.getValue();
-
-            // skip the “empty” slot
+            int id = Integer.parseInt(entry.getKey());
             if (id == 0) {
-                tile[id] = null;
+                tiles[id] = null;
                 continue;
             }
 
             // load texture once
-            Texture tex = new Texture(Gdx.files.internal(fn));
-
-            // 1) config override?
-            AnimatedConfig cfg = AnimatedConfig.animConfigs.get(id);
-            if (cfg != null) {
-                tile[id] = new AnimatedTile(tex, cfg.getCols(), cfg.getRows(), cfg.getSpeed());
-
-                // 2) generic sprite‑sheet?
-            } else if (ANIMATED_ITEMS.contains(id)) {
-                int cols = tex.getWidth()  / tileSize;
-                int rows = tex.getHeight() / tileSize;
-                tile[id] = new AnimatedTile(tex, cols, rows, defaultSpeed);
-
-                // 3) static tile
-            } else {
-                Tile t = new Tile();
-                t.image     = tex;
-                t.collision = TilesSet.COLLIDABLE_TILES.contains(id);
-                tile[id] = t;
-            }
-
-            // every tile (even animated ones) needs a Rectangle to dodge NPEs
-            tile[id].collisionBox = new Rectangle();
+            Texture texture = new Texture(Gdx.files.internal(entry.getValue()));
+            tiles[id] = createTile(id, texture, TILE_SIZE, defaultSpeed);
+            // ensure collisionBox is never null
+            tiles[id].collisionBox = new Rectangle();
         }
-    }
-
-    public void render (SpriteBatch batch, Camera camera, ShapeRenderer shape) {
-        float bgX = (camera.position.x - camera.viewportWidth / 2)*1.1f;
-        float bgY = (camera.position.y - camera.viewportHeight / 2)*1.1f;
-
-        batch.draw(backgroundImage, bgX, bgY, camera.viewportWidth, camera.viewportHeight);
-
-        int tileSize=TILE_SIZE;
-        int colStart=Math.max(0,(int)(camera.position.x-camera.viewportWidth/2)/tileSize);
-        int colEnd=Math.min(MAX_SCREEN_COL,(int)(camera.position.x+camera.viewportWidth/2)/tileSize+1);
-        int rowStart=Math.max(0,(int)(camera.position.y-camera.viewportHeight/2)/tileSize);
-        int rowEnd=Math.min(MAX_SCREEN_ROW,(int)(camera.position.y+camera.viewportWidth/2)/tileSize+1);
-        int w=colEnd-colStart;
-        System.out.println("col end - colStart "+ w);
-        int row = rowStart;
-        for (int[][] mapTileLayer : mapTileLayers) {
-            for (row = rowStart; row < rowEnd; row++) {
-                for (int col = colStart; col < colEnd; col++) {
-                    int renderRow = MAX_SCREEN_ROW - 1 - row;
-                    int tileNumber = mapTileLayer[col][renderRow];
-                    if (tile[tileNumber] instanceof AnimatedTile) {
-                        System.out.println("Tilenum: " + tileNumber + " | Class: " + tile[tileNumber].getClass().getSimpleName());
-                        TextureRegion frame = ((AnimatedTile) tile[tileNumber]).getCurrentFrame(Gdx.graphics.getDeltaTime());
-                        System.out.println("Drawing frame: " + frame.getRegionX() + ", " + frame.getRegionY());
-                        batch.draw(frame, col * tileSize, row * tileSize);
-
-                    } else if (tile[tileNumber] != null && tile[tileNumber].image != null) {
-                        tile[tileNumber].collisionBox = new Rectangle(col * tileSize, row * tileSize, tileSize, tileSize);
-                        batch.draw(tile[tileNumber].image, col * tileSize, row * tileSize);
-                        if (tile[tileNumber].collision) {
-                            shape.setColor(Color.YELLOW);
-                        } else
-                            shape.setColor(Color.RED);
-                        shape.rect(tile[tileNumber].collisionBox.x, tile[tileNumber].collisionBox.y, tile[tileNumber].collisionBox.width, tile[tileNumber].collisionBox.height);
-
-                    }
-
-
-                }
-            }
-        }
-
-       }
-
-    public void dispose(){
-        for (Tile t : tile) {
-            if (t != null && t.image != null) t.image.dispose();
-        }
-    }
-
-    public Tile[] getTiles(){
-        if (tile == null) {
-            System.out.println("tile is null");
-        }
-        else {
-            for (int i = 1; i < tile.length; i++) {
-                if (tile[i] != null){
-                    // debug:
-                    System.out.println("Collision box x:" + tile[i].collisionBox.x);
-                }
-            }
-        }
-        return tile;
     }
 
     /**
-     * @param worldX  The x‑position in pixels (e.g. entity.x or hitBox.x)
-     * @param worldY  The y‑position in pixels (e.g. entity.y or hitBox.y)
-     * @param layer   Which layer to query (0=ground, 1=objects, etc)
+     * Creates a Tile or AnimatedTile based on ID, texture, and configs.
+     */
+    public Tile createTile(int id, Texture texture, int tileSize, int defaultSpeed) {
+        AnimatedConfig cfg = AnimatedConfig.animConfigs.get(id);
+        if (cfg != null) {
+            return new AnimatedTile(texture, cfg.getCols(), cfg.getRows(), cfg.getSpeed());
+        }
+        if (ANIMATED_ITEMS.contains(id)) {
+            int cols = texture.getWidth() / tileSize;
+            int rows = texture.getHeight() / tileSize;
+            return new AnimatedTile(texture, cols, rows, defaultSpeed);
+        }
+        Tile t = new Tile();
+        t.image = texture;
+        t.collision = TilesSet.COLLIDABLE_TILES.contains(id);
+        return t;
+    }
+
+
+    /**
+     * Renders all map layers and the background.
+     * @param batch  sprite batch for drawing
+     * @param camera camera for viewport info
+     * @param shape  shape renderer for collision debug
+     */
+    public void render(SpriteBatch batch, Camera camera, ShapeRenderer shape) {
+        drawBackground(batch, camera);
+        for (int[][] mapTileLayer : mapTileLayers) {
+            renderLayer(batch, camera, shape, mapTileLayer);
+        }
+    }
+
+    private void drawBackground(SpriteBatch batch, Camera camera) {
+        float x = (camera.position.x - camera.viewportWidth/2) * 1.1f;
+        float y = (camera.position.y - camera.viewportHeight/2) * 1.1f;
+        batch.draw(backgroundImage, x, y, camera.viewportWidth, camera.viewportHeight);
+    }
+
+    private void renderLayer(SpriteBatch batch, Camera camera, ShapeRenderer shape, int[][] layerData) {
+        int tileSize = TILE_SIZE;
+        int minCol = clamp((int)(camera.position.x - camera.viewportWidth/2) / tileSize, 0, MAX_SCREEN_COL);
+        int maxCol = clamp((int)(camera.position.x + camera.viewportWidth/2) / tileSize + 1, 0, MAX_SCREEN_COL);
+        int minRow = clamp((int)(camera.position.y - camera.viewportHeight/2) / tileSize, 0, MAX_SCREEN_ROW);
+        int maxRow = clamp((int)(camera.position.y + camera.viewportHeight/2) / tileSize + 1, 0, MAX_SCREEN_ROW);
+
+        for (int row = minRow; row < maxRow; row++) {
+            for (int col = minCol; col < maxCol; col++) {
+                int dataRow = MAX_SCREEN_ROW - 1 - row;
+                int id = layerData[col][dataRow];
+                Tile t = tiles[id];
+                if (t == null) continue;
+
+                if (t instanceof AnimatedTile) {
+                    TextureRegion frame = ((AnimatedTile) t).getCurrentFrame(Gdx.graphics.getDeltaTime());
+                    batch.draw(frame, col*tileSize, row*tileSize);
+                } else if (t.image != null) {
+                    Rectangle box = t.collisionBox;
+                    box.set(col*tileSize, row*tileSize, tileSize, tileSize);
+                    batch.draw(t.image, col*tileSize, row*tileSize);
+                    shape.setColor(t.collision ? Color.YELLOW : Color.RED);
+                    shape.rect(box.x, box.y, box.width, box.height);
+                }
+            }
+        }
+    }
+
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    /**
+     * @param worldX  The x‑position in pixels
+     * @param worldY  The y‑position in pixels
+     * @param layer   Which layer to query (0=ground, 1=objects)
      * @return        The Tile instance under that pixel, or null if out of bounds
      */
     public Tile getTile(int worldX, int worldY, int layer) {
@@ -210,7 +214,15 @@ public class TileManager {
         }
         int renderRow = MAX_SCREEN_ROW - 1 - row;
         int tileNum = mapTileLayers[layer][col][renderRow];
-        return tile[tileNum];
+        return tiles[tileNum];
     }
 
+    /**
+     * Disposes of all loaded textures.
+     */
+    public void dispose(){
+        for (Tile t : tiles) {
+            if (t != null && t.image != null) t.image.dispose();
+        }
+    }
 }
