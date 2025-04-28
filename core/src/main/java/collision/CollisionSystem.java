@@ -123,8 +123,12 @@ public class CollisionSystem {
         );
 
         for (TileInstance tile : entity.tileManager.getOverlappingTiles(0,entity)) {
-            if (tile.prototype.collision && tile.collisionBox.overlaps(feet)) {
-                return true; // player is standing on a solid tile
+            TileFace tileFace = getCollisionFace(entity, tile);
+            //if(tile.prototype == null) return true;
+            if(tile.prototype != null ) {
+                if (tile.prototype.collision && tile.collisionBox.overlaps(feet)) {
+                    return true;
+                }
             }
         }
 

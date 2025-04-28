@@ -56,25 +56,4 @@ public class JumpPhysics {
         ((Player)entity).updateAnimation();
     }
 
-
-
-//    public static void applyGravity(Entity entity) {
-//        if (entity.isGrounded()) {
-//            return; // Don't apply gravity if the player is grounded
-//        }
-//
-//        // Apply gravity by adjusting the Y position
-//        float currentY = entity.getY();
-//        float newY = currentY - GRAVITY; // Apply downward force
-//
-//        entity.setY(newY); // Update Y position
-//
-//        // Update hitboxes (ensure collision checks are accurate)
-//        entity.updateHitboxes();
-//    }
-
-
-
-
-
 }

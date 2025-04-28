@@ -94,7 +94,8 @@ public class Game extends ApplicationAdapter {
         // Set animation timer to current time
         animationTimer += Gdx.graphics.getDeltaTime();
 
-        //JumpPhysics.applyGravity(player);
+        GravityPhysics.applyGravity(player);
+        GravityPhysics.applyGravity(enemy);
 
         // Check if enough time has passed
         float FRAME_DELAY = 0.1f;

@@ -95,6 +95,11 @@ public abstract class Entity {
     public boolean canMove(float dx, float dy) {
         boolean moved = false;
 //        JumpPhysics.applyGravity(this);
+        if(CollisionSystem.isStandingOnSolid(this)){
+            setGrounded(true);
+            System.out.println("CollisionSystem.isStandingOnSolid()");
+        }
+        else setGrounded(false);
 
         // Attempt horizontal move
         if (dx != 0) {
