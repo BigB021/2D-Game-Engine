@@ -1,5 +1,6 @@
 package inputs;
 
+import com.badlogic.gdx.Gdx;
 import physics.JumpPhysics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -9,9 +10,10 @@ import entities.Player;
 import java.util.HashSet;
 import java.util.Set;
 
+import static constants.AudiConstants.*;
 import static constants.EntityConstants.*;
 import static constants.FramesConstants.FRAME_WIDTH;
-
+import audio.SoundController;
 /**
  * Handles input processing for the game.
  * This class implements the {@link InputProcessor} interface to manage keyboard and touch inputs.
@@ -23,7 +25,7 @@ public class InputsManager implements InputProcessor {
 
     // A set to store the currently pressed keys.
     private final Set<Integer> pressedKeys = new HashSet<>();
-
+    SoundController soundController;
 
     /**
      * Constructs an InputsManager for the specified player.
@@ -31,7 +33,17 @@ public class InputsManager implements InputProcessor {
      * @param player the player instance to control.
      */
     public InputsManager(Player player) {
+
         this.player = player;
+        soundController = new SoundController();
+
+        /*
+        if (soundController.isSoundEnabled()) {
+            soundController.playSound("FAST_SIMPLE_CHOP", 1f, true);
+            //soundController.playSound("METAL_PLATE", 1f, false);
+        }
+
+         */
     }
 
 
@@ -45,11 +57,27 @@ public class InputsManager implements InputProcessor {
      */
     @Override
     public boolean keyDown(int keycode) {
+        // Sound effects for player
+        // TEST : testing player's sounds
+        soundController.addNewSound("RUNNING_SOUND", soundController.generateSoundFromPath(RUNNING_SOUND));
+        soundController.addNewSound("FAST_SIMPLE_CHOP", soundController.generateSoundFromPath(FAST_SIMPLE_CHOP));
+        soundController.addNewSound("METAL_PLATE", soundController.generateSoundFromPath(METAL_PLATE));
+        soundController.addNewSound("ATTACK_1_SOUND", soundController.generateSoundFromPath(ATTACK_1_SOUND));
+
+
         // Add the keycode to the set of currently pressed keys.
         pressedKeys.add(keycode);
 
         // Handle movement to the right
         if (pressedKeys.contains(Input.Keys.D)) {
+            /*
+            soundController.playSound("RUNNING_SOUND", 1f, true);
+
+             */
+            double rand = (Math.random()) + 0.5;
+            soundController.playSound("RUNNING_SOUND", 1f, true, (float) rand);
+
+
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                 player.setPlayerAction(RUN);
             } else {
@@ -62,6 +90,15 @@ public class InputsManager implements InputProcessor {
 
         // Handle movement to the left
         if (pressedKeys.contains(Input.Keys.A)) {
+            //play music
+            /*
+            soundController.playSound("RUNNING_SOUND", 1f, true);
+             */
+
+            double rand = (Math.random()) + 0.5 ;
+            soundController.playSound("RUNNING_SOUND", 1f, true, (float) rand);
+
+
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                 player.setPlayerAction(RUN);
             } else {
@@ -75,7 +112,14 @@ public class InputsManager implements InputProcessor {
         // Handle attack action
         if (pressedKeys.contains(Input.Keys.X) && !player.isAttacking()) {
             long currentTimeMs = System.currentTimeMillis();
+            Gdx.app.log("ATTACK", "Lancement de l'attaque !");
+            /*
+            soundController.stopSound("METAL_PLATE");
+            soundController.playSound("METAL_PLATE", 1f, false);
 
+             */
+            soundController.stopSound("ATTACK_1_SOUND");
+            soundController.playSound("ATTACK_1_SOUND", 1f, false);
             // Check for cooldown period
             if (currentTimeMs - player.getLastAttackTime() > player.getCooldown()) {
                 player.setLastAttackTime(currentTimeMs);
@@ -100,6 +144,12 @@ public class InputsManager implements InputProcessor {
                             shouldMove = true;
                             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                                 newAction = RUN;
+                                /*
+                                soundController.stopSound("RUNNING_SOUND");
+                                double rand = (Math.random() * 2.1)+0.5;
+                                soundController.playSound("RUNNING_SOUND", 1f, true, (float) rand);
+
+                                 */
                             } else {
                                 newAction = WALK;
                             }
@@ -125,6 +175,8 @@ public class InputsManager implements InputProcessor {
         // Handle jumping
         if (pressedKeys.contains(Input.Keys.SPACE)) {
             //player.jump();
+            soundController.stopSound("FAST_SIMPLE_CHOP");
+            soundController.playSound("FAST_SIMPLE_CHOP", 1f, false);
             JumpPhysics.jumpPlayer(player);
             return true;
         }
@@ -155,6 +207,7 @@ public class InputsManager implements InputProcessor {
             }
         } else if (keycode == Input.Keys.D || keycode == Input.Keys.A) {
             // Stop movement if left or right keys are released.
+            soundController.stopSound("RUNNING_SOUND");
             player.setMoving(false);
             player.setPlayerAction(IDLE);
         }
@@ -165,9 +218,18 @@ public class InputsManager implements InputProcessor {
             player.updateAnimation();
         }
 
+        if(keycode == Input.Keys.P){
+            soundController.stopSound("METAL_PLATE");
+            soundController.playSound("METAL_PLATE", 1f, false);
+        }
+
 
 
         return false;
+    }
+
+    public SoundController getSoundController(){
+        return soundController;
     }
 
 

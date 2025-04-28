@@ -45,6 +45,7 @@ public class Player extends Entity {
     private Texture hurtTexture;
     private Texture deadTexture;
 
+    private int maxHealth = 100;  // Default max health for the player
 
     /**
      * Constructs a Player object with specified position, size, and speed.
@@ -228,6 +229,21 @@ public class Player extends Entity {
     public void setPlayerSpeed(double playerSpeed) {
         this.playerSpeed = playerSpeed;
     }
+
+/*
+    //todo : add setPlyer to change the GameStat after the player has death
+    @Override
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+
+ */
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
 
     public void setMoving(boolean moving) {
         isMoving = moving;
