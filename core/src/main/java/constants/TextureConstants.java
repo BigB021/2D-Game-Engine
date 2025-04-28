@@ -9,6 +9,7 @@ public class TextureConstants {
     public static final String PLAYER_ATTACK_1_ANIMATION = "assets/playerTextures/Attack_1.png";
     public static final String PLAYER_HURT_ANIMATION = "assets/playerTextures/Hurt.png";
     public static  final String PLAYER_DEAD_ANIMATION = "assets/playerTextures/Dead.png";
+
     // Enemy Assets
     public static  final String ENEMY_IDLE_ANIMATION = "assets/enemyTextures/Idle.png";
     public static final String ENEMY_WALK_ANIMATION = "assets/enemyTextures/Walk.png";
@@ -17,9 +18,7 @@ public class TextureConstants {
     public static final String ENEMY_ATTACK_1_ANIMATION = "assets/enemyTextures/Attack_1.png";
     public static final String ENEMY_HURT_ANIMATION = "assets/enemyTextures/Hurt.png";
     public static  final String ENEMY_DEAD_ANIMATION = "assets/enemyTextures/Dead.png";
+
     // Map Assets
-    public static final String TILE1 = "assets/tilesAssets/tiles/2.png";
-    public static final String TILE0 = "assets/tilesAssets/tiles/1.png";
-    public static final String TILE59 = "assets/tilesAssets/tiles/59.png";
     public static final String TILE_FOLDER = "assets/tilesAssets/tiles";
 }

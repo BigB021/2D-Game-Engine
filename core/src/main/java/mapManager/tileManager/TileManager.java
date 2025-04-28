@@ -1,6 +1,7 @@
 package mapManager.tileManager;
 import java.io.File;
 
+import collision.CollisionSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -9,9 +10,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import entities.Entity;
 import utilities.AnimatedConfig;
+import utilities.TileFace;
 import utilities.TilesSet;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import static constants.MapTilesConstants.*;
 import static constants.TextureConstants.TILE_FOLDER;
@@ -22,7 +27,7 @@ import static constants.TextureConstants.TILE_FOLDER;
  * Supports static and animated tiles, multi-layer maps, and collision querying.
  */
 public class TileManager {
-    /** Array of all Tile instances (indexed by tile ID). */
+    private TileInstance[][] tileInstances = new TileInstance[MAX_SCREEN_COL][MAX_SCREEN_ROW];
     public Tile[] tiles;
     /** Tensor holding map data: [layer][column][row]. */
     public static int[][][] mapTileLayers;
@@ -126,6 +131,34 @@ public class TileManager {
     }
 
     /**
+     * Returns up to 4 tiles beneath/around your hitBox on the given layer.
+     */
+    public List<TileInstance> getOverlappingTiles(int layer, Entity e) {
+        float px   = e.getHitBox().x;
+        float py   = e.getHitBox().y;
+        float pw   = e.getHitBox().width;
+        float ph   = e.getHitBox().height;
+        int ts     = TILE_SIZE;
+
+        int leftCol  = (int)(px      / ts);
+        int rightCol = (int)((px+pw) / ts);
+        int bottomRow= (int)(py      / ts);
+        int topRow   = (int)((py+ph) / ts);
+
+        List<TileInstance> list = new ArrayList<>();
+        for (int c = leftCol; c <= rightCol; c++) {
+            for (int r = bottomRow; r <= topRow; r++) {
+                TileInstance t = getTileInstance(c, r, layer);
+                if (t != null) {
+                    list.add(t);
+                }
+               }
+        }
+        return list;
+    }
+
+
+    /**
      * Creates a Tile or AnimatedTile based on ID, texture, and configs.
      */
     public Tile createTile(int id, Texture texture, int tileSize, int defaultSpeed) {
@@ -171,20 +204,30 @@ public class TileManager {
         int minRow = clamp((int)(camera.position.y - camera.viewportHeight/2) / tileSize, 0, MAX_SCREEN_ROW);
         int maxRow = clamp((int)(camera.position.y + camera.viewportHeight/2) / tileSize + 1, 0, MAX_SCREEN_ROW);
 
+
         for (int row = minRow; row < maxRow; row++) {
             for (int col = minCol; col < maxCol; col++) {
                 int dataRow = MAX_SCREEN_ROW - 1 - row;
-                int id = layerData[col][dataRow];
-                Tile t = tiles[id];
+                int num = layerData[col][dataRow];
+                Tile t = tiles[num];
                 if (t == null) continue;
 
                 if (t instanceof AnimatedTile) {
                     TextureRegion frame = ((AnimatedTile) t).getCurrentFrame(Gdx.graphics.getDeltaTime());
                     batch.draw(frame, col*tileSize, row*tileSize);
                 } else if (t.image != null) {
-                    Rectangle box = t.collisionBox;
-                    box.set(col*tileSize, row*tileSize, tileSize, tileSize);
+                    //Rectangle box = t.collisionBox;
+                    //box.set(col*tileSize, row*tileSize, tileSize, tileSize);
+                    Rectangle box = new Rectangle(col*tileSize, row*tileSize, tileSize, tileSize);
+
+                    // Saving instance if not already saved
+                    if (tileInstances[col][row] == null) {
+                        tileInstances[col][row] = new TileInstance(t, box);
+                    }
+
+                    // Draw tile
                     batch.draw(t.image, col*tileSize, row*tileSize);
+                    // debug: draw tiles hitbox (red for collidable and yellow for non-collidable)
                     shape.setColor(t.collision ? Color.YELLOW : Color.RED);
                     shape.rect(box.x, box.y, box.width, box.height);
                 }
@@ -197,25 +240,36 @@ public class TileManager {
     }
 
     /**
-     * @param worldX  The x‑position in pixels
-     * @param worldY  The y‑position in pixels
-     * @param layer   Which layer to query (0=ground, 1=objects)
-     * @return        The Tile instance under that pixel, or null if out of bounds
+     * @param col   tile‐column index, 0=leftmost
+     * @param row   tile‐row index, 0=bottom
+     * @param layer which layer
      */
-    public Tile getTile(int worldX, int worldY, int layer) {
-        int tileSize = TILE_SIZE;
-        int col = worldX / tileSize;
-        int row = worldY / tileSize;
-        // safety check
+    public TileInstance getTileInstance(int col, int row, int layer) {
         if (col < 0 || col >= MAX_SCREEN_COL ||
             row < 0 || row >= MAX_SCREEN_ROW ||
             layer < 0 || layer >= mapTileLayers.length) {
             return null;
         }
+        // flip row to match how mapTileLayers is stored
         int renderRow = MAX_SCREEN_ROW - 1 - row;
-        int tileNum = mapTileLayers[layer][col][renderRow];
-        return tiles[tileNum];
+        int id = mapTileLayers[layer][col][renderRow];
+
+        // Handle invalid id
+        if (id < 0 || id >= tiles.length) {
+            return null;
+        }
+
+        // Return the existing TileInstance from tileInstances array
+        TileInstance tileInstance = tileInstances[col][row];
+        if (tileInstance == null) {
+            // Create a new TileInstance only if it hasn't been created yet
+            tileInstance = new TileInstance(tiles[id], new Rectangle(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+            tileInstances[col][row] = tileInstance; // Save the new instance
+        }
+
+        return tileInstance;
     }
+
 
     /**
      * Disposes of all loaded textures.

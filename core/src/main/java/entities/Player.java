@@ -1,5 +1,6 @@
 package entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import mapManager.tileManager.TileManager;
@@ -25,15 +26,6 @@ public class Player extends Entity {
     private double cooldown;
     private long lastAttackTime = 0;
     private int animation_index;
-
-    // Jumping physics
-
-    private float jumpVelocity;
-    private static final float JUMP_FORCE = 15f;
-    private static final float GRAVITY = 0.5f;
-    // todo: get the y coordinates of the ground
-    private static final int GROUND_Y = 192;
-
 
 
     // Cached textures for animations
@@ -63,7 +55,6 @@ public class Player extends Entity {
         this.playerAction = IDLE;
         this.animation_index = 0;
         this.isJumping = false;
-        this.jumpVelocity = 0;
 
         loadTextures();
         // Initialize sprite with the idle texture
@@ -148,43 +139,45 @@ public class Player extends Entity {
      */
     public void movePlayer() {
 
-        canMove();
-        this.updateAnimation();
-        // Apply jump physics if the player is in jump state
         JumpPhysics.applyJumpPhysics(this);
 
-        if(this.getEntityDirection() == JUMP){
-            this.setY((int) (this.getY() + GRAVITY_SPEED));
-        }
-        if (isMoving) {
-            double speed = (playerAction == RUN) ? playerSpeed * 2 : playerSpeed;
-            // Checking collision with screen borders
-            if(this.getX() >= (MAX_SCREEN_COL * TILE_SIZE - FRAME_WIDTH*CAMERA_ZOOM)){
-                this.setX(this.getX() - 1);
+        if(canMove(DX,DY)) {
 
-            }else if(this.getX()<= 0){
-                this.setX(this.getX() + 1);
-            }
-            else {
-                this.setX(this.getX() + (int) speed * getEntityDirection());
-                updateHitboxes();
-            }
-        }
-        else if(isDead){
-            setPlayerAction(DEAD);
-
-            // todo: improve respawning
-            this.setX(PLAYER_SPAWN_X); // respawn player
-            this.setY(PLAYER_SPAWN_Y);
             this.updateAnimation();
-            this.updateHitboxes();
-            this.setEntityHealth(10);
-            isDead = false;
-        }
-        else if (!this.isAttacking && !this.isJumping) {
-            setPlayerAction(IDLE);
 
+            if (this.getEntityDirection() == JUMP) {
+                this.setY((int) (this.getY() + GRAVITY_SPEED));
+            }
+            if (isMoving) {
+                double speed = (playerAction == RUN) ? playerSpeed * 2 : playerSpeed;
+                // Checking collision with screen borders
+                if (this.getX() >= (MAX_SCREEN_COL * TILE_SIZE - FRAME_WIDTH * CAMERA_ZOOM)) {
+                    this.setX(this.getX() - 1);
+
+                } else if (this.getX() <= 0) {
+                    this.setX(this.getX() + 1);
+                } else {
+                    this.setX(this.getX() + (int) speed * getEntityDirection());
+                    updateHitboxes();
+                }
+            } else if (isDead) {
+                setPlayerAction(DEAD);
+
+                // todo: improve respawning
+                this.setX(PLAYER_SPAWN_X); // respawn player
+                this.setY(PLAYER_SPAWN_Y);
+                this.updateAnimation();
+                this.updateHitboxes();
+                this.setEntityHealth(10);
+                isDead = false;
+            } else if (!this.isAttacking && !this.isJumping) {
+                setPlayerAction(IDLE);
+
+            }
         }
+
+
+
     }
 
     /**
@@ -255,12 +248,7 @@ public class Player extends Entity {
         this.animation_index = animation_index;
     }
 
-    public float getJumpVelocity() {
-        return jumpVelocity;
-    }
-    public void setJumpVelocity(float jumpVelocity) {
-        this.jumpVelocity = jumpVelocity;
-    }
+
 
 
 

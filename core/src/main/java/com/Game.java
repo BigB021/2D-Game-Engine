@@ -15,6 +15,8 @@ import entities.Enemy;
 import entities.Player;
 import inputs.InputsManager;
 import mapManager.tileManager.TileManager;
+import physics.GravityPhysics;
+import physics.JumpPhysics;
 
 import java.io.IOException;
 
@@ -77,9 +79,6 @@ public class Game extends ApplicationAdapter {
     public void render() {
         float mapWidth = MAX_SCREEN_COL * TILE_SIZE;
         float mapHeight = MAX_SCREEN_ROW * TILE_SIZE;
-
-        float screenwidth=camera.zoom*mapWidth;//912
-        float screenheight=camera.zoom*mapHeight;//912
         float playerCenterX = player.getX() + player.getHitBox().width / 2f;
         float playerCenterY = player.getHitBox().y + player.getHitBox().height / 2f;
 
@@ -90,16 +89,12 @@ public class Game extends ApplicationAdapter {
         camera.position.y = Math.max(halfViewportHeight, Math.min(playerCenterY, mapHeight - halfViewportHeight));
         camera.update();
 
-////// we can implement a camera but for now we stick to this
-        System.out.println("centerX "+playerCenterX+ "CAMERAx "+ camera.position.x+"viewport "+viewport.getScreenWidth());
-
         batch.setProjectionMatrix(camera.combined);
-
-
-
 
         // Set animation timer to current time
         animationTimer += Gdx.graphics.getDeltaTime();
+
+        //JumpPhysics.applyGravity(player);
 
         // Check if enough time has passed
         float FRAME_DELAY = 0.1f;
@@ -123,8 +118,12 @@ public class Game extends ApplicationAdapter {
         batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), FRAME_WIDTH*camera.zoom, FRAME_HEIGHT*camera.zoom);
         player.movePlayer();
         enemy.moveEnemy();
+
         batch.end();
         shape.setProjectionMatrix(camera.combined);
+
+        // Debug: Gravity
+        System.out.println("Grounded"+ player.isGrounded());
 
         // Debug: Draw player hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);

@@ -1,15 +1,18 @@
 package entities;
 
+import collision.CollisionSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import mapManager.tileManager.Tile;
+import mapManager.tileManager.TileInstance;
 import mapManager.tileManager.TileManager;
+import physics.JumpPhysics;
+import utilities.TileFace;
 
 import static constants.EntityConstants.LEFT;
 import static constants.EntityConstants.RIGHT;
 import static constants.FramesConstants.FRAME_HEIGHT;
 import static constants.FramesConstants.FRAME_WIDTH;
-
 
 /**
  * Abstract class that represents base entity in the game.
@@ -22,10 +25,11 @@ public abstract class Entity {
     protected Rectangle attackHitBox;
 
     protected int entityDirection;
-
     private int entityHealth;
 
-    protected long deathStartTime = 0;   // <— new
+    protected long deathStartTime = 0;
+
+    protected float velocityY = 0f;
 
 
     // Entity state
@@ -33,6 +37,14 @@ public abstract class Entity {
     protected boolean isDead;
     protected boolean isAttacking;
     protected boolean isJumping;
+    protected boolean isGrounded;
+
+    // Jumping physics
+    private float jumpVelocity;
+    private static final float JUMP_FORCE = 15f;
+    private static final float GRAVITY = 0.5f;
+    // todo: get the y coordinates of the ground
+    private static final int GROUND_Y = 192;
 
     public TileManager tileManager;
 
@@ -52,6 +64,9 @@ public abstract class Entity {
         this.entityHealth = health;
         this.entityDirection = RIGHT;
         this.tileManager = tileManager;
+
+        this.jumpVelocity = 0;
+
 
     }
 
@@ -74,27 +89,60 @@ public abstract class Entity {
 
     }
 
-    // check if entity can move
-    public void canMove(){
-        Tile tile = tileManager.getTile((int)hitBox.x,(int)hitBox.y,0);
 
-        // Escape if tile is empty
-        if(tile == null){
-            return;
+
+
+    public boolean canMove(float dx, float dy) {
+        boolean moved = false;
+//        JumpPhysics.applyGravity(this);
+
+        // Attempt horizontal move
+        if (dx != 0) {
+            setX(getX() + dx);
+            updateHitboxes();
+
+            for (TileInstance tileInstance : tileManager.getOverlappingTiles(0, this)) {
+                if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
+
+                TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
+                System.out.println("Collision with tile " + tileInstance.prototype.image.toString() +
+                    " at " + tileInstance.collisionBox.x + "," + tileInstance.collisionBox.y +
+                    " | Face: " + face);
+
+                if (face == TileFace.LEFT || face == TileFace.RIGHT) {
+                    CollisionSystem.resolveTileCollision(this, tileInstance, face);
+                    dx = 0; // Cancel horizontal movement
+                    break;
+                }
+            }
+            moved |= dx != 0;
         }
 
-        // debug:
-        System.out.println("tile image "+ tile.image.toString());
-        System.out.println("collision box x:" + tile.collisionBox.x);
+        // Attempt vertical move
+        if (dy != 0) {
+            //if (dy < 0) setGrounded(false);
+            setY(getY() + dy);
+            updateHitboxes();
 
-        // check collision with tile
-        if (hitBox.overlaps(tile.collisionBox) && tile.collision){
-            // todo : handle collision with tile
-            System.out.println("collision!!");
-            System.out.println("overlapping with tile"+ tile.image.toString());
-            setMoving(false);
+            for (TileInstance tileInstance : tileManager.getOverlappingTiles(0, this)) {
+                if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
+
+                TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
+
+                if (face == TileFace.TOP || face == TileFace.BOTTOM) {
+                    CollisionSystem.resolveTileCollision(this, tileInstance, face);
+                    dy = 0; // Cancel vertical movement
+                    break;
+                }
+            }
+            moved |= dy != 0;
         }
+
+        return moved;
     }
+
+
+
 
 
     // Getters & Setters
@@ -118,7 +166,7 @@ public abstract class Entity {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 
@@ -152,13 +200,11 @@ public abstract class Entity {
         return isAttacking;
     }
 
-    public void setJumping(boolean jumping) {
-        isJumping = jumping;
-    }
+    public boolean isGrounded() {return isGrounded;}
 
-    public void setMoving(boolean moving) {
-        isMoving = moving;
-    }
+    public void setJumping(boolean jumping) {isJumping = jumping;}
+
+    public void setMoving(boolean moving) {isMoving = moving;}
 
     public void setAttacking(boolean attacking) {
         isAttacking = attacking;
@@ -167,6 +213,8 @@ public abstract class Entity {
     public void setDead(boolean dead) {
         isDead = dead;
     }
+
+    public void setGrounded(boolean grounded) {isGrounded = grounded;}
 
     public void setAttackHitBox(Rectangle hitBox) { this.attackHitBox = hitBox; }
 
@@ -178,7 +226,17 @@ public abstract class Entity {
         return entityDirection;
     }
 
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
+    }
+    public float getVelocityY() {
+        return velocityY;
+    }
 
-
-
+    public float getJumpVelocity() {
+        return jumpVelocity;
+    }
+    public void setJumpVelocity(float jumpVelocity) {
+        this.jumpVelocity = jumpVelocity;
+    }
 }

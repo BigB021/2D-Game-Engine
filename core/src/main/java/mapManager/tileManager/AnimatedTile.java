@@ -26,7 +26,7 @@ public class AnimatedTile extends Tile {
 
     public TextureRegion getCurrentFrame(float deltaTime) {
         stateTime += deltaTime;
-        System.out.println("Drawing frame: " + animation.getKeyFrame(stateTime, true).getRegionX() + ", " + animation.getKeyFrame(stateTime, true).getRegionY());
+        //System.out.println("Drawing frame: " + animation.getKeyFrame(stateTime, true).getRegionX() + ", " + animation.getKeyFrame(stateTime, true).getRegionY());
 
         return animation.getKeyFrame(stateTime, true); // true = looping
 

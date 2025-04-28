@@ -8,6 +8,7 @@ import mapManager.tileManager.TileManager;
 import static constants.EntityConstants.*;
 import static constants.FramesConstants.FRAME_DELAY;
 import static constants.FramesConstants.FRAME_WIDTH;
+import static constants.MapTilesConstants.TILE_SIZE;
 import static constants.TextureConstants.*;
 
 public class Enemy extends Entity {
@@ -128,36 +129,38 @@ public class Enemy extends Entity {
     // Move enemy
     // todo: OPTIMIZE fighting mechanism
     public void moveEnemy(){
-        handleDeath();
-        updateHitboxes();
-        if (isDeathAnimationOngoing()){
-            updateAnimation();
+        if(canMove(DX,DY)) {
+            handleDeath();
             updateHitboxes();
-            return;
-        }
-
-        if(enemyAction == HURT){
-            long elapsed = System.currentTimeMillis() - hurtStartTime;
-            if (elapsed < getHurtDuration()){
+            if (isDeathAnimationOngoing()) {
                 updateAnimation();
                 updateHitboxes();
                 return;
             }
-        }
 
-        if(enemyAction == DEAD ) {
-            respawnEnemy();
-        }
+            if (enemyAction == HURT) {
+                long elapsed = System.currentTimeMillis() - hurtStartTime;
+                if (elapsed < getHurtDuration()) {
+                    updateAnimation();
+                    updateHitboxes();
+                    return;
+                }
+            }
 
-        if(shouldPursuePlayer()){
-            updateMovementBasedOnPlayer();
-            handleCombat();
-        }else {
-            setIdleState();
-        }
+            if (enemyAction == DEAD) {
+                respawnEnemy();
+            }
 
-        updateAnimation();
-        updateHitboxes();
+            if (shouldPursuePlayer()) {
+                updateMovementBasedOnPlayer();
+                handleCombat();
+            } else {
+                setIdleState();
+            }
+
+            updateAnimation();
+            updateHitboxes();
+        }
     }
 
     // =====================Move Enemy submethods=====================
@@ -200,8 +203,9 @@ public class Enemy extends Entity {
     }
 
     private  boolean shouldPursuePlayer(){
-        float distance = Math.abs(this.getHitBox().x - player.getHitBox().x);
-        return distance <= DISTANCE;
+        float distanceX = Math.abs(this.getHitBox().x - player.getHitBox().x);
+        if(Math.abs(this.getY() - player.getY()) <= TILE_SIZE) return distanceX <= DISTANCE;
+        return false;
     }
 
     private  void updateMovementBasedOnPlayer(){

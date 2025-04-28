@@ -1,15 +1,18 @@
 package physics;
 
+import entities.Enemy;
 import entities.Entity;
 import entities.Player;
+import mapManager.tileManager.Tile;
+import mapManager.tileManager.TileInstance;
 
 import static constants.EntityConstants.*;
+import static constants.MapTilesConstants.TILE_SIZE;
+import static constants.PhysicsConstants.*;
 
 public class JumpPhysics {
 
-    // Jumping physics
-    private static final float JUMP_FORCE = 15f;
-    private static final float GRAVITY = 0.9f;
+
     // todo : find a way to find landing y position
     private static final int GROUND_Y = ENEMY_SPAWN_Y;
 
@@ -28,30 +31,50 @@ public class JumpPhysics {
         }
     }
 
-    // todo: implement jumping method for enemy if needed
 
-    /**
-     * Applies gravity to the player if jumping.
-     * Updates the Y position based on jump velocity and applies gravity.
-     */
     public static void applyJumpPhysics(Entity entity) {
-        if (entity instanceof Player){
-            if (entity.isJumping()) {
-                // Update Y position with current jump velocity
-                entity.setY((int) (entity.getY() + ((Player)entity).getJumpVelocity()));
-                // Apply gravity: reduce jump velocity
-                ((Player)entity).setJumpVelocity(((Player)entity).getJumpVelocity() - GRAVITY);
-                // If player falls back to ground level, end jump
-                if (entity.getY() <= GROUND_Y) {
-                    entity.setY(GROUND_Y);
-                    entity.setJumping(false);
-                    ((Player)entity).setJumpVelocity(0);
-                    ((Player)entity).setPlayerAction(IDLE);
-                }
-                entity.updateHitboxes();
-                ((Player)entity).updateAnimation();
-            }
+        if (!(entity instanceof Player)) return;
+
+        if (!entity.isJumping()) return;
+
+        entity.setGrounded(false);
+
+        // Apply gravity
+        entity.setJumpVelocity(entity.getJumpVelocity() - GRAVITY);
+
+        // Limit max fall speed
+        if (entity.getJumpVelocity() < -MAX_FALL_SPEED) {
+            entity.setJumpVelocity(-MAX_FALL_SPEED);
         }
 
+        // Move Y position based on velocity
+        float newY = entity.getY() + entity.getJumpVelocity();
+        entity.setY(newY);
+        entity.updateHitboxes();
+
+
+        ((Player)entity).updateAnimation();
     }
+
+
+
+//    public static void applyGravity(Entity entity) {
+//        if (entity.isGrounded()) {
+//            return; // Don't apply gravity if the player is grounded
+//        }
+//
+//        // Apply gravity by adjusting the Y position
+//        float currentY = entity.getY();
+//        float newY = currentY - GRAVITY; // Apply downward force
+//
+//        entity.setY(newY); // Update Y position
+//
+//        // Update hitboxes (ensure collision checks are accurate)
+//        entity.updateHitboxes();
+//    }
+
+
+
+
+
 }

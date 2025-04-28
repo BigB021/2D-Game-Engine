@@ -7,4 +7,7 @@ public class FramesConstants {
 
     public static final int FRAME_WIDTH = 128;
     public static final int FRAME_HEIGHT = 128;
+
+    public static final int WINDOW_WIDTH = 1600;
+    public static final int WINDOW_HEIGHT = 760;
 }
