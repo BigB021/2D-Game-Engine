@@ -93,7 +93,7 @@ public class CollisionSystem {
                 // 2) stop vertical motion
                 entity.setVelocityY(0);
                 // 3) mark as grounded so gravity stops next frame
-                entity.setGrounded(true);
+                //entity.setGrounded(true);
                 entity.setJumping(false);
                 break;
             case BOTTOM: // hit head
@@ -114,25 +114,33 @@ public class CollisionSystem {
 
 
     public static boolean isStandingOnSolid(Entity entity) {
+        entity.setGrounded(false);
 
-        Rectangle feet = new Rectangle(
-            entity.getHitBox().x,
-            entity.getHitBox().y - 1, // 1 pixel below the player's feet
-            entity.getHitBox().width,
-            2 // 2 pixels height just to be safe
-        );
+        Rectangle hit = entity.getHitBox();
+        int ts       = TILE_SIZE;
+        float feetY  = hit.y;
 
-        for (TileInstance tile : entity.tileManager.getOverlappingTiles(0,entity)) {
-            TileFace tileFace = getCollisionFace(entity, tile);
-            //if(tile.prototype == null) return true;
-            if(tile.prototype != null ) {
-                if (tile.prototype.collision && tile.collisionBox.overlaps(feet)) {
+        int colStart = (int)(hit.x / ts);
+        int colEnd   = (int)((hit.x + hit.width) / ts);
+        int rowBelow = (int)((feetY - 1) / ts);
+
+        for (int c = colStart; c <= colEnd; c++) {
+            TileInstance t = entity.tileManager.getTileInstance(c, rowBelow, 0);
+            if(t.prototype != null) {
+            if (t != null && t.prototype.collision) {
+                // Optionally a tiny overlap test here:
+                if (t.collisionBox.y + t.collisionBox.height >= feetY) {
+                    entity.setGrounded(true);
+                    //System.out.println("Grounded true at tile row " + rowBelow);
                     return true;
                 }
             }
+            }
         }
 
+        //System.out.println("Grounded false");
         return false;
     }
+
 
 }

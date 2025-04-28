@@ -7,9 +7,11 @@ import static constants.PhysicsConstants.*;
 public class GravityPhysics {
 
     public static void applyGravity(Entity entity) {
+        // Don't apply gravity if the player is grounded
+
         if (entity.isGrounded()) {
             entity.setVelocityY(0);
-            return; // Don't apply gravity if the player is grounded
+            return;
         }
 
         // Apply gravity by adjusting the Y position
@@ -17,7 +19,7 @@ public class GravityPhysics {
         float newY = currentY - GRAVITY * entity.getVelocityY(); // Apply downward force
 
         entity.setY(newY); // Update Y position
-        entity.setVelocityY(entity.getVelocityY() + GRAVITY);
+        if(entity.getVelocityY() <= MAX_FALL_SPEED) entity.setVelocityY(entity.getVelocityY() + GRAVITY); // Increment Y velocity
 
         // Update hitboxes (ensure collision checks are accurate)
         entity.updateHitboxes();

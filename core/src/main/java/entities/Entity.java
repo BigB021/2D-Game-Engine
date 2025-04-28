@@ -66,6 +66,7 @@ public abstract class Entity {
         this.tileManager = tileManager;
 
         this.jumpVelocity = 0;
+        this.isGrounded=false;
 
 
     }
@@ -94,12 +95,9 @@ public abstract class Entity {
 
     public boolean canMove(float dx, float dy) {
         boolean moved = false;
-//        JumpPhysics.applyGravity(this);
-        if(CollisionSystem.isStandingOnSolid(this)){
-            setGrounded(true);
-            System.out.println("CollisionSystem.isStandingOnSolid()");
-        }
-        else setGrounded(false);
+
+        // Check if player is standing on a solid tile
+        setGrounded(CollisionSystem.isStandingOnSolid(this));
 
         // Attempt horizontal move
         if (dx != 0) {
@@ -110,10 +108,6 @@ public abstract class Entity {
                 if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
 
                 TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
-                System.out.println("Collision with tile " + tileInstance.prototype.image.toString() +
-                    " at " + tileInstance.collisionBox.x + "," + tileInstance.collisionBox.y +
-                    " | Face: " + face);
-
                 if (face == TileFace.LEFT || face == TileFace.RIGHT) {
                     CollisionSystem.resolveTileCollision(this, tileInstance, face);
                     dx = 0; // Cancel horizontal movement
@@ -125,15 +119,12 @@ public abstract class Entity {
 
         // Attempt vertical move
         if (dy != 0) {
-            //if (dy < 0) setGrounded(false);
             setY(getY() + dy);
             updateHitboxes();
 
             for (TileInstance tileInstance : tileManager.getOverlappingTiles(0, this)) {
                 if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
-
                 TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
-
                 if (face == TileFace.TOP || face == TileFace.BOTTOM) {
                     CollisionSystem.resolveTileCollision(this, tileInstance, face);
                     dy = 0; // Cancel vertical movement
@@ -142,6 +133,7 @@ public abstract class Entity {
             }
             moved |= dy != 0;
         }
+
 
         return moved;
     }

@@ -27,6 +27,7 @@ public class JumpPhysics {
             // Set jump velocity to initiate upward movement
             player.setJumpVelocity(JUMP_FORCE);
             player.setPlayerAction(JUMP);
+            player.setMoving(false);
             player.updateAnimation();
         }
     }
@@ -37,7 +38,6 @@ public class JumpPhysics {
 
         if (!entity.isJumping()) return;
 
-        entity.setGrounded(false);
 
         // Apply gravity
         entity.setJumpVelocity(entity.getJumpVelocity() - GRAVITY);
@@ -52,8 +52,6 @@ public class JumpPhysics {
         entity.setY(newY);
         entity.updateHitboxes();
 
-
-        ((Player)entity).updateAnimation();
     }
 
 }

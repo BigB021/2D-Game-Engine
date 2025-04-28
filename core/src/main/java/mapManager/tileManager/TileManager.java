@@ -228,8 +228,8 @@ public class TileManager {
                     // Draw tile
                     batch.draw(t.image, col*tileSize, row*tileSize);
                     // debug: draw tiles hitbox (red for collidable and yellow for non-collidable)
-                    shape.setColor(t.collision ? Color.YELLOW : Color.RED);
-                    shape.rect(box.x, box.y, box.width, box.height);
+//                    shape.setColor(t.collision ? Color.YELLOW : Color.RED);
+//                    shape.rect(box.x, box.y, box.width, box.height);
                 }
             }
         }

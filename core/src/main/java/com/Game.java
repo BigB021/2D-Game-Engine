@@ -123,8 +123,6 @@ public class Game extends ApplicationAdapter {
         batch.end();
         shape.setProjectionMatrix(camera.combined);
 
-        // Debug: Gravity
-        System.out.println("Grounded"+ player.isGrounded());
 
         // Debug: Draw player hitBox rect
         shape.begin(ShapeRenderer.ShapeType.Line);
@@ -149,6 +147,10 @@ public class Game extends ApplicationAdapter {
         shape.setColor(Color.GREEN);
         shape.rect(enemy.getAttackHitBox().x, enemy.getAttackHitBox().y, enemy.getAttackHitBox().width, enemy.getAttackHitBox().height);
         shape.end();
+
+        // Debug: Player health
+        System.out.println("Player health:"+ player.getEntityHealth());
+        System.out.println("Is dead: "+player.isDead());
 
 
 

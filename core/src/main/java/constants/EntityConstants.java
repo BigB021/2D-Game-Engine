@@ -14,15 +14,15 @@ public class EntityConstants {
     public static final int RIGHT = 1;
     public static final int LEFT = -1;
 
-    // Gravity Speed
-    public  static final int GRAVITY_SPEED = 5;
-    public  static final int MAX_FALL_SPEED = 15;
+    public static final int PLAYER_ATTACK_DAMAGE = 2;
+    public static final int ENEMY_ATTACK_DAMAGE = 1;
+
     // Enemy pursue distance
     public  static final int DISTANCE = 100;
 
     // Respawn Constants
     public static final int PLAYER_SPAWN_X = 1;
-    public static final int PLAYER_SPAWN_Y = 192;
+    public static final int PLAYER_SPAWN_Y = 1920;
     public static final int ENEMY_SPAWN_X = 400;
     public static final int ENEMY_SPAWN_Y = 192;
 

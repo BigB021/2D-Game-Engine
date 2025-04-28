@@ -49,7 +49,7 @@ public class InputsManager implements InputProcessor {
         pressedKeys.add(keycode);
 
         // Handle movement to the right
-        if (pressedKeys.contains(Input.Keys.D)) {
+        if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.RIGHT)) {
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                 player.setPlayerAction(RUN);
             } else {
@@ -61,7 +61,7 @@ public class InputsManager implements InputProcessor {
         }
 
         // Handle movement to the left
-        if (pressedKeys.contains(Input.Keys.A)) {
+        if (pressedKeys.contains(Input.Keys.A) || pressedKeys.contains(Input.Keys.LEFT)) {
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                 player.setPlayerAction(RUN);
             } else {
@@ -96,7 +96,7 @@ public class InputsManager implements InputProcessor {
                         int newAction = IDLE;
                         int direction = player.getEntityDirection();
 
-                        if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A)) {
+                        if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A) || pressedKeys.contains(Input.Keys.LEFT)) {
                             shouldMove = true;
                             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                                 newAction = RUN;
@@ -104,10 +104,10 @@ public class InputsManager implements InputProcessor {
                                 newAction = WALK;
                             }
                             // Update direction based on currently pressed key
-                            if (pressedKeys.contains(Input.Keys.D)) {
-                                direction = RIGHT;
-                            } else {
+                            if (pressedKeys.contains(Input.Keys.A)|| pressedKeys.contains(Input.Keys.LEFT) ) {
                                 direction = LEFT;
+                            } else {
+                                direction = RIGHT;
                             }
                         }
 
@@ -123,9 +123,13 @@ public class InputsManager implements InputProcessor {
         }
 
         // Handle jumping
-        if (pressedKeys.contains(Input.Keys.SPACE)) {
-            //player.jump();
-            JumpPhysics.jumpPlayer(player);
+        if (keycode == Input.Keys.SPACE) {
+            if (!player.isJumping()) {
+                JumpPhysics.jumpPlayer(player);
+                player.setPlayerAction(JUMP);    // ← switch into jump action
+                player.setMoving(false);         // optional: stop any horizontal walk/run
+                player.updateAnimation();        // force the jump texture to load immediately
+            }
             return true;
         }
 
@@ -149,11 +153,11 @@ public class InputsManager implements InputProcessor {
 
         // Switch to walking if shift is released
         if (keycode == Input.Keys.SHIFT_RIGHT) {
-            if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A)) {
+            if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.A) || pressedKeys.contains(Input.Keys.LEFT) || pressedKeys.contains(Input.Keys.RIGHT)) {
                 // Switch to walk if shift is released
                 player.setPlayerAction(WALK);
             }
-        } else if (keycode == Input.Keys.D || keycode == Input.Keys.A) {
+        } else if (keycode == Input.Keys.D || keycode == Input.Keys.A || keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
             // Stop movement if left or right keys are released.
             player.setMoving(false);
             player.setPlayerAction(IDLE);

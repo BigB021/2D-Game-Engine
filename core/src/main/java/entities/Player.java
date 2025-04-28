@@ -1,5 +1,6 @@
 package entities;
 
+import collision.CollisionSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +10,7 @@ import physics.JumpPhysics;
 import static constants.EntityConstants.*;
 import static constants.FramesConstants.*;
 import static constants.MapTilesConstants.*;
+import static constants.PhysicsConstants.GRAVITY_SPEED;
 import static constants.TextureConstants.*;
 
 /**
@@ -21,12 +23,12 @@ public class Player extends Entity {
     private boolean isDead;
     private boolean isAttacking;
     private boolean isJumping;
-    //private int playerDirection;
     private double playerSpeed;
     private double cooldown;
     private long lastAttackTime = 0;
     private int animation_index;
-
+    private int checkpointX;
+    private int checkpointY;
 
     // Cached textures for animations
     private Texture idleTexture;
@@ -55,6 +57,9 @@ public class Player extends Entity {
         this.playerAction = IDLE;
         this.animation_index = 0;
         this.isJumping = false;
+
+        this.checkpointX = PLAYER_SPAWN_X;
+        this.checkpointY = PLAYER_SPAWN_Y;
 
         loadTextures();
         // Initialize sprite with the idle texture
@@ -140,6 +145,12 @@ public class Player extends Entity {
     public void movePlayer() {
 
         JumpPhysics.applyJumpPhysics(this);
+        if (getEntityHealth() <= 0) {
+            setPlayerAction(DEAD);
+            this.updateAnimation();
+            respawnPalyer();
+
+        }
 
         if(canMove(DX,DY)) {
 
@@ -160,23 +171,29 @@ public class Player extends Entity {
                     this.setX(this.getX() + (int) speed * getEntityDirection());
                     updateHitboxes();
                 }
-            } else if (isDead) {
-                setPlayerAction(DEAD);
-
-                // todo: improve respawning
-                this.setX(PLAYER_SPAWN_X); // respawn player
-                this.setY(PLAYER_SPAWN_Y);
-                this.updateAnimation();
-                this.updateHitboxes();
-                this.setEntityHealth(10);
-                isDead = false;
-            } else if (!this.isAttacking && !this.isJumping) {
-                setPlayerAction(IDLE);
-
             }
+            else if(isAttacking()) setPlayerAction(ATTACK_1);
+            else if(CollisionSystem.isStandingOnSolid(this) && !isJumping) setPlayerAction(IDLE);
+            if (getEntityHealth() <= 0) {
+                setDead(true);
+                setPlayerAction(DEAD);
+                updateAnimation();
+                respawnPalyer();
+            }
+
         }
+    }
 
+    private void respawnPalyer(){
+        this.setX(checkpointX); // respawn player
+        this.setY(checkpointY);
+        this.updateHitboxes();
+        this.setEntityHealth(10);
+        isDead = false;
+    }
 
+    // todo: implement a method that updates checkPoint
+    private void updateCheckPoint() {
 
     }
 
@@ -246,6 +263,21 @@ public class Player extends Entity {
 
     public void setAnimation_index(int animation_index) {
         this.animation_index = animation_index;
+    }
+
+    public void setCheckPointX(int checkpointX) {
+        this.checkpointX = checkpointX;
+    }
+    public void setCheckPointY(int checkpointY) {
+        this.checkpointY = checkpointY;
+    }
+
+    public int getCheckPointX() {
+        return this.checkpointX;
+    }
+
+    public int getCheckPointY() {
+        return this.checkpointY;
     }
 
 

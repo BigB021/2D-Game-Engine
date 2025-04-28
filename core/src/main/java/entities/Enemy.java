@@ -231,7 +231,7 @@ public class Enemy extends Entity {
 
     private void handlePlayerAttack(){
         if(player.isAttacking() && player.getAttackHitBox().overlaps(this.getHitBox())){
-            this.setEntityHealth(this.getEntityHealth() - 1);
+            this.setEntityHealth(this.getEntityHealth() - PLAYER_ATTACK_DAMAGE);
             this.setEnemyAction(HURT);
             this.hurtStartTime = System.currentTimeMillis();
             this.setAttacking(false);
@@ -248,7 +248,7 @@ public class Enemy extends Entity {
 
         player.setPlayerAction(HURT);
         player.updateAnimation();
-        player.setEntityHealth(player.getEntityHealth() - 5);
+        player.setEntityHealth(player.getEntityHealth() - ENEMY_ATTACK_DAMAGE);
         if (player.getEntityHealth() <= 0) {
             player.setDead(true);
         }
