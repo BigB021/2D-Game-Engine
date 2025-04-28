@@ -3,7 +3,13 @@ package entities;
 import collision.CollisionSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import utilities.Constants;
+import mapManager.tileManager.TileManager;
+
+import static constants.EntityConstants.*;
+import static constants.FramesConstants.FRAME_DELAY;
+import static constants.FramesConstants.FRAME_WIDTH;
+import static constants.MapTilesConstants.TILE_SIZE;
+import static constants.TextureConstants.*;
 
 public class Enemy extends Entity {
 
@@ -24,10 +30,10 @@ public class Enemy extends Entity {
     private Texture hurtTexture;
     private Texture deadTexture;
 
-    public Enemy(int x, int y, int width, int height,double enemySpeed,int health ,Player player) {
-        super(x, y, width, height,health);
+    public Enemy(int x, int y, int width, int height,double enemySpeed,int health ,Player player, TileManager tileManager) {
+        super(x, y, width, height,health,tileManager);
         this.player = player;
-        this.enemyAction = Constants.IDLE;
+        this.enemyAction = IDLE;
         this.isMoving = false;
         this.isDead = false;
         this.enemySpeed = enemySpeed;
@@ -42,22 +48,22 @@ public class Enemy extends Entity {
     // Set enemy's initial direction towards the player
     public void initDirection(){
         if (player.x - this.x > 0)
-            this.entityDirection = Constants.RIGHT;
+            this.entityDirection = RIGHT;
         else
-            this.entityDirection = Constants.LEFT;
+            this.entityDirection = LEFT;
     }
 
     /**
      * Loads animation textures once and caches them.
      */
     private void loadTextures() {
-        idleTexture = new Texture(Constants.ENEMY_IDLE_ANIMATION);
-        walkTexture = new Texture(Constants.ENEMY_WALK_ANIMATION);
-        runTexture = new Texture(Constants.ENEMY_RUN_ANIMATION);
-        jumpTexture = new Texture(Constants.ENEMY_JUMP_ANIMATION);
-        attack1Texture = new Texture(Constants.ENEMY_ATTACK_1_ANIMATION);
-        hurtTexture = new Texture(Constants.ENEMY_HURT_ANIMATION);
-        deadTexture = new Texture(Constants.ENEMY_DEAD_ANIMATION);
+        idleTexture = new Texture(ENEMY_IDLE_ANIMATION);
+        walkTexture = new Texture(ENEMY_WALK_ANIMATION);
+        runTexture = new Texture(ENEMY_RUN_ANIMATION);
+        jumpTexture = new Texture(ENEMY_JUMP_ANIMATION);
+        attack1Texture = new Texture(ENEMY_ATTACK_1_ANIMATION);
+        hurtTexture = new Texture(ENEMY_HURT_ANIMATION);
+        deadTexture = new Texture(ENEMY_DEAD_ANIMATION);
     }
 
     /**
@@ -65,37 +71,37 @@ public class Enemy extends Entity {
      */
     public void updateAnimation() {
         switch (enemyAction) {
-            case Constants.IDLE:
+            case IDLE:
                 if (getSprite() != idleTexture) {
                     setSprite(idleTexture);
                 }
                 break;
-            case Constants.WALK:
+            case WALK:
                 if (getSprite() != walkTexture) {
                     setSprite(walkTexture);
                 }
                 break;
-            case Constants.RUN:
+            case RUN:
                 if (getSprite() != runTexture) {
                     setSprite(runTexture);
                 }
                 break;
-            case Constants.JUMP:
+            case JUMP:
                 if (getSprite() != jumpTexture) {
                     setSprite(jumpTexture);
                 }
                 break;
-            case Constants.ATTACK_1:
+            case ATTACK_1:
                 if (getSprite() != attack1Texture) {
                     setSprite(attack1Texture);
                 }
                 break;
-            case Constants.DEAD:
+            case DEAD:
                 if (getSprite() != deadTexture) {
                     setSprite(deadTexture);
                 }
                 break;
-            case Constants.HURT:
+            case HURT:
                 if (getSprite() != hurtTexture) {
                     setSprite(hurtTexture);
                 }
@@ -113,7 +119,7 @@ public class Enemy extends Entity {
      * @return TextureRegion containing the selected frame.
      */
     public TextureRegion loadAnimation(int x, int y, int width, int height) {
-        if (getEntityDirection() == Constants.RIGHT) {
+        if (getEntityDirection() == RIGHT) {
 
             return new TextureRegion(getSprite() ,x,y, getEntityDirection() * width,height);
         }
@@ -123,51 +129,53 @@ public class Enemy extends Entity {
     // Move enemy
     // todo: OPTIMIZE fighting mechanism
     public void moveEnemy(){
-        handleDeath();
-        updateHitboxes();
-        if (isDeathAnimationOngoing()){
-            updateAnimation();
+        if(canMove(DX,DY)) {
+            handleDeath();
             updateHitboxes();
-            return;
-        }
-
-        if(enemyAction == Constants.HURT){
-            long elapsed = System.currentTimeMillis() - hurtStartTime;
-            if (elapsed < getHurtDuration()){
+            if (isDeathAnimationOngoing()) {
                 updateAnimation();
                 updateHitboxes();
                 return;
             }
-        }
 
-        if(enemyAction == Constants.DEAD ) {
-            respawnEnemy();
-        }
+            if (enemyAction == HURT) {
+                long elapsed = System.currentTimeMillis() - hurtStartTime;
+                if (elapsed < getHurtDuration()) {
+                    updateAnimation();
+                    updateHitboxes();
+                    return;
+                }
+            }
 
-        if(shouldPursuePlayer()){
-            updateMovementBasedOnPlayer();
-            handleCombat();
-        }else {
-            setIdleState();
-        }
+            if (enemyAction == DEAD) {
+                respawnEnemy();
+            }
 
-        updateAnimation();
-        updateHitboxes();
+            if (shouldPursuePlayer()) {
+                updateMovementBasedOnPlayer();
+                handleCombat();
+            } else {
+                setIdleState();
+            }
+
+            updateAnimation();
+            updateHitboxes();
+        }
     }
 
     // =====================Move Enemy submethods=====================
 
     private void respawnEnemy(){
-        this.setX(Constants.ENEMY_SPAWN_X);
-        this.setY(Constants.ENEMY_SPAWN_Y);
+        this.setX(ENEMY_SPAWN_X);
+        this.setY(ENEMY_SPAWN_Y);
         setEntityHealth(10);
         setDead(false);
         initDirection();
-        setEnemyAction(Constants.IDLE);
+        setEnemyAction(IDLE);
     }
 
     private boolean isDeathAnimationOngoing() {
-        if (enemyAction == Constants.DEAD) {
+        if (enemyAction == DEAD) {
             long elapsed = System.currentTimeMillis() - deathStartTime;
             return elapsed < getDeathDuration();
         }
@@ -175,8 +183,8 @@ public class Enemy extends Entity {
     }
 
     private void handleDeath() {
-        if(getEntityHealth() <= 0 && enemyAction != Constants.DEAD){
-            setEnemyAction(Constants.DEAD);
+        if(getEntityHealth() <= 0 && enemyAction != DEAD){
+            setEnemyAction(DEAD);
             this.setDead(true);
             deathStartTime = System.currentTimeMillis();
             // todo : drop sound and loot
@@ -187,16 +195,17 @@ public class Enemy extends Entity {
     private void updateDirectionTowardsPlayer(){
 
         if(this.getHitBox().x - player.getHitBox().x >= 0){
-            this.setEntityDirection(Constants.LEFT);
+            this.setEntityDirection(LEFT);
         }
         else if(this.getHitBox().x - player.getHitBox().x <= 0){
-            this.setEntityDirection(Constants.RIGHT);
+            this.setEntityDirection(RIGHT);
         }
     }
 
     private  boolean shouldPursuePlayer(){
-        float distance = Math.abs(this.getHitBox().x - player.getHitBox().x);
-        return distance <= Constants.DISTANCE;
+        float distanceX = Math.abs(this.getHitBox().x - player.getHitBox().x);
+        if(Math.abs(this.getY() - player.getY()) <= TILE_SIZE) return distanceX <= DISTANCE;
+        return false;
     }
 
     private  void updateMovementBasedOnPlayer(){
@@ -210,7 +219,7 @@ public class Enemy extends Entity {
         if(!CollisionSystem.checkPlayerCollision(player, this)) return ;
 
         long currentTime = System.currentTimeMillis();
-        this.setEnemyAction(Constants.ATTACK_1);
+        this.setEnemyAction(ATTACK_1);
         this.setMoving(false);
         this.setAttacking(true);
 
@@ -222,8 +231,8 @@ public class Enemy extends Entity {
 
     private void handlePlayerAttack(){
         if(player.isAttacking() && player.getAttackHitBox().overlaps(this.getHitBox())){
-            this.setEntityHealth(this.getEntityHealth() - 1);
-            this.setEnemyAction(Constants.HURT);
+            this.setEntityHealth(this.getEntityHealth() - PLAYER_ATTACK_DAMAGE);
+            this.setEnemyAction(HURT);
             this.hurtStartTime = System.currentTimeMillis();
             this.setAttacking(false);
             // debug System.out
@@ -235,18 +244,18 @@ public class Enemy extends Entity {
         // debug System.out
         System.out.println("Cooldown Detected:" + player.getCooldown());
         this.lastAttackTime = currentTime;
-        this.setAnimation_index(3 * Constants.FRAME_WIDTH);
+        this.setAnimation_index(3 * FRAME_WIDTH);
 
-        player.setPlayerAction(Constants.HURT);
+        player.setPlayerAction(HURT);
         player.updateAnimation();
-        player.setEntityHealth(player.getEntityHealth() - 5);
+        player.setEntityHealth(player.getEntityHealth() - ENEMY_ATTACK_DAMAGE);
         if (player.getEntityHealth() <= 0) {
             player.setDead(true);
         }
     }
 
     private void pursuePlayer(){
-        float speed = (enemyAction == Constants.RUN) ? (float) (enemySpeed * 2) : (float) enemySpeed;
+        float speed = (enemyAction == RUN) ? (float) (enemySpeed * 2) : (float) enemySpeed;
         this.setX(this.getX() + speed * getEntityDirection());
     }
 
@@ -258,13 +267,13 @@ public class Enemy extends Entity {
      * @return the attack duration in milliseconds.
      */
     public long getAttackAnimationDuration() {
-        int frames = attack1Texture.getWidth() / Constants.FRAME_WIDTH;
-        return (long)(frames * Constants.FRAME_DELAY * 1000);
+        int frames = attack1Texture.getWidth() / FRAME_WIDTH;
+        return (long)(frames * FRAME_DELAY * 1000);
     }
 
     public long getHurtDuration() {
-        int frames = hurtTexture.getWidth() / Constants.FRAME_WIDTH;
-        return (long)(frames * Constants.FRAME_DELAY * 1000);
+        int frames = hurtTexture.getWidth() / FRAME_WIDTH;
+        return (long)(frames * FRAME_DELAY * 1000);
     }
 
     /**
@@ -273,8 +282,8 @@ public class Enemy extends Entity {
      */
     public long getDeathDuration() {
         // number of frames in the death sprite sheet:
-        int frames = deadTexture.getWidth() / Constants.FRAME_WIDTH;
-        return (long)(frames * Constants.FRAME_DELAY * 1000);
+        int frames = deadTexture.getWidth() / FRAME_WIDTH;
+        return (long)(frames * FRAME_DELAY * 1000);
     }
 
 
@@ -306,11 +315,11 @@ public class Enemy extends Entity {
 
     // Set Enemy State
     private void setRunningState() {
-        this.setEnemyAction(Constants.RUN);
+        this.setEnemyAction(RUN);
     }
 
     private void setIdleState() {
-        this.setEnemyAction(Constants.IDLE);
+        this.setEnemyAction(IDLE);
     }
 
 
