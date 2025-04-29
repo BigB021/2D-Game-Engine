@@ -35,6 +35,7 @@ public class Game extends ApplicationAdapter {
     private Player player;
     private Enemy enemy;
     private float animationTimer = 0f;
+    private float cords ;
     public TileManager tileManager = new TileManager();
 
     // Testing hitBox
@@ -137,7 +138,20 @@ public class Game extends ApplicationAdapter {
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
+        for (int i = 0; i <tileManager.getOverlappingTiles(0,player).size() ; i++) {
+            if (tileManager.getOverlappingTiles(0,player).get(i).prototype!=null){
 
+
+            if (tileManager.getOverlappingTiles(0,player).get(i)
+                .prototype.image.toString()
+                .equals("assets/tilesAssets/tiles/190.png")){
+                System.out.println("les/190.png "+tileManager.getOverlappingTiles(0,player).get(i).collisionBox.getX());
+                setCords(tileManager.getOverlappingTiles(0,player).get(i).collisionBox.getX());
+                System.out.println("cords X "+cords);
+
+            }
+            }
+        }
         // Update animation timer
         animationTimer += Gdx.graphics.getDeltaTime();
 
@@ -300,12 +314,33 @@ public class Game extends ApplicationAdapter {
         // Reinitialize essential objects
         int CalculatedHeight = (int) (FRAME_HEIGHT * camera.zoom);
         int CalculatedWidth = (int) (FRAME_WIDTH * camera.zoom);
-        player = new Player(PLAYER_SPAWN_X, PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
+        player = new Player((int)getCords(), PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
         enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager);
 
         player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
-        player.setX(800);
+        System.out.println(getCords());
+        player.setX(getCords());
+        enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+
+        animationTimer = 0f;
+
+        playerInput = new InputsManager(player);
+        Gdx.input.setInputProcessor(playerInput);
+
+        setGameState(GameState.GAME_PLAYING);
+    }
+
+    public void restartGame(float coords) {
+        // Reinitialize essential objects
+        int CalculatedHeight = (int) (FRAME_HEIGHT * camera.zoom);
+        int CalculatedWidth = (int) (FRAME_WIDTH * camera.zoom);
+        System.out.println(getCords());
+        player = new Player((int)getCords(), PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
+        enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager);
+
+        player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        player.setCooldown(player.getAttackAnimationDuration() * 1000);
         enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
 
         animationTimer = 0f;
@@ -360,5 +395,13 @@ public class Game extends ApplicationAdapter {
         } catch (Exception e) {
             Gdx.app.error("GameMain", "Error during disposal", e);
         }
+    }
+
+    public float getCords() {
+        return cords;
+    }
+
+    public void setCords(float value) {
+        cords = value;
     }
 }

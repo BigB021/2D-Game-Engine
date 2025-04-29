@@ -71,7 +71,7 @@ public class GameOverScreen {
         retryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.restartGame();
+                game.restartGame(game.getCords());
                 game.setGameState(GameState.GAME_PLAYING);
 
             }
