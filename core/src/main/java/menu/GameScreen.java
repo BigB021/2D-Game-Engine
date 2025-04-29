@@ -3,8 +3,8 @@ package menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.Game;
-import com.GameState;
+import core.Game;
+import core.GameState;
 
 public class GameScreen {
     private Game game;
@@ -19,8 +19,6 @@ public class GameScreen {
             game.setGameState(GameState.PAUSE);
         }
 
-        // Le rendu du jeu est maintenant géré dans Game.renderGameWorld()
-        // Cette méthode est juste pour les contrôles UI spécifiques à l'écran de jeu
     }
 
     public void resize(int width, int height) {

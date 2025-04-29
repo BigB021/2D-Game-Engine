@@ -16,8 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.Game;
-import com.GameState;
+import core.Game;
+import core.GameState;
 
 public class OptionsScreen {
     private final Game game;
