@@ -42,11 +42,23 @@ This engine is designed as a base upon which full games can be developed, making
 - ├── **utilities/**
 - ├─── AnimatedConfig.java # Frame config per animated tile ID
 - └── **constants/**
+- ├─── AudiConstants.java
 - ├─── EntityConstants.java
 - ├─── MapTilesConstants.java
 - ├─── PhysicsConstants.java
 - ├─── TextureConstants.java
 - └─── FramesConstants.java
+- ├── **menu/**
+- ├── GameOverScreen.java
+- ├── GameScreen.java
+- ├── MainMenuScreen.java
+- ├── OptionsScreen.java
+- └── PauseScreen.java
+- ├── **audio/**
+- ├── MusicController.java
+- └── SoundController.java
+
+
 
 ## ️Getting Started
 
@@ -78,7 +90,7 @@ The engine includes debug rendering:
 
 ## Contributors
 - [Youssef Aitbouddroub](https://github.com/BigB021)
-- [Amine Amda](https://github.com/bighes121)
+- [Mohamed Amine Amda](https://github.com/bighes121)
 - [Houssam Elaoutmani](https://github.com/houssamelaoutmani)
-- [Sofiane El Amraoui](https://github.com/SEL1000)
+- [Soufiane El Amraoui](https://github.com/SEL1000)
 
