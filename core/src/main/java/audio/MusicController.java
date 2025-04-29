@@ -6,7 +6,8 @@ import com.badlogic.gdx.audio.Music;
 import java.util.HashMap;
 import java.util.Map;
 
-import static constants.AudiConstants.DEFAULT_MUSIC_VOLUME;
+
+import static utilities.constants.AudiConstants.DEFAULT_MUSIC_VOLUME;
 
 public class MusicController {
 

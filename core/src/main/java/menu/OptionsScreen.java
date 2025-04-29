@@ -2,6 +2,7 @@ package menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -51,11 +52,11 @@ public class OptionsScreen {
         soundVolumeLabel = new Label("Sound Volume: 0.00", labelStyle);
 
         // Création du bouton retour
-        TextButton backButton = new TextButton("Return to Main Menu", buttonStyle);
+        TextButton backButton = new TextButton("Resume", buttonStyle);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setGameState(GameState.MAIN_MENU);
+                game.setGameState(GameState.GAME_PLAYING);
             }
         });
 
@@ -73,7 +74,8 @@ public class OptionsScreen {
     }
     public void render(SpriteBatch batch) {
         // Le batch est déjà commencé dans la méthode appelante
-
+        Gdx.gl.glClearColor(Color.DARK_GRAY.r, Color.DARK_GRAY.g, Color.DARK_GRAY.b, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Mise à jour des libellés avec les valeurs actuelles
         musicVolumeLabel.setText("Music Volume: " + String.format("%.2f", game.getMusicController().getVolume()));
         soundVolumeLabel.setText("Sound Volume: " + String.format("%.2f", game.getSoundController().getMasterVolume()));

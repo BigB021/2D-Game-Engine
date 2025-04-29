@@ -89,6 +89,16 @@ public abstract class Entity {
 
     /**
      * Checks if the entity can move in the specified direction and updates the position.
+     /**
+     * Checks if the entity can move in the specified direction and updates the position.
+     *
+     * @param dx The horizontal movement.
+     * @param dy The vertical movement.
+     * @return true if the entity moved, false if it was blocked.
+     */
+
+    /**
+     * Checks if the entity can move in the specified direction and updates the position.
      *
      * @param dx The horizontal movement.
      * @param dy The vertical movement.
@@ -138,6 +148,7 @@ public abstract class Entity {
         }
         return moved;
     }
+
 
 
     //=====================Getters & Setters=====================

@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.Game;
 import com.GameState;
 
+import static utilities.constants.FramesConstants.WINDOW_HEIGHT;
+import static utilities.constants.FramesConstants.WINDOW_WIDTH;
+
 public class MainMenuScreen {
     private Game game;
     private Stage stage;
@@ -27,7 +30,7 @@ public class MainMenuScreen {
         this.game = game;
 
         // Créez un viewport qui s'adapte à l'écran
-        viewport = new FitViewport(1600,760);
+        viewport = new FitViewport(WINDOW_WIDTH,WINDOW_HEIGHT);
         stage = new Stage(viewport);
         // Ne pas définir l'input processor ici
         // Gdx.input.setInputProcessor(stage); - RETIRÉ
@@ -47,9 +50,9 @@ public class MainMenuScreen {
         stage.addActor(table);
 
         // Créez les boutons
-        TextButton playButton = new TextButton("Jouer", buttonStyle);
+        TextButton playButton = new TextButton("Play", buttonStyle);
         TextButton optionsButton = new TextButton("Options", buttonStyle);
-        TextButton quitButton = new TextButton("Quitter", buttonStyle);
+        TextButton quitButton = new TextButton("Quit", buttonStyle);
 
         // Ajoutez les boutons à la table
         table.add(playButton).padBottom(20).row();
@@ -81,6 +84,9 @@ public class MainMenuScreen {
 
     public void render(SpriteBatch batch) {
         // Le SpriteBatch est déjà commencé et sera fini dans la méthode appelante
+
+        Gdx.gl.glClearColor(Color.DARK_GRAY.r, Color.DARK_GRAY.g, Color.DARK_GRAY.b, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Mise à jour et rendu du stage
         stage.act(Gdx.graphics.getDeltaTime());

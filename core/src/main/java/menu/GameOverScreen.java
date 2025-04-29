@@ -18,6 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import static utilities.constants.FramesConstants.WINDOW_HEIGHT;
+import static utilities.constants.FramesConstants.WINDOW_WIDTH;
+
 public class GameOverScreen {
     private final Game game;
     private final Stage stage;
@@ -29,7 +32,7 @@ public class GameOverScreen {
     public GameOverScreen(final Game game) {
         this.game = game;
 
-        viewport = new FitViewport(1600, 760);
+        viewport = new FitViewport(WINDOW_WIDTH,WINDOW_HEIGHT);
         stage = new Stage(viewport);
 
         shapeRenderer = new ShapeRenderer();
@@ -59,11 +62,10 @@ public class GameOverScreen {
 
         // Boutons
         TextButton retryButton = new TextButton("Rejouer", buttonStyle);
-        TextButton mainMenuButton = new TextButton("Menu Principal", buttonStyle);
         TextButton quitButton = new TextButton("Quitter", buttonStyle);
 
         table.add(retryButton).padBottom(20).row();
-        table.add(mainMenuButton).padBottom(20).row();
+
         table.add(quitButton).padBottom(20).row();
 
         retryButton.addListener(new ClickListener() {
@@ -71,13 +73,7 @@ public class GameOverScreen {
             public void clicked(InputEvent event, float x, float y) {
                 game.restartGame();
                 game.setGameState(GameState.GAME_PLAYING);
-            }
-        });
 
-        mainMenuButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setGameState(GameState.MAIN_MENU);
             }
         });
 

@@ -1,5 +1,6 @@
 package inputs;
 
+import com.badlogic.gdx.Gdx;
 import physics.JumpPhysics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -12,9 +13,10 @@ import java.util.Set;
 import static utilities.constants.EntityConstants.*;
 import static utilities.constants.FramesConstants.FRAME_WIDTH;
 
-import static constants.AudiConstants.*;
-import static constants.EntityConstants.*;
-import static constants.FramesConstants.FRAME_WIDTH;
+
+import static utilities.constants.AudiConstants.*;
+import static utilities.constants.EntityConstants.*;
+import static utilities.constants.FramesConstants.FRAME_WIDTH;
 import audio.SoundController;
 /**
  * Handles input processing for the game.
@@ -71,7 +73,7 @@ public class InputsManager implements InputProcessor {
 
         // Handle movement to the right
         if (pressedKeys.contains(Input.Keys.D) || pressedKeys.contains(Input.Keys.RIGHT)) {
-            soundController.playSound("RUNNING_SOUND", 1f, true, (float) rand);
+            soundController.playSound("RUNNING_SOUND", 1f, true);
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                 player.setPlayerAction(RUN);
             } else {
@@ -84,7 +86,7 @@ public class InputsManager implements InputProcessor {
 
         // Handle movement to the left
         if (pressedKeys.contains(Input.Keys.A) || pressedKeys.contains(Input.Keys.LEFT)) {
-            soundController.playSound("RUNNING_SOUND", 1f, true, (float) rand);
+            soundController.playSound("RUNNING_SOUND", 1f, true);
             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                 player.setPlayerAction(RUN);
             } else {
@@ -161,14 +163,15 @@ public class InputsManager implements InputProcessor {
         // Handle jumping
         if (keycode == Input.Keys.SPACE) {
             if (player.isEntityJumping()) {
+                soundController.stopSound("FAST_SIMPLE_CHOP");
+                soundController.playSound("FAST_SIMPLE_CHOP", 1f, false);
                 JumpPhysics.jumpPlayer(player);
                 player.setPlayerAction(JUMP);    // ← switch into jump action
                 player.setMoving(false);         // optional: stop any horizontal walk/run
                 player.updateAnimation();        // force the jump texture to load immediately
             }
             return true;
-           }
-
+        }
 
 
         return false;

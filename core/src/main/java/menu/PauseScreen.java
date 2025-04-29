@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.Game;
 import com.GameState;
 
+import static utilities.constants.FramesConstants.WINDOW_HEIGHT;
+import static utilities.constants.FramesConstants.WINDOW_WIDTH;
+
 public class PauseScreen {
     private Game game;
     private Stage stage;
@@ -28,7 +31,7 @@ public class PauseScreen {
         this.game = game;
 
         // Initialisation de la vue et du stage
-        viewport = new FitViewport(1600,760);
+        viewport = new FitViewport(WINDOW_WIDTH,WINDOW_HEIGHT);
         stage = new Stage(viewport);
         // Ne pas définir l'input processor ici
         // Gdx.input.setInputProcessor(stage); - RETIRÉ
@@ -51,9 +54,9 @@ public class PauseScreen {
         stage.addActor(table);
 
         // Créez les boutons
-        TextButton resumeButton = new TextButton("Reprendre", buttonStyle);
+        TextButton resumeButton = new TextButton("Resume", buttonStyle);
         TextButton optionsButton = new TextButton("Options", buttonStyle);
-        TextButton mainMenuButton = new TextButton("Menu Principal", buttonStyle);
+        TextButton mainMenuButton = new TextButton("Main menu", buttonStyle);
 
         // Ajoutez les boutons à la table
         table.add(resumeButton).padBottom(20).row();

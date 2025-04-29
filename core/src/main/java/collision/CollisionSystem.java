@@ -6,6 +6,7 @@ import entities.Enemy;
 import entities.Entity;
 import entities.Player;
 import tileManager.TileInstance;
+import tileManager.TileManager;
 import utilities.TileFace;
 
 import static utilities.constants.EntityConstants.LEFT;
@@ -53,6 +54,10 @@ public class CollisionSystem {
     public static TileFace getCollisionFace(Entity entity, TileInstance tile) {
         Rectangle intersection = new Rectangle();
         if (!Intersector.intersectRectangles(entity.getHitBox(), tile.collisionBox, intersection)) {
+            System.out.println(tile.prototype.image.toString());
+            if(tile.prototype.toString().equals("assets/tilesAssets/tiles/190.png")){
+                System.out.println("Check point !!!");
+            }
             return TileFace.NONE;
         }
 
@@ -80,15 +85,26 @@ public class CollisionSystem {
 
     public static void resolveTileCollision(Entity entity, TileInstance tile, TileFace face) {
         Rectangle overlap = new Rectangle();
+        if (!tile.iscollidqble()) {
+
+                System.out.println("Check point !!!");
+
+        };
+
 
         if (!Intersector.intersectRectangles(entity.getHitBox(), tile.collisionBox, overlap)) {
             return;
         }
 
+
+
+
+
         switch (face) {
             case TOP:  // landing on tile
                 entity.setY(tile.collisionBox.y + tile.collisionBox.height);
                 entity.setVelocityY(0);
+
                 entity.setJumping(false);
                 break;
             case BOTTOM: // hit head
@@ -96,6 +112,12 @@ public class CollisionSystem {
                 break;
             case LEFT:
                 entity.setX(tile.collisionBox.x - tile.collisionBox.width);
+                System.out.println(tile.prototype.image.toString());
+                if(tile.prototype.toString().equals("assets/tilesAssets/tiles/105.png")){
+                    System.out.println("Check point !!!");
+                }
+
+
                 break;
             case RIGHT:
                 entity.setX(tile.collisionBox.x + tile.collisionBox.width - entity.getHitBox().width);
@@ -121,6 +143,7 @@ public class CollisionSystem {
 
         for (int c = colStart; c <= colEnd; c++) {
             TileInstance t = entity.tileManager.getTileInstance(c, rowBelow, 0);
+            if(t != null) {
             if(t.prototype != null) {
                 if (t.prototype.collision) {
                     // Overlap test
@@ -129,7 +152,7 @@ public class CollisionSystem {
                         return true;
                     }
                 }
-            }
+            }}
         }
 
         return false;

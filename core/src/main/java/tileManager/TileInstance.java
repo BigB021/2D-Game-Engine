@@ -20,4 +20,12 @@ public class TileInstance {
         this.prototype = prototype;
         this.collisionBox = collisionBox;
     }
+    @Override
+    public String toString() {
+
+        return  this.prototype.image.toString().split("/")[-1];
+    }
+    public boolean iscollidqble(){
+       return this.prototype.collision;
+    }
 }

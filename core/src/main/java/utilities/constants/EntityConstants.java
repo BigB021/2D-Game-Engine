@@ -22,9 +22,9 @@ public class EntityConstants {
 
     // Respawn Constants
     public static final int PLAYER_SPAWN_X = 1;
-    public static final int PLAYER_SPAWN_Y = 192;
+    public static final int PLAYER_SPAWN_Y = 256;
     public static final int ENEMY_SPAWN_X = 400;
-    public static final int ENEMY_SPAWN_Y = 192;
+    public static final int ENEMY_SPAWN_Y = 256;
 
     public static final float DX = 0.000000001f;
     public static final float DY = 0.000000001f;
