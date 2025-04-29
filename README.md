@@ -1,33 +1,84 @@
-# 2DGameEngine
+# 2D Platformer Game Engine
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+This project is a **simple, extensible 2D game engine** for platformer-style games, built with [LibGDX](https://libgdx.com/). It provides essential components such as an entity system, physics engine (gravity & jumping), tile management (including animated tiles), and a basic rendering pipeline with camera tracking and debug tools.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+This engine is designed as a base upon which full games can be developed, making it ideal for educational purposes, prototyping, or lightweight game projects.
 
-## Platforms
+## Features
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+- **Entity System**: Abstract base class for players, enemies, or any moving object.
+- **Physics Engine**:
+    - Gravity simulation
+    - Jump mechanics
+    - Configurable constants for tuning
+- **Tile Engine**:
+    - Supports both static and animated tiles
+    - Tile collision via `Rectangle` hitboxes
+- **Rendering System**:
+    - Sprite animation using `TextureRegion`
+    - Camera follows the player while clamped to the map boundaries
+    - Debug rendering with `ShapeRenderer`
+- **Input Handling**: Modular input system for controlling the player
+- **Animation Configs**: Per-tile animation frame settings using a config map
 
-## Gradle
+## Architecture Overview
+- src/
+- ├── **core/** 
+- └─── Game.java # Core LibGDX game lifecycle (create, render, dispose)
+- ├── **entities/**
+- ├─── Entity.java # Base entity class (position, hitboxes, movement)
+- ├─── Player.java # Handles player logic
+- └─── Enemy.java # Simple enemy with basic tracking AI
+- ├─── **inputs/**
+- └─── InputsManager.java # Keyboard input mapping to player actions
+- ├── **physics/**
+- ├─── GravityPhysics.java # Applies gravity over time
+- └─── JumpPhysics.java # Handles upward motion and jump physics
+- ├── **tileManager/**
+- ├─── TileManager.java # Loads and renders tiles from folder
+- ├─── Tile.java # Base tile class
+- ├─── AnimatedTile.java # Tiles with frame-based animation
+- └─── TileInstance.java # Individual tile with collision data
+- ├── **utilities/**
+- ├─── AnimatedConfig.java # Frame config per animated tile ID
+- └── **constants/**
+- ├─── EntityConstants.java
+- ├─── MapTilesConstants.java
+- ├─── PhysicsConstants.java
+- ├─── TextureConstants.java
+- └─── FramesConstants.java
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+## ️Getting Started
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+### Requirements
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+- Java 8+
+- [LibGDX Setup](https://libgdx.com/wiki/start/project-generation) with Gradle
+- IDE like IntelliJ IDEA or VS Code
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https:https: //github.com/BigB021/2D-Game-Engine.git
+   ```
+2. Open the project in your IDE and refresh Gradle.
+3. Run the desktop launcher via Game.java.
+
+🧪 Debug Tools
+The engine includes debug rendering:
+• Blue rectangle → Player hitbox
+• Red rectangle → Enemy hitbox
+• Yellow rectangle → Player attack range
+• Green rectangle → Enemy attack range
+
+
+## License
+[MIT License](LICENSE)
+
+## Contributors
+- [Youssef Aitbouddroub](https://github.com/BigB021)
+- [Amine Amda](https://github.com/bighes121)
+- [Houssam Elaoutmani](https://github.com/houssamelaoutmani)
+- [Sofiane El Amraoui](https://github.com/SEL1000)
+

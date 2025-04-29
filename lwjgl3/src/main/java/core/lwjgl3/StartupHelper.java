@@ -14,7 +14,7 @@
  */
 //Note, the above license and copyright applies to this file only.
 
-package com.lwjgl3;
+package core.lwjgl3;
 
 import org.lwjgl.system.macosx.LibC;
 
