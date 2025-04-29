@@ -1,4 +1,73 @@
 META-INF/MANIFEST.MF
+assets/2 Background/1.png
+assets/2 Background/2.png
+assets/2 Background/3.png
+assets/2 Background/4.png
+assets/2 Background/5.png
+assets/2 Background/Background.png
+assets/3 Objects/0.png
+assets/3 Objects/1.png
+assets/3 Objects/2.png
+assets/3 Objects/3.png
+assets/3 Objects/4.png
+assets/3 Objects/5.png
+assets/3 Objects/6.png
+assets/3 Objects/7.png
+assets/3 Objects/8.png
+assets/3 Objects/9.png
+assets/3 Objects/Barrel1.png
+assets/3 Objects/Barrel2.png
+assets/3 Objects/Barrel3.png
+assets/3 Objects/Barrel4.png
+assets/3 Objects/Bench.png
+assets/3 Objects/Board1.png
+assets/3 Objects/Board2.png
+assets/3 Objects/Board3.png
+assets/3 Objects/Box1.png
+assets/3 Objects/Box2.png
+assets/3 Objects/Box3.png
+assets/3 Objects/Box4.png
+assets/3 Objects/Box5.png
+assets/3 Objects/Box6.png
+assets/3 Objects/Box7.png
+assets/3 Objects/Box8.png
+assets/3 Objects/Bucket.png
+assets/3 Objects/Fence1.png
+assets/3 Objects/Fence2.png
+assets/3 Objects/Fence3.png
+assets/3 Objects/Fire-extinguisher1.png
+assets/3 Objects/Fire-extinguisher2.png
+assets/3 Objects/Fire-extinguisher3.png
+assets/3 Objects/Flag.png
+assets/3 Objects/Ladder1.png
+assets/3 Objects/Ladder2.png
+assets/3 Objects/Ladder3.png
+assets/3 Objects/Locker1.png
+assets/3 Objects/Locker2.png
+assets/3 Objects/Locker3.png
+assets/3 Objects/Locker4.png
+assets/3 Objects/Mop.png
+assets/3 Objects/Pointer1.png
+assets/3 Objects/Pointer2.png
+assets/4 Animated objects/Card.png
+assets/4 Animated objects/Chest.png
+assets/4 Animated objects/Entry.png
+assets/4 Animated objects/Hammer.png
+assets/4 Animated objects/Money.png
+assets/4 Animated objects/Platform.png
+assets/4 Animated objects/Screen1.png
+assets/4 Animated objects/Screen2.png
+assets/4 Animated objects/Transporter.png
+assets/4 Animated objects/Transporter1.png
+assets/4 Animated objects/Transporter2.png
+assets/4 Animated objects/Transporter3.png
+assets/Font.txt
+assets/Free Assets Craftpix!.url
+assets/PSD/Animated_objects.psd
+assets/PSD/Background.psd
+assets/PSD/Objects.psd
+assets/PSD/Tiles.psd
+assets/license.txt
 enemyTextures/Attack_1.png
 enemyTextures/Attack_2.png
 enemyTextures/Attack_3.png

@@ -1,4 +1,4 @@
-package constants;
+package utilities.constants;
 
 public class FramesConstants {
     // Frame Constants

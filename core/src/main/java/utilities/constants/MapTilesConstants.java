@@ -1,4 +1,4 @@
-package constants;
+package utilities.constants;
 
 import java.util.HashMap;
 import java.util.List;

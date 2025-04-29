@@ -3,13 +3,13 @@ package entities;
 import collision.CollisionSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import mapManager.tileManager.TileManager;
+import tileManager.TileManager;
 
-import static constants.EntityConstants.*;
-import static constants.FramesConstants.FRAME_DELAY;
-import static constants.FramesConstants.FRAME_WIDTH;
-import static constants.MapTilesConstants.TILE_SIZE;
-import static constants.TextureConstants.*;
+import static utilities.constants.EntityConstants.*;
+import static utilities.constants.TextureConstants.*;
+import static utilities.constants.FramesConstants.FRAME_DELAY;
+import static utilities.constants.FramesConstants.FRAME_WIDTH;
+import static utilities.constants.MapTilesConstants.TILE_SIZE;
 
 public class Enemy extends Entity {
 
@@ -30,6 +30,18 @@ public class Enemy extends Entity {
     private Texture hurtTexture;
     private Texture deadTexture;
 
+    /**
+     * Constructs an Enemy object.
+     *
+     * @param x           Initial x-coordinate.
+     * @param y           Initial y-coordinate.
+     * @param width       Width of the enemy.
+     * @param height      Height of the enemy.
+     * @param enemySpeed  Movement speed of the enemy.
+     * @param health      Health of the enemy.
+     * @param player      The player object the enemy will interact with.
+     * @param tileManager TileManager instance for collision checks.
+     */
     public Enemy(int x, int y, int width, int height,double enemySpeed,int health ,Player player, TileManager tileManager) {
         super(x, y, width, height,health,tileManager);
         this.player = player;
@@ -45,7 +57,9 @@ public class Enemy extends Entity {
         setSprite(idleTexture);
     }
 
-    // Set enemy's initial direction towards the player
+    /**
+     * Initializes the enemy's direction towards the player.
+     */
     public void initDirection(){
         if (player.x - this.x > 0)
             this.entityDirection = RIGHT;
@@ -126,13 +140,15 @@ public class Enemy extends Entity {
         return new TextureRegion(getSprite() ,x + width,y, getEntityDirection() * width,height);
     }
 
-    // Move enemy
-    // todo: OPTIMIZE fighting mechanism
+    /**
+     * Moves the enemy based on its current state and interactions with the player.
+     */
     public void moveEnemy(){
         if(canMove(DX,DY)) {
             handleDeath();
             updateHitboxes();
-            if (isDeathAnimationOngoing()) {
+
+            if (isDying()) {
                 updateAnimation();
                 updateHitboxes();
                 return;
@@ -165,6 +181,9 @@ public class Enemy extends Entity {
 
     // =====================Move Enemy submethods=====================
 
+    /**
+     * Respawns enemy to spawn point after his death
+     */
     private void respawnEnemy(){
         this.setX(ENEMY_SPAWN_X);
         this.setY(ENEMY_SPAWN_Y);
@@ -174,7 +193,11 @@ public class Enemy extends Entity {
         setEnemyAction(IDLE);
     }
 
-    private boolean isDeathAnimationOngoing() {
+    /**
+     * Checks if death animation is still on going
+     * @return if elapsed time is greater than death animation duration
+     */
+    private boolean isDying() {
         if (enemyAction == DEAD) {
             long elapsed = System.currentTimeMillis() - deathStartTime;
             return elapsed < getDeathDuration();
@@ -182,6 +205,9 @@ public class Enemy extends Entity {
         return false;
     }
 
+    /**
+     * Handles enemy's death
+     */
     private void handleDeath() {
         if(getEntityHealth() <= 0 && enemyAction != DEAD){
             setEnemyAction(DEAD);
@@ -191,7 +217,9 @@ public class Enemy extends Entity {
         }
     }
 
-
+    /**
+     * set enemy's direction towards the player
+     */
     private void updateDirectionTowardsPlayer(){
 
         if(this.getHitBox().x - player.getHitBox().x >= 0){
@@ -202,18 +230,28 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     *  Checks if player is within enemy's pursue distance
+     * @return if distance between player and enemy is greater than pursue distance
+     */
     private  boolean shouldPursuePlayer(){
         float distanceX = Math.abs(this.getHitBox().x - player.getHitBox().x);
         if(Math.abs(this.getY() - player.getY()) <= TILE_SIZE) return distanceX <= DISTANCE;
         return false;
     }
 
+    /**
+     * Update enemy's position based on if player is within pursue distance
+     */
     private  void updateMovementBasedOnPlayer(){
         updateDirectionTowardsPlayer();
         setRunningState();
         pursuePlayer();
     }
 
+    /**
+     * Handles combat between enemy and player
+     */
     private void handleCombat(){
         // do nothing if collision is not detected
         if(!CollisionSystem.checkPlayerCollision(player, this)) return ;
@@ -229,20 +267,23 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     * When attacked by player, enemy takes damage and loads HURT animation
+     */
     private void handlePlayerAttack(){
         if(player.isAttacking() && player.getAttackHitBox().overlaps(this.getHitBox())){
             this.setEntityHealth(this.getEntityHealth() - PLAYER_ATTACK_DAMAGE);
             this.setEnemyAction(HURT);
             this.hurtStartTime = System.currentTimeMillis();
             this.setAttacking(false);
-            // debug System.out
-            System.out.println("Enemy health:"+ this.getEntityHealth());
         }
     }
 
+    /**
+     * Attacks player if enemy collides with him and attack cooldown is elapsed
+     * @param currentTime: current time to check with last attack time
+     */
     private void handleEnemyAttack(long currentTime){
-        // debug System.out
-        System.out.println("Cooldown Detected:" + player.getCooldown());
         this.lastAttackTime = currentTime;
         this.setAnimation_index(3 * FRAME_WIDTH);
 
@@ -254,6 +295,9 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     * Moves enemy towards the player if he's within pursue distance
+     */
     private void pursuePlayer(){
         float speed = (enemyAction == RUN) ? (float) (enemySpeed * 2) : (float) enemySpeed;
         this.setX(this.getX() + speed * getEntityDirection());
@@ -271,6 +315,11 @@ public class Enemy extends Entity {
         return (long)(frames * FRAME_DELAY * 1000);
     }
 
+    /**
+     * Calculates the total duration of the hurt animation in milliseconds.
+     *
+     * @return the hurt duration in milliseconds.
+     */
     public long getHurtDuration() {
         int frames = hurtTexture.getWidth() / FRAME_WIDTH;
         return (long)(frames * FRAME_DELAY * 1000);
@@ -279,6 +328,7 @@ public class Enemy extends Entity {
     /**
      * Calculate total duration of the death animation in ms.
      * Derives frame count from sprite width / FRAME_WIDTH.
+     * @return the death duration in milliseconds.
      */
     public long getDeathDuration() {
         // number of frames in the death sprite sheet:

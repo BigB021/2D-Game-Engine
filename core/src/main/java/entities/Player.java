@@ -1,17 +1,16 @@
 package entities;
 
 import collision.CollisionSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import mapManager.tileManager.TileManager;
+import tileManager.TileManager;
 import physics.JumpPhysics;
 
-import static constants.EntityConstants.*;
-import static constants.FramesConstants.*;
-import static constants.MapTilesConstants.*;
-import static constants.PhysicsConstants.GRAVITY_SPEED;
-import static constants.TextureConstants.*;
+import static utilities.constants.EntityConstants.*;
+import static utilities.constants.FramesConstants.*;
+import static utilities.constants.MapTilesConstants.*;
+import static utilities.constants.PhysicsConstants.GRAVITY_SPEED;
+import static utilities.constants.TextureConstants.*;
 
 /**
  * Represents the player entity in the game, handling movement, actions, and animations.
@@ -122,8 +121,9 @@ public class Player extends Entity {
         }
     }
 
+
     /**
-     * Loads and returns the appropriate animation frame based on direction.
+     * Loads the animation frame based on the player's direction and returns a TextureRegion for rendering.
      *
      * @param x      X-coordinate of the animation frame.
      * @param y      Y-coordinate of the animation frame.
@@ -140,15 +140,18 @@ public class Player extends Entity {
     }
 
     /**
-     * Moves the player based on their current state and updates their hitBox.
+     *  Moves the player entity based on the current action,
+     *  updates the player's position, handles collisions,
+     *  and manages player health.
      */
     public void movePlayer() {
 
         JumpPhysics.applyJumpPhysics(this);
+
         if (getEntityHealth() <= 0) {
             setPlayerAction(DEAD);
             this.updateAnimation();
-            respawnPalyer();
+            respawnPlayer();
 
         }
 
@@ -178,14 +181,18 @@ public class Player extends Entity {
                 setDead(true);
                 setPlayerAction(DEAD);
                 updateAnimation();
-                respawnPalyer();
+                respawnPlayer();
             }
 
         }
     }
 
-    private void respawnPalyer(){
-        this.setX(checkpointX); // respawn player
+    /**
+     * Resets the player’s position to the last checkpoint and restores health.
+     * This method is called when the player dies.
+    */
+    private void respawnPlayer(){
+        this.setX(checkpointX);
         this.setY(checkpointY);
         this.updateHitboxes();
         this.setEntityHealth(10);
@@ -197,27 +204,19 @@ public class Player extends Entity {
 
     }
 
+
     /**
      * Calculates and returns the duration of the attack animation.
      *
      * @return Duration of attack animation in seconds.
      */
     public float getAttackAnimationDuration() {
-        return ATTACK_1_FRAMES * FRAME_DELAY; // Returns seconds
+        return ATTACK_1_FRAMES * FRAME_DELAY;
 
     }
 
 
-
-    // Getters and Setters
-
-    public double getPlayerSpeed() {
-        return playerSpeed;
-    }
-
-    public boolean isMoving() {
-        return isMoving;
-    }
+    //=====================Getters & Setters=====================
 
     public boolean isAttacking() {
         return isAttacking;
@@ -233,10 +232,6 @@ public class Player extends Entity {
 
     public int getAnimation_index() {
         return animation_index;
-    }
-
-    public void setPlayerSpeed(double playerSpeed) {
-        this.playerSpeed = playerSpeed;
     }
 
     public void setMoving(boolean moving) {
@@ -255,10 +250,6 @@ public class Player extends Entity {
 
     public void setPlayerAction(int playerAction) {
         this.playerAction = playerAction;
-    }
-
-    public int getPlayerAction() {
-        return playerAction;
     }
 
     public void setAnimation_index(int animation_index) {

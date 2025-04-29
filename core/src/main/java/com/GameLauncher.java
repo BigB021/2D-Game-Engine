@@ -5,8 +5,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 import java.io.IOException;
 
-import static constants.FramesConstants.WINDOW_HEIGHT;
-import static constants.FramesConstants.WINDOW_WIDTH;
+import static utilities.constants.FramesConstants.WINDOW_HEIGHT;
+import static utilities.constants.FramesConstants.WINDOW_WIDTH;
 
 public class GameLauncher {
     public static void main(String[] args) throws IOException {

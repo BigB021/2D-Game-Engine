@@ -1,4 +1,4 @@
-package constants;
+package utilities.constants;
 
 public class TextureConstants {
     // Player Assets

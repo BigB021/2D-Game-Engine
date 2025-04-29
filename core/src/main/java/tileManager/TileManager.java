@@ -1,10 +1,8 @@
-package mapManager.tileManager;
+package tileManager;
 import java.io.File;
 
-import collision.CollisionSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,14 +10,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import entities.Entity;
 import utilities.AnimatedConfig;
-import utilities.TileFace;
 import utilities.TilesSet;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import static constants.MapTilesConstants.*;
-import static constants.TextureConstants.TILE_FOLDER;
+
+import static utilities.constants.MapTilesConstants.*;
+import static utilities.constants.TextureConstants.TILE_FOLDER;
 
 
 /**
@@ -216,8 +214,6 @@ public class TileManager {
                     TextureRegion frame = ((AnimatedTile) t).getCurrentFrame(Gdx.graphics.getDeltaTime());
                     batch.draw(frame, col*tileSize, row*tileSize);
                 } else if (t.image != null) {
-                    //Rectangle box = t.collisionBox;
-                    //box.set(col*tileSize, row*tileSize, tileSize, tileSize);
                     Rectangle box = new Rectangle(col*tileSize, row*tileSize, tileSize, tileSize);
 
                     // Saving instance if not already saved
@@ -227,6 +223,7 @@ public class TileManager {
 
                     // Draw tile
                     batch.draw(t.image, col*tileSize, row*tileSize);
+
                     // debug: draw tiles hitbox (red for collidable and yellow for non-collidable)
 //                    shape.setColor(t.collision ? Color.YELLOW : Color.RED);
 //                    shape.rect(box.x, box.y, box.width, box.height);

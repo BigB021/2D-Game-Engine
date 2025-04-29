@@ -3,22 +3,21 @@ package entities;
 import collision.CollisionSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import mapManager.tileManager.Tile;
-import mapManager.tileManager.TileInstance;
-import mapManager.tileManager.TileManager;
-import physics.JumpPhysics;
+import tileManager.TileInstance;
+import tileManager.TileManager;
 import utilities.TileFace;
 
-import static constants.EntityConstants.LEFT;
-import static constants.EntityConstants.RIGHT;
-import static constants.FramesConstants.FRAME_HEIGHT;
-import static constants.FramesConstants.FRAME_WIDTH;
+import static utilities.constants.EntityConstants.LEFT;
+import static utilities.constants.EntityConstants.RIGHT;
+import static utilities.constants.FramesConstants.FRAME_HEIGHT;
+import static utilities.constants.FramesConstants.FRAME_WIDTH;
 
 /**
  * Abstract class that represents base entity in the game.
  * Provides common properties and methods for all game entities.
  */
 public abstract class Entity {
+
     protected float x, y;
     protected Texture sprite;
     protected Rectangle hitBox;
@@ -29,32 +28,30 @@ public abstract class Entity {
 
     protected long deathStartTime = 0;
 
+    // Physics properties
     protected float velocityY = 0f;
+    private float jumpVelocity;
 
 
-    // Entity state
+    // Entity state flags
     protected boolean isMoving;
     protected boolean isDead;
     protected boolean isAttacking;
     protected boolean isJumping;
     protected boolean isGrounded;
 
-    // Jumping physics
-    private float jumpVelocity;
-    private static final float JUMP_FORCE = 15f;
-    private static final float GRAVITY = 0.5f;
-    // todo: get the y coordinates of the ground
-    private static final int GROUND_Y = 192;
 
     public TileManager tileManager;
 
     /**
-     * Constructs an entity with a specified position and hitbox dimensions.
+     * Constructor for the Entity.
      *
-     * @param x      The initial x-coordinate of the entity.
-     * @param y      The initial y-coordinate of the entity.
+     * @param x      The initial x-position of the entity.
+     * @param y      The initial y-position of the entity.
      * @param width  The width of the entity's sprite.
      * @param height The height of the entity's sprite.
+     * @param health The initial health of the entity.
+     * @param tileManager The TileManager instance to manage collisions.
      */
     public Entity(float x, float y, int width, int height, int health,TileManager tileManager) {
         this.x = x;
@@ -90,9 +87,13 @@ public abstract class Entity {
 
     }
 
-
-
-
+    /**
+     * Checks if the entity can move in the specified direction and updates the position.
+     *
+     * @param dx The horizontal movement.
+     * @param dy The vertical movement.
+     * @return true if the entity moved, false if it was blocked.
+     */
     public boolean canMove(float dx, float dy) {
         boolean moved = false;
 
@@ -104,6 +105,7 @@ public abstract class Entity {
             setX(getX() + dx);
             updateHitboxes();
 
+            // Check if the movement collides with any tiles
             for (TileInstance tileInstance : tileManager.getOverlappingTiles(0, this)) {
                 if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
 
@@ -122,6 +124,7 @@ public abstract class Entity {
             setY(getY() + dy);
             updateHitboxes();
 
+            // Check for collisions during vertical movement
             for (TileInstance tileInstance : tileManager.getOverlappingTiles(0, this)) {
                 if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
                 TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
@@ -133,16 +136,11 @@ public abstract class Entity {
             }
             moved |= dy != 0;
         }
-
-
         return moved;
     }
 
 
-
-
-
-    // Getters & Setters
+    //=====================Getters & Setters=====================
     public Texture getSprite() {
         return sprite;
     }
@@ -173,20 +171,12 @@ public abstract class Entity {
 
     public Rectangle getAttackHitBox() { return attackHitBox; }
 
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
-    }
-
     public int getEntityHealth() { return entityHealth; }
 
     public void setEntityHealth(int health) { this.entityHealth = health; }
 
-    public boolean isJumping() {
-        return isJumping;
-    }
-
-    public boolean isMoving() {
-        return isMoving;
+    public boolean isEntityJumping() {
+        return !isJumping;
     }
 
     public boolean isDead(){
@@ -213,8 +203,6 @@ public abstract class Entity {
 
     public void setGrounded(boolean grounded) {isGrounded = grounded;}
 
-    public void setAttackHitBox(Rectangle hitBox) { this.attackHitBox = hitBox; }
-
     public void setEntityDirection(int entityDirection) {
         this.entityDirection = entityDirection;
     }
@@ -226,6 +214,7 @@ public abstract class Entity {
     public void setVelocityY(float velocityY) {
         this.velocityY = velocityY;
     }
+
     public float getVelocityY() {
         return velocityY;
     }
@@ -233,6 +222,7 @@ public abstract class Entity {
     public float getJumpVelocity() {
         return jumpVelocity;
     }
+
     public void setJumpVelocity(float jumpVelocity) {
         this.jumpVelocity = jumpVelocity;
     }

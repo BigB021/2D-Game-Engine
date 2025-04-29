@@ -2,10 +2,16 @@ package physics;
 
 import entities.Entity;
 
-import static constants.PhysicsConstants.*;
+import static utilities.constants.PhysicsConstants.GRAVITY;
+import static utilities.constants.PhysicsConstants.MAX_FALL_SPEED;
 
 public class GravityPhysics {
 
+    /**
+     * Applies gravity to the given entity in a game,
+     * adjusting its vertical velocity and position based on whether it is grounded or not
+     * @param entity : The entity on which gravity is being applied.
+     */
     public static void applyGravity(Entity entity) {
         // Don't apply gravity if the player is grounded
 

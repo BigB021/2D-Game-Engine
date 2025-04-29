@@ -5,14 +5,13 @@ import com.badlogic.gdx.math.Rectangle;
 import entities.Enemy;
 import entities.Entity;
 import entities.Player;
-import mapManager.tileManager.Tile;
-import mapManager.tileManager.TileInstance;
+import tileManager.TileInstance;
 import utilities.TileFace;
 
-import static constants.EntityConstants.LEFT;
-import static constants.EntityConstants.RIGHT;
-import static constants.MapTilesConstants.SCREEN_WIDTH;
-import static constants.MapTilesConstants.TILE_SIZE;
+import static utilities.constants.EntityConstants.LEFT;
+import static utilities.constants.EntityConstants.RIGHT;
+import static utilities.constants.MapTilesConstants.SCREEN_WIDTH;
+import static utilities.constants.MapTilesConstants.TILE_SIZE;
 
 public class CollisionSystem {
 
@@ -60,7 +59,7 @@ public class CollisionSystem {
         float width = intersection.getWidth();
         float height = intersection.getHeight();
 
-        // Which side has the smallest overlap → assume collision from that side
+        // Assume collision from the side that has the smallest overlap
         if (width < height) {
             // horizontal collision
             if (entity.getHitBox().x < tile.collisionBox.x) {
@@ -88,12 +87,8 @@ public class CollisionSystem {
 
         switch (face) {
             case TOP:  // landing on tile
-                // 1) snap to top of the tile
                 entity.setY(tile.collisionBox.y + tile.collisionBox.height);
-                // 2) stop vertical motion
                 entity.setVelocityY(0);
-                // 3) mark as grounded so gravity stops next frame
-                //entity.setGrounded(true);
                 entity.setJumping(false);
                 break;
             case BOTTOM: // hit head
@@ -127,18 +122,16 @@ public class CollisionSystem {
         for (int c = colStart; c <= colEnd; c++) {
             TileInstance t = entity.tileManager.getTileInstance(c, rowBelow, 0);
             if(t.prototype != null) {
-            if (t != null && t.prototype.collision) {
-                // Optionally a tiny overlap test here:
-                if (t.collisionBox.y + t.collisionBox.height >= feetY) {
-                    entity.setGrounded(true);
-                    //System.out.println("Grounded true at tile row " + rowBelow);
-                    return true;
+                if (t.prototype.collision) {
+                    // Overlap test
+                    if (t.collisionBox.y + t.collisionBox.height >= feetY) {
+                        entity.setGrounded(true);
+                        return true;
+                    }
                 }
-            }
             }
         }
 
-        //System.out.println("Grounded false");
         return false;
     }
 

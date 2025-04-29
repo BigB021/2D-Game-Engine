@@ -9,8 +9,8 @@ import entities.Player;
 import java.util.HashSet;
 import java.util.Set;
 
-import static constants.EntityConstants.*;
-import static constants.FramesConstants.FRAME_WIDTH;
+import static utilities.constants.EntityConstants.*;
+import static utilities.constants.FramesConstants.FRAME_WIDTH;
 
 /**
  * Handles input processing for the game.
@@ -124,7 +124,7 @@ public class InputsManager implements InputProcessor {
 
         // Handle jumping
         if (keycode == Input.Keys.SPACE) {
-            if (!player.isJumping()) {
+            if (player.isEntityJumping()) {
                 JumpPhysics.jumpPlayer(player);
                 player.setPlayerAction(JUMP);    // ← switch into jump action
                 player.setMoving(false);         // optional: stop any horizontal walk/run
