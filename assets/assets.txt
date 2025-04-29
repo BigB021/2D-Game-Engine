@@ -233,9 +233,12 @@ tilesAssets/tiles/162.png
 tilesAssets/tiles/163.png
 tilesAssets/tiles/164.png
 tilesAssets/tiles/165.png
+tilesAssets/tiles/166.png
+tilesAssets/tiles/167.png
 tilesAssets/tiles/17.png
 tilesAssets/tiles/18.png
 tilesAssets/tiles/19.png
+tilesAssets/tiles/190.png
 tilesAssets/tiles/2.png
 tilesAssets/tiles/20.png
 tilesAssets/tiles/21.png
