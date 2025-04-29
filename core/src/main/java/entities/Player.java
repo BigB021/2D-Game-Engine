@@ -22,6 +22,7 @@ public class Player extends Entity {
     private boolean isDead;
     private boolean isAttacking;
     private boolean isJumping;
+    //private int playerDirection;
     private double playerSpeed;
     private double cooldown;
     private long lastAttackTime = 0;
@@ -38,6 +39,7 @@ public class Player extends Entity {
     private Texture hurtTexture;
     private Texture deadTexture;
 
+    private int maxHealth = 100;  // Default max health for the player
 
     /**
      * Constructs a Player object with specified position, size, and speed.
@@ -121,9 +123,8 @@ public class Player extends Entity {
         }
     }
 
-
     /**
-     * Loads the animation frame based on the player's direction and returns a TextureRegion for rendering.
+     * Loads and returns the appropriate animation frame based on direction.
      *
      * @param x      X-coordinate of the animation frame.
      * @param y      Y-coordinate of the animation frame.
@@ -202,6 +203,7 @@ public class Player extends Entity {
     // todo: implement a method that updates checkPoint
     private void updateCheckPoint() {
 
+        }
     }
 
 
@@ -233,6 +235,25 @@ public class Player extends Entity {
     public int getAnimation_index() {
         return animation_index;
     }
+
+    public void setPlayerSpeed(double playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
+
+/*
+    //todo : add setPlyer to change the GameStat after the player has death
+    @Override
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+
+ */
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
 
     public void setMoving(boolean moving) {
         isMoving = moving;

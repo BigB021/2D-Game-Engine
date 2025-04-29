@@ -1,5 +1,7 @@
 package com;
 
+import audio.MusicController;
+import audio.SoundController;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -14,8 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import entities.Enemy;
 import entities.Player;
 import inputs.InputsManager;
-import tileManager.TileManager;
-import physics.GravityPhysics;
+import mapManager.tileManager.TileManager;
 
 import static utilities.constants.EntityConstants.*;
 import static utilities.constants.MapTilesConstants.*;
@@ -23,18 +24,35 @@ import static utilities.constants.TextureConstants.*;
 import static utilities.constants.FramesConstants.FRAME_HEIGHT;
 import static utilities.constants.FramesConstants.FRAME_WIDTH;
 
-/**
- * Main game class that extends ApplicationAdapter. Handles game initialization, rendering, and cleanup.
- */
+import static utilities.constants.AudiConstants.*;
+import static utilities.constants.EntityConstants.*;
+import static utilities.constants.FramesConstants.FRAME_HEIGHT;
+import static utilities.constants.FramesConstants.FRAME_WIDTH;
+import static utilities.constants.MapTilesConstants.*;
+import static utilities.constants.TextureConstants.PLAYER_IDLE_ANIMATION;
+
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
-    private  Player player;
+    private Player player;
     private Enemy enemy;
     private float animationTimer = 0f;
     public TileManager tileManager = new TileManager();
-
     // Testing hitBox
     private ShapeRenderer shape;
+    private audio.MusicController musicController;
+    private audio.SoundController soundController;
+    private GameState currentState;
+    // Simulons des "screens"
+    private MainMenuScreen mainMenuScreen;
+    private GameScreen gameScreen;
+    private OptionsScreen optionsScreen;
+    private PauseScreen pauseScreen;
+    private GameOverScreen gameOverScreen;
+    private InputsManager playerInput;
+
+    //FIXME:
+
+
 
     private OrthographicCamera camera;
     public Viewport viewport;
@@ -44,30 +62,38 @@ public class Game extends ApplicationAdapter {
      */
     public Game() {
     }
+    OrthographicCamera camera;
+    Viewport viewport;
 
-    /**
-     * Initializes the game, setting up the camera, player, enemy, and tile manager.
-     */
     @Override
     public void create() {
         camera = new OrthographicCamera();
         camera.zoom = CAMERA_ZOOM;
-        camera.setToOrtho(false,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        viewport = new FitViewport(SCREEN_WIDTH,SCREEN_HEIGHT,camera);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FitViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
 
         // Initialize tiles and load backgrounds
         tileManager.getTilesFromFolder();
         tileManager.initTiles();
         tileManager.loadBackground();
+        int CalculatedHeight = (int) (FRAME_HEIGHT * camera.zoom);
+        int CalculatedWidth = (int) (FRAME_WIDTH * camera.zoom);
+        player = new Player(PLAYER_SPAWN_X, PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
+        enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1., 5, player, tileManager);
 
-        int CalculatedHeight = (int)(FRAME_HEIGHT * camera.zoom);
-        int CalculatedWidth = (int)(FRAME_WIDTH * camera.zoom);
+        // Inputs initialization
+        /*
+        InputsManager playerInput = new InputsManager(player);
+        Gdx.input.setInputProcessor(playerInput);
 
-        // Initialize player and enemy
-        player = new Player(PLAYER_SPAWN_X, PLAYER_SPAWN_Y,CalculatedWidth,CalculatedHeight,3.5,10,tileManager);
-        enemy = new Enemy(ENEMY_SPAWN_X,ENEMY_SPAWN_Y,CalculatedWidth,CalculatedHeight,1., 5,player,tileManager);
+         */
+        playerInput = new InputsManager(player);
+
+        // Init player
         player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
+
+        // Init enemy
         enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
 
         // Inputs initialization
@@ -79,6 +105,41 @@ public class Game extends ApplicationAdapter {
 
         // Init batch
         batch = new SpriteBatch();
+
+
+
+
+        //⚠️
+        //currentState = GameState.MAIN_MENU;
+        // Init screens
+        mainMenuScreen = new MainMenuScreen(this);
+        gameScreen = new GameScreen(this);
+        optionsScreen = new OptionsScreen(this);
+        pauseScreen = new PauseScreen(this);
+        gameOverScreen = new GameOverScreen(this);
+
+
+
+        musicController = new MusicController();
+        musicController.addMusic("BACKGROUND_MUSIC", musicController.generateMusicFromPath(BACKGROUND_MUSIC));
+        musicController.addMusic("HORROR_SCENE", musicController.generateMusicFromPath(HORROR_SCENE));
+        musicController.playMusic("HORROR_SCENE", 0.5f, false);
+        //musicController.playMusic("BACKGROUND_MUSIC", 0.1f, true);
+
+        /*
+        if(currentState == GameState.GAME_PLAYING){
+            musicController.playMusic("BACKGROUND_MUSIC",0.5f,  true);
+        }else{
+            musicController.playMusic("RUNNING_SOUND",0.5f,  true);
+        }
+
+         */
+
+
+        soundController = new SoundController();
+        soundController.addNewSound("RUNNING_SOUND", soundController.generateSoundFromPath(RUNNING_SOUND));
+
+        setGameState(GameState.MAIN_MENU);
 
     }
 
@@ -96,14 +157,19 @@ public class Game extends ApplicationAdapter {
         float halfViewportWidth = camera.viewportWidth * camera.zoom / 2f;
         float halfViewportHeight = camera.viewportHeight * camera.zoom / 2f;
 
-        // Adjust camera position to follow player within map boundaries
         camera.position.x = Math.max(halfViewportWidth, Math.min(playerCenterX, mapWidth - halfViewportWidth));
         camera.position.y = Math.max(halfViewportHeight, Math.min(playerCenterY, mapHeight - halfViewportHeight));
         camera.update();
 
+////// we can implement a camera but for now we stick to this
+        System.out.println("centerX "+playerCenterX+ "CAMERAx "+ camera.position.x+"viewport "+viewport.getScreenWidth());
+
         batch.setProjectionMatrix(camera.combined);
 
-        // Update animation timer to current time
+
+
+
+        // Set animation timer to current time
         animationTimer += Gdx.graphics.getDeltaTime();
 
         // Apply gravity to player and enemy
@@ -113,36 +179,45 @@ public class Game extends ApplicationAdapter {
         // Update animation frames if enough time has passed
         float FRAME_DELAY = 0.1f;
         if (animationTimer >= FRAME_DELAY) {
-            player.setAnimation_index(player.getAnimation_index()+ FRAME_WIDTH);
+            player.setAnimation_index(player.getAnimation_index() + FRAME_WIDTH);
             if (player.getAnimation_index() > player.getSprite().getWidth() - FRAME_WIDTH) player.setAnimation_index(0);
-            enemy.setAnimation_index(enemy.getAnimation_index()+ FRAME_WIDTH);
+            enemy.setAnimation_index(enemy.getAnimation_index() + FRAME_WIDTH);
             if (enemy.getAnimation_index() > enemy.getSprite().getWidth() - FRAME_WIDTH) enemy.setAnimation_index(0);
             animationTimer = 0f;  // Reset timer
         }
+        ScreenUtils.clear(0.8f, 0.85f, 0.8f, 0.00f);
 
-        // Clear the screen with a color
-        //ScreenUtils.clear(0.8f, 0.85f, 0.8f, 0.00f);
+        // Effectuer le rendu du jeu uniquement quand on est en mode GAME_PLAYING
+        if(currentState == GameState.GAME_PLAYING) {
+            // Mettre à jour la logique du jeu
 
-        // Start drawing textures
-        batch.begin();
+            // Rendre le fond et les éléments de jeu
+            batch.begin();
+            shape.begin(ShapeRenderer.ShapeType.Line);
+            tileManager.render(batch,camera,shape);
+            shape.end();
 
-        // Render tiles and hitboxes
-        shape.begin(ShapeRenderer.ShapeType.Line);
-        tileManager.render(batch,camera,shape);
-        shape.end();
+            // Draw player and enemy animations
+            TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, (FRAME_WIDTH), FRAME_HEIGHT);
+            TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(),0,FRAME_WIDTH, FRAME_HEIGHT);
+            batch.draw(playerRegion, player.getX(),player.getY(), FRAME_WIDTH*camera.zoom, FRAME_HEIGHT*camera.zoom);
+            batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), FRAME_WIDTH*camera.zoom, FRAME_HEIGHT*camera.zoom);
 
-        // Draw player and enemy animations
-        TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, (FRAME_WIDTH), FRAME_HEIGHT);
-        TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(),0,FRAME_WIDTH, FRAME_HEIGHT);
-        batch.draw(playerRegion, player.getX(),player.getY(), FRAME_WIDTH*camera.zoom, FRAME_HEIGHT*camera.zoom);
-        batch.draw(enemyRegion,(int)enemy.getX(),(int) enemy.getY(), FRAME_WIDTH*camera.zoom, FRAME_HEIGHT*camera.zoom);
+            player.movePlayer();
+            enemy.moveEnemy();
 
-        // Move player and enemy based on their respective logic
-        player.movePlayer();
-        enemy.moveEnemy();
+            shape.begin(ShapeRenderer.ShapeType.Line);
+            tileManager.render(batch, camera, shape);
+            shape.end();
 
-        batch.end();
-        shape.setProjectionMatrix(camera.combined);
+            TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, (FRAME_WIDTH), FRAME_HEIGHT);
+            TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(), 0, FRAME_WIDTH, FRAME_HEIGHT);
+            batch.draw(playerRegion, player.getX(), player.getY(), FRAME_WIDTH * camera.zoom, FRAME_HEIGHT * camera.zoom);
+            batch.draw(enemyRegion, (int) enemy.getX(), (int) enemy.getY(), FRAME_WIDTH * camera.zoom, FRAME_HEIGHT * camera.zoom);
+            batch.end();
+
+            // Rendre les hitboxes pour le debug
+            shape.setProjectionMatrix(camera.combined);
 
 
         // Debug: Draw Entities hitboxes
@@ -160,6 +235,10 @@ public class Game extends ApplicationAdapter {
         // Player hitbox
         shape.setColor(Color.BLUE);
         shape.rect(player.getHitBox().x, player.getHitBox().y, player.getHitBox().width, player.getHitBox().height);
+            // Debug: Draw player hitBox rect
+            shape.begin(ShapeRenderer.ShapeType.Line);
+            shape.setColor(Color.BLUE);
+            shape.rect(player.getHitBox().x, player.getHitBox().y, player.getHitBox().width, player.getHitBox().height);
 
         // Enemy hitbox
         shape.setColor(Color.RED);
@@ -175,10 +254,54 @@ public class Game extends ApplicationAdapter {
 
         shape.end();
 
-        // Debug: Log player health status
-        //System.out.println("Player health: " + player.getEntityHealth());
-        //System.out.println("Is player dead: " + player.isDead());
+
+
+
     }
+
+
+
+
+    public void quitter() {
+        Gdx.app.exit();
+        System.exit(0);
+    }
+
+    public MusicController getMusicController() {
+        return musicController;
+    }
+
+    public SoundController getSoundController() {
+        return soundController;
+    }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+
+
+    public void restartGame() {
+        // Réinitialiser les objets essentiels
+        int CalculatedHeight = (int) (FRAME_HEIGHT * camera.zoom);
+        int CalculatedWidth = (int) (FRAME_WIDTH * camera.zoom);
+        player = new Player(PLAYER_SPAWN_X, PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
+        enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager);
+
+        player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        player.setCooldown(player.getAttackAnimationDuration() * 1000);
+
+        enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+
+        animationTimer = 0f;
+
+        playerInput = new InputsManager(player);
+        Gdx.input.setInputProcessor(playerInput);
+
+        setGameState(GameState.GAME_PLAYING);
+    }
+
+
 
     /**
      * Disposes of game resources to free up memory.
@@ -188,9 +311,14 @@ public class Game extends ApplicationAdapter {
         try {
             if (batch != null) {
                 batch.dispose();
+                mainMenuScreen.dispose();
+                gameScreen.dispose();
+                optionsScreen.dispose();
+                pauseScreen.dispose();
+                gameOverScreen.dispose();
             }
         } catch (Exception e) {
             Gdx.app.error("GameMain", "Error during disposal", e);
         }
     }
-}
+}}

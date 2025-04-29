@@ -91,6 +91,13 @@ playerTextures/Jump.png
 playerTextures/Run.png
 playerTextures/Shield.png
 playerTextures/Walk.png
+sounds&musics/ATTACK_1_SOUND.mp3
+sounds&musics/BACKGROUND_MUSIC.mp3
+sounds&musics/Game_Over_Sound_Screen.mp3
+sounds&musics/HORROR-SCENE-1.mp3
+sounds&musics/RUNNING_SOUND.mp3
+sounds&musics/fast-simple-chop-sound.mp3
+sounds&musics/metal-plate-gong.mp3
 tilesAssets/2 Background/1.png
 tilesAssets/2 Background/2.png
 tilesAssets/2 Background/3.png
