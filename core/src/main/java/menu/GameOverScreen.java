@@ -1,7 +1,7 @@
 package menu;
 
-import game.Game;
-import game.GameState;
+import core.Game;
+import core.GameState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

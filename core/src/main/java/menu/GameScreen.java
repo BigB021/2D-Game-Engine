@@ -3,8 +3,8 @@ package menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import game.Game;
-import game.GameState;
+import core.Game;
+import core.GameState;
 
 public class GameScreen {
     private Game game;
