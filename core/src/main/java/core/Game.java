@@ -264,7 +264,7 @@ public class Game extends ApplicationAdapter {
     /**
      * Renders debug hitboxes for player and enemy.
      */
-    private void renderDebugHitboxes() {
+    private void renderHitboxes() {
         shape.setProjectionMatrix(camera.combined);
 
         // Player hitbox
