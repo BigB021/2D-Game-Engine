@@ -58,9 +58,7 @@ public class Game extends ApplicationAdapter {
 
     private OrthographicCamera camera;
     public Viewport viewport;
-    private int enemy_num = 2;
-    private int[] coordsX = {ENEMY_SPAWN_X,ENEMY2_SPAWN_X};
-    private int[] coordsY = {ENEMY_SPAWN_Y,ENEMY2_SPAWN_Y};
+    private final int NUM_ENEMIES = ENEMY_SPAWN_X.length;
 
 
 
@@ -97,8 +95,8 @@ public class Game extends ApplicationAdapter {
         //Init enemies array
         enemies = new ArrayList<>();
 
-        for (int i = 0; i < enemy_num; i++) {
-            enemies.add(new Enemy(coordsX[i], coordsY[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
+        for (int i = 0; i < NUM_ENEMIES; i++) {
+            enemies.add(new Enemy(ENEMY_SPAWN_X[i], ENEMY_SPAWN_Y[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
         }
 
         // Inputs initialization
@@ -107,7 +105,7 @@ public class Game extends ApplicationAdapter {
         // Init player and enemy sprites
         player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
-        for (int i = 0; i < enemy_num; i++) {
+        for (int i = 0; i < NUM_ENEMIES; i++) {
             enemies.get(i).setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         }
 
@@ -230,7 +228,7 @@ public class Game extends ApplicationAdapter {
             batch.end();
 
             // Render debug hitboxes
-            renderDebugHitboxes();
+            //renderDebugHitboxes();
         }
 
         // Check if player is dead and update game state
@@ -357,7 +355,7 @@ public class Game extends ApplicationAdapter {
         //System.out.println(getCords());
         player.setX(getCords());
         for (int i = 0; i < enemies.size(); i++) {
-            enemies.set(i, new Enemy(coordsX[i], coordsY[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
+            enemies.set(i, new Enemy(ENEMY_SPAWN_X[i], ENEMY_SPAWN_Y[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
             enemies.get(i).setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         }
 
@@ -384,7 +382,7 @@ public class Game extends ApplicationAdapter {
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
 
         for (int i = 0; i < enemies.size(); i++) {
-            enemies.set(i, new Enemy(coordsX[i], coordsY[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
+            enemies.set(i, new Enemy(ENEMY_SPAWN_X[i], ENEMY_SPAWN_Y[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
             enemies.get(i).setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         }
 
