@@ -1,4 +1,4 @@
-package core;
+package game;
 
 import audio.MusicController;
 import audio.SoundController;

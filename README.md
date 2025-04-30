@@ -23,7 +23,7 @@ This engine is designed as a base upon which full games can be developed, making
 
 ## Architecture Overview
 - src/
-- ├── **core/** 
+- ├── **game/** 
 - └─── Game.java # Core LibGDX game lifecycle (create, render, dispose)
 - ├── **entities/**
 - ├─── Entity.java # Base entity class (position, hitboxes, movement)

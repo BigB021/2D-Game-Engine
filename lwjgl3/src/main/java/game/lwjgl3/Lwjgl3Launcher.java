@@ -1,8 +1,8 @@
-package core.lwjgl3;
+package game.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import core.Game;
+import game.Game;
 
 import java.io.IOException;
 
