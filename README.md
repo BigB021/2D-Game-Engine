@@ -66,14 +66,13 @@ https://github.com/user-attachments/assets/acac2667-bca4-44d1-8398-9e566dd4cbe7
 
 ## Method 1 (Recommended) : pull from dockerhub and run it.
 ```bash
+ sudo systemctl start docker # Start docker
+```
+```bash
 xhost +local:docker  # Allow Docker access to the display
 ```
 ```bash
-docker run -it --rm
---net=host
--e DISPLAY=$DISPLAY
--v /tmp/.X11-unix:/tmp/.X11-unix
---device /dev/snd   bighes121/2dgameengine:v5
+sudo docker run -it --rm --net=host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/snd   bighes121/2dgameengine:v5
 ````
 
 ## Method 2: load the image and run it.
@@ -82,12 +81,7 @@ docker run -it --rm
 docker load -i 2d-game-engine.tar
 ```
 ```bash
-docker run -it --rm \
---net=host \
--e DISPLAY=$DISPLAY \
--v /tmp/.X11-unix:/tmp/.X11-unix \
---device /dev/snd \
-2dgameengine:latest
+sudo docker run -it --rm --net=host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/snd \2dgameengine:latest
 ```
 ## Requirements
 
@@ -95,7 +89,7 @@ docker run -it --rm \
 - [LibGDX Setup](https://libgdx.com/wiki/start/project-generation) with Gradle
 - IDE like IntelliJ IDEA or VS Code
 
-## Setup (without Docker)
+## Fork and set up the project
 
 1. Clone the repository:
    ```bash
@@ -104,12 +98,13 @@ docker run -it --rm \
 2. Open the project in your IDE (Intellij) and load Gradle.
 3. Run the desktop launcher via Game.java.
 
- Debug Tools
+### Debug Tools
 The engine includes debug rendering:
-• Blue rectangle → Player hitbox
-• Red rectangle → Enemy hitbox
-• Yellow rectangle → Player attack range
-• Green rectangle → Enemy attack range
+
+- • **Blue rectangle** → Player hitbox
+- • **Red rectangle** → Enemy hitbox
+- • **Yellow rectangle** → Player attack range
+- • **Green rectangle** → Enemy attack range
 
 
 ## License
