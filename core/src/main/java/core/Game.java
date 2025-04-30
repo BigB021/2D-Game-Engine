@@ -20,6 +20,8 @@ import menu.*;
 import tileManager.TileManager;
 import physics.GravityPhysics;
 
+import java.util.ArrayList;
+
 import static utilities.constants.EntityConstants.*;
 import static utilities.constants.MapTilesConstants.*;
 import static utilities.constants.TextureConstants.*;
@@ -33,7 +35,9 @@ import static utilities.constants.AudiConstants.*;
 public class Game extends ApplicationAdapter {
     private SpriteBatch batch;
     private Player player;
-    private Enemy enemy;
+    //private Enemy enemy1;
+    //private Enemy enemy2;
+    private ArrayList<Enemy> enemies;
     private float animationTimer = 0f;
     private float cords ;
     public TileManager tileManager = new TileManager();
@@ -54,6 +58,9 @@ public class Game extends ApplicationAdapter {
 
     private OrthographicCamera camera;
     public Viewport viewport;
+    private int enemy_num = 2;
+    private int[] coordsX = {ENEMY_SPAWN_X,ENEMY2_SPAWN_X};
+    private int[] coordsY = {ENEMY_SPAWN_Y,ENEMY2_SPAWN_Y};
 
 
 
@@ -68,6 +75,7 @@ public class Game extends ApplicationAdapter {
      */
     @Override
     public void create() {
+
         // Initialize camera and viewport
         camera = new OrthographicCamera();
         camera.zoom = CAMERA_ZOOM;
@@ -85,7 +93,13 @@ public class Game extends ApplicationAdapter {
 
         // Initialize player and enemy
         player = new Player(PLAYER_SPAWN_X, PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
-        enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager);
+
+        //Init enemies array
+        enemies = new ArrayList<>();
+
+        for (int i = 0; i < enemy_num; i++) {
+            enemies.add(new Enemy(coordsX[i], coordsY[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
+        }
 
         // Inputs initialization
         playerInput = new InputsManager(player);
@@ -93,7 +107,9 @@ public class Game extends ApplicationAdapter {
         // Init player and enemy sprites
         player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
-        enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        for (int i = 0; i < enemy_num; i++) {
+            enemies.get(i).setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        }
 
         // Init ShapeRenderer and batch
         shape = new ShapeRenderer();
@@ -108,11 +124,11 @@ public class Game extends ApplicationAdapter {
 
         // Initialize audio
         musicController = new MusicController();
-        musicController.addMusic("BACKGROUND_MUSIC", musicController.generateMusicFromPath(BACKGROUND_MUSIC));
-        musicController.addMusic("HORROR_SCENE", musicController.generateMusicFromPath(HORROR_SCENE));
+        musicController.addMusic("BACKGROUND_MUSIC", musicController.createMusicFile(BACKGROUND_MUSIC));
+        musicController.addMusic("HORROR_SCENE", musicController.createMusicFile(HORROR_SCENE));
 
         soundController = new SoundController();
-        soundController.addNewSound("RUNNING_SOUND", soundController.generateSoundFromPath(RUNNING_SOUND));
+        soundController.addNewSound("RUNNING_SOUND", soundController.generateSoundFromFile(RUNNING_SOUND));
 
         // Set initial game state to main menu
         setGameState(GameState.MAIN_MENU);
@@ -123,6 +139,7 @@ public class Game extends ApplicationAdapter {
      */
     @Override
     public void render() {
+
         // Calculate the map size and camera boundaries
         float mapWidth = MAX_SCREEN_COL * TILE_SIZE;
         float mapHeight = MAX_SCREEN_ROW * TILE_SIZE;
@@ -145,13 +162,15 @@ public class Game extends ApplicationAdapter {
             if (tileManager.getOverlappingTiles(0,player).get(i)
                 .prototype.image.toString()
                 .equals("assets/tilesAssets/tiles/190.png")){
-                System.out.println("les/190.png "+tileManager.getOverlappingTiles(0,player).get(i).collisionBox.getX());
+                // debug
+                // System.out.println("les/190.png "+tileManager.getOverlappingTiles(0,player).get(i).collisionBox.getX());
+                // System.out.println("cords X "+cords);
                 setCords(tileManager.getOverlappingTiles(0,player).get(i).collisionBox.getX());
-                System.out.println("cords X "+cords);
 
             }
             }
         }
+        //System.out.println("Player coords:"+ player.getX() + "," + player.getY());
         // Update animation timer
         animationTimer += Gdx.graphics.getDeltaTime();
 
@@ -160,22 +179,23 @@ public class Game extends ApplicationAdapter {
         if (animationTimer >= FRAME_DELAY) {
             player.setAnimation_index(player.getAnimation_index() + FRAME_WIDTH);
             if (player.getAnimation_index() > player.getSprite().getWidth() - FRAME_WIDTH) player.setAnimation_index(0);
-            enemy.setAnimation_index(enemy.getAnimation_index() + FRAME_WIDTH);
-            if (enemy.getAnimation_index() > enemy.getSprite().getWidth() - FRAME_WIDTH) enemy.setAnimation_index(0);
+            for (Enemy enemy : enemies) {
+                enemy.setAnimation_index(enemy.getAnimation_index() + FRAME_WIDTH);
+                if (enemy.getAnimation_index() > enemy.getSprite().getWidth() - FRAME_WIDTH)
+                    enemy.setAnimation_index(0);
+            }
+
             animationTimer = 0f;  // Reset timer
         }
 
-        ScreenUtils.clear(0.8f, 0.85f, 0.8f, 0.00f);
+        // clears screen
+        ScreenUtils.clear(0.f, 0.f, 0.f, 0.00f);
 
         // Render game elements only when in GAME_PLAYING state
         if (currentState == GameState.GAME_PLAYING) {
-            // Apply gravity to player and enemy
+            // Apply gravity to player and enemy and update their position
             GravityPhysics.applyGravity(player);
-            GravityPhysics.applyGravity(enemy);
-
-            // Update player and enemy positions
             player.movePlayer();
-            enemy.moveEnemy();
 
 
 
@@ -185,15 +205,26 @@ public class Game extends ApplicationAdapter {
             tileManager.render(batch, camera, shape);
             shape.end();
 
+            TextureRegion[] enemiesRegions = new TextureRegion[enemies.size()];
+            for (int i = 0; i < enemies.size(); i++) {
+                GravityPhysics.applyGravity(enemies.get(i));
+                enemies.get(i).moveEnemy();
+                enemiesRegions[i] = enemies.get(i).loadAnimation(enemies.get(i).getAnimation_index(), 0, FRAME_WIDTH, FRAME_HEIGHT);
+                batch.draw(enemiesRegions[i], enemies.get(i).getX(), enemies.get(i).getY(), FRAME_WIDTH * camera.zoom, FRAME_HEIGHT * camera.zoom);
+
+            }
             // Draw player and enemy animations
             TextureRegion playerRegion = player.loadAnimation(player.getAnimation_index(), 0, (FRAME_WIDTH), FRAME_HEIGHT);
-            TextureRegion enemyRegion = enemy.loadAnimation(enemy.getAnimation_index(), 0, FRAME_WIDTH, FRAME_HEIGHT);
+            //TextureRegion enemy2Region = enemy2.loadAnimation(enemy2.getAnimation_index(), 0, FRAME_WIDTH, FRAME_HEIGHT);
             batch.draw(playerRegion, player.getX(), player.getY(), FRAME_WIDTH * camera.zoom, FRAME_HEIGHT * camera.zoom);
-            batch.draw(enemyRegion, (int) enemy.getX(), (int) enemy.getY(), FRAME_WIDTH * camera.zoom, FRAME_HEIGHT * camera.zoom);
+            //batch.draw(enemy2Region, enemy2.getX(), enemy2.getY(), FRAME_WIDTH * camera.zoom, FRAME_HEIGHT * camera.zoom);
 
             if(player.getHitBox().y <= 40){
                 player.setDead(true);
             }
+
+            // Dispose enemy if deadx
+            enemies.removeIf(Enemy::isDead);
 
 
             batch.end();
@@ -247,8 +278,10 @@ public class Game extends ApplicationAdapter {
         // Enemy hitbox
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.RED);
-        shape.rect(enemy.getHitBox().x, enemy.getHitBox().y, enemy.getHitBox().width, enemy.getHitBox().height);
-        shape.end();
+        for (int i = 0; i < enemies.size(); i++) {
+            shape.rect(enemies.get(i).getHitBox().x, enemies.get(i).getHitBox().y, enemies.get(i).getHitBox().width, enemies.get(i).getHitBox().height);
+
+        }        shape.end();
 
         // Player attack hitbox
         shape.begin(ShapeRenderer.ShapeType.Line);
@@ -259,7 +292,10 @@ public class Game extends ApplicationAdapter {
         // Enemy attack hitbox
         shape.begin(ShapeRenderer.ShapeType.Line);
         shape.setColor(Color.GREEN);
-        shape.rect(enemy.getAttackHitBox().x, enemy.getAttackHitBox().y, enemy.getAttackHitBox().width, enemy.getAttackHitBox().height);
+        for (int i = 0; i < enemies.size(); i++) {
+            shape.rect(enemies.get(i).getAttackHitBox().x, enemies.get(i).getAttackHitBox().y, enemies.get(i).getAttackHitBox().width, enemies.get(i).getAttackHitBox().height);
+
+        }
         shape.end();
     }
 
@@ -315,13 +351,16 @@ public class Game extends ApplicationAdapter {
         int CalculatedHeight = (int) (FRAME_HEIGHT * camera.zoom);
         int CalculatedWidth = (int) (FRAME_WIDTH * camera.zoom);
         player = new Player((int)getCords(), PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
-        enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager);
 
         player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
-        System.out.println(getCords());
+        //System.out.println(getCords());
         player.setX(getCords());
-        enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.set(i, new Enemy(coordsX[i], coordsY[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
+            enemies.get(i).setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        }
+
 
         animationTimer = 0f;
 
@@ -331,17 +370,23 @@ public class Game extends ApplicationAdapter {
         setGameState(GameState.GAME_PLAYING);
     }
 
+    /**
+     *  Restarts the game when player dies
+     * @param coords : player checkpoint coordinates
+     */
     public void restartGame(float coords) {
         // Reinitialize essential objects
         int CalculatedHeight = (int) (FRAME_HEIGHT * camera.zoom);
         int CalculatedWidth = (int) (FRAME_WIDTH * camera.zoom);
         System.out.println(getCords());
         player = new Player((int)getCords(), PLAYER_SPAWN_Y, CalculatedWidth, CalculatedHeight, 3.5, 10, tileManager);
-        enemy = new Enemy(ENEMY_SPAWN_X, ENEMY_SPAWN_Y, CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager);
-
         player.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
         player.setCooldown(player.getAttackAnimationDuration() * 1000);
-        enemy.setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.set(i, new Enemy(coordsX[i], coordsY[i], CalculatedWidth, CalculatedHeight, 1.0, 5, player, tileManager));
+            enemies.get(i).setSprite(new Texture(PLAYER_IDLE_ANIMATION));
+        }
 
         animationTimer = 0f;
 
@@ -349,33 +394,6 @@ public class Game extends ApplicationAdapter {
         Gdx.input.setInputProcessor(playerInput);
 
         setGameState(GameState.GAME_PLAYING);
-    }
-
-    /**
-     * Gets the music controller.
-     *
-     * @return The music controller
-     */
-    public MusicController getMusicController() {
-        return musicController;
-    }
-
-    /**
-     * Gets the sound controller.
-     *
-     * @return The sound controller
-     */
-    public SoundController getSoundController() {
-        return soundController;
-    }
-
-    /**
-     * Gets the player.
-     *
-     * @return The player
-     */
-    public Player getPlayer() {
-        return player;
     }
 
     /**
@@ -397,6 +415,19 @@ public class Game extends ApplicationAdapter {
         }
     }
 
+    //===================== Getters & Setters =====================
+    public MusicController getMusicController() {
+        return musicController;
+    }
+
+    public SoundController getSoundController() {
+        return soundController;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     public float getCords() {
         return cords;
     }
@@ -404,4 +435,5 @@ public class Game extends ApplicationAdapter {
     public void setCords(float value) {
         cords = value;
     }
+    //=============================================================
 }

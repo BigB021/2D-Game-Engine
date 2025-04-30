@@ -164,7 +164,7 @@ public class Enemy extends Entity {
             }
 
             if (enemyAction == DEAD) {
-                respawnEnemy();
+                setAttacking(false);
             }
 
             if (shouldPursuePlayer()) {
@@ -184,9 +184,9 @@ public class Enemy extends Entity {
     /**
      * Respawns enemy to spawn point after his death
      */
-    private void respawnEnemy(){
-        this.setX(ENEMY_SPAWN_X);
-        this.setY(ENEMY_SPAWN_Y);
+    private void respawnEnemy(int x, int y) {
+        this.setX(x);
+        this.setY(y);
         setEntityHealth(10);
         setDead(false);
         initDirection();
@@ -337,6 +337,8 @@ public class Enemy extends Entity {
     }
 
 
+
+
     //=====================Getters & Setters=====================
 
     public int getEnemyAction() {
@@ -363,7 +365,6 @@ public class Enemy extends Entity {
         this.animation_index = animation_index;
     }
 
-    // Set Enemy State
     private void setRunningState() {
         this.setEnemyAction(RUN);
     }

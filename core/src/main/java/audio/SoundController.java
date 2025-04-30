@@ -17,7 +17,7 @@ public class SoundController {
     private static Map<String, Float> volumeSounds;
 
     private static float masterVolume = 1.0f;
-    private static boolean soundEnabled = true;
+    private static boolean soundOn = true;
 
 
 
@@ -30,11 +30,11 @@ public class SoundController {
 
     /**
      *
-     * @param path the path of the sound to generate
+     * @param filePath the filePath of the sound to generate
      * @return Sound
      */
-    public Sound generateSoundFromPath(String path){
-        return Gdx.audio.newSound(Gdx.files.internal(path));
+    public Sound generateSoundFromFile(String filePath){
+        return Gdx.audio.newSound(Gdx.files.internal(filePath));
     }
 
     /**
@@ -47,13 +47,13 @@ public class SoundController {
     }
 
 
-    // NOTE : ⚠️ Si le son est déjà en cours de lecture, il ne sera pas rejoué.
+    // NOTE : Si le son est déjà en cours de lecture, il ne sera pas rejoué.
 
     /**
      *
      * Joue un son simple (non-looping) s'il n'est pas déjà en cours de lecture.
      *
-     * ⚠️ Si le son est déjà en cours de lecture, il ne sera pas rejoué.
+     * Si le son est déjà en cours de lecture, il ne sera pas rejoué.
      * Pour le relancer, il faut d'abord appeler {@link #stopSound(String)}.
      *
      * @param id the id of the sound
@@ -84,7 +84,7 @@ public class SoundController {
      *
      * Joue un son avec un volume personnalisé s'il n'est pas déjà en lecture.
      *
-     * ⚠️ Si le son est déjà en cours de lecture, il ne sera pas rejoué.
+     * Si le son est déjà en cours de lecture, il ne sera pas rejoué.
      * Pour le relancer, utilisez {@link #stopSound(String)} avant d'appeler cette méthode.
      * @param id : The id of the Sound
      * @param volume : The fixed value of volume
@@ -142,7 +142,7 @@ public class SoundController {
      *
      * Joue un son avec volume personnalisé et option looping, s'il n'est pas déjà en lecture.
      *
-     * ⚠️ Pour relancer le son même s’il est déjà joué, appelez {@link #stopSound(String)} d’abord.
+     * Pour relancer le son même s’il est déjà joué, appelez {@link #stopSound(String)} d’abord.
      *
      * @param id
      * @param volume
@@ -196,7 +196,7 @@ public class SoundController {
      * @param maxDistance La distance maximale d'audibilité
      * @return Un volume entre 0.0 (inaudible) et 1.0 (proche)
      */
-    private float calculateVolumeFromDistance(float distance, float maxDistance) {
+    private float calcVolDistance(float distance, float maxDistance) {
         return MathUtils.clamp(1.0f - (distance / maxDistance), 0f, 1f);
     }
 
@@ -207,7 +207,7 @@ public class SoundController {
      * @param maxDistance La distance maximale considérée pour le pan
      * @return Une valeur de pan entre -1 (gauche) et 1 (droite)
      */
-    private float calculatePan(float directionX, float maxDistance) {
+    private float calcPan(float directionX, float maxDistance) {
         return MathUtils.clamp(directionX / (maxDistance * 0.5f), -1f, 1f);
     }
 
@@ -222,7 +222,7 @@ public class SoundController {
      * @return l'identifiant du son en mémoire
      */
     public long playSound2D(String id, Vector2 position, Vector2 listenerPosition, float maxDistance) {
-        if (!soundEnabled) {
+        if (!soundOn) {
             return -1;
         }
 
@@ -286,7 +286,7 @@ public class SoundController {
      * @param id L'identifiant du son
      * @return Le volume du son ou -1 si le son n'existe pas
      */
-    public float getSoundVolume(String id){
+    public float getVolume(String id){
         if(!sounds.containsKey(id)) {
             Gdx.app.error("SoundController", "Sound with Id " + id + " not found!");
             return -1;
@@ -354,7 +354,7 @@ public class SoundController {
      * @param amount La quantité à ajouter ou soustraire au volume actuel
      * @return Le nouveau volume après ajustement
      */
-    public float changeSoundVolume(String id, float amount) {
+    public float changeVolume(String id, float amount) {
         if (!sounds.containsKey(id)) {
             Gdx.app.error("SoundController", "Sound with Id " + id + " not found!");
             return -1;
@@ -403,12 +403,12 @@ public class SoundController {
      * Active ou désactive tous les sons
      * @param enabled true pour activer les sons, false pour les désactiver
      */
-    public void setSoundEnabled(boolean enabled) {
-        if (soundEnabled == enabled) {
+    public void setSoundOn(boolean enabled) {
+        if (soundOn == enabled) {
             return;
         }
 
-        soundEnabled = enabled;
+        soundOn = enabled;
 
         if (!enabled) {
             stopAllSounds();
@@ -421,8 +421,8 @@ public class SoundController {
      * Indique si les sons sont activés
      * @return true si les sons sont activés, false sinon
      */
-    public boolean isSoundEnabled() {
-        return soundEnabled;
+    public boolean isSoundOn() {
+        return soundOn;
     }
 
     /**

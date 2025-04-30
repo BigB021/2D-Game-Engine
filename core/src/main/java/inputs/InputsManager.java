@@ -15,8 +15,7 @@ import static utilities.constants.FramesConstants.FRAME_WIDTH;
 
 
 import static utilities.constants.AudiConstants.*;
-import static utilities.constants.EntityConstants.*;
-import static utilities.constants.FramesConstants.FRAME_WIDTH;
+
 import audio.SoundController;
 /**
  * Handles input processing for the game.
@@ -40,13 +39,6 @@ public class InputsManager implements InputProcessor {
         this.player = player;
         soundController = new SoundController();
 
-        /*
-        if (soundController.isSoundEnabled()) {
-            soundController.playSound("FAST_SIMPLE_CHOP", 1f, true);
-            //soundController.playSound("METAL_PLATE", 1f, false);
-        }
-
-         */
     }
 
 
@@ -62,10 +54,10 @@ public class InputsManager implements InputProcessor {
     public boolean keyDown(int keycode) {
         // Sound effects for player
         // TEST : testing player's sounds
-        soundController.addNewSound("RUNNING_SOUND", soundController.generateSoundFromPath(RUNNING_SOUND));
-        soundController.addNewSound("FAST_SIMPLE_CHOP", soundController.generateSoundFromPath(FAST_SIMPLE_CHOP));
-        soundController.addNewSound("METAL_PLATE", soundController.generateSoundFromPath(METAL_PLATE));
-        soundController.addNewSound("ATTACK_1_SOUND", soundController.generateSoundFromPath(ATTACK_1_SOUND));
+        soundController.addNewSound("RUNNING_SOUND", soundController.generateSoundFromFile(RUNNING_SOUND));
+        soundController.addNewSound("FAST_SIMPLE_CHOP", soundController.generateSoundFromFile(FAST_SIMPLE_CHOP));
+        soundController.addNewSound("METAL_PLATE", soundController.generateSoundFromFile(METAL_PLATE));
+        soundController.addNewSound("ATTACK_1_SOUND", soundController.generateSoundFromFile(ATTACK_1_SOUND));
 
 
         // Add the keycode to the set of currently pressed keys.
@@ -100,12 +92,9 @@ public class InputsManager implements InputProcessor {
         // Handle attack action
         if (pressedKeys.contains(Input.Keys.X) && !player.isAttacking()) {
             long currentTimeMs = System.currentTimeMillis();
+            // Debug
             Gdx.app.log("ATTACK", "Lancement de l'attaque !");
-            /*
-            soundController.stopSound("METAL_PLATE");
-            soundController.playSound("METAL_PLATE", 1f, false);
 
-             */
             soundController.stopSound("ATTACK_1_SOUND");
             soundController.playSound("ATTACK_1_SOUND", 1f, false);
             // Check for cooldown period
@@ -132,12 +121,6 @@ public class InputsManager implements InputProcessor {
                             shouldMove = true;
                             if (pressedKeys.contains(Input.Keys.SHIFT_RIGHT)) {
                                 newAction = RUN;
-                                /*
-                                soundController.stopSound("RUNNING_SOUND");
-                                double rand = (Math.random() * 2.1)+0.5;
-                                soundController.playSound("RUNNING_SOUND", 1f, true, (float) rand);
-
-                                 */
                             } else {
                                 newAction = WALK;
                             }
@@ -166,14 +149,12 @@ public class InputsManager implements InputProcessor {
                 soundController.stopSound("FAST_SIMPLE_CHOP");
                 soundController.playSound("FAST_SIMPLE_CHOP", 1f, false);
                 JumpPhysics.jumpPlayer(player);
-                player.setPlayerAction(JUMP);    // ← switch into jump action
-                player.setMoving(false);         // optional: stop any horizontal walk/run
-                player.updateAnimation();        // force the jump texture to load immediately
+                player.setPlayerAction(JUMP);
+                player.setMoving(false);
+                player.updateAnimation();
             }
             return true;
         }
-
-
         return false;
     }
 

@@ -68,6 +68,7 @@ public abstract class Entity {
 
     }
 
+
     /**
      * Updates the player's hitbox position to match the player's movement.
      */
@@ -86,16 +87,6 @@ public abstract class Entity {
         this.attackHitBox.y = this.getY() + (FRAME_HEIGHT * 0.1f);
 
     }
-
-    /**
-     * Checks if the entity can move in the specified direction and updates the position.
-     /**
-     * Checks if the entity can move in the specified direction and updates the position.
-     *
-     * @param dx The horizontal movement.
-     * @param dy The vertical movement.
-     * @return true if the entity moved, false if it was blocked.
-     */
 
     /**
      * Checks if the entity can move in the specified direction and updates the position.
@@ -121,7 +112,7 @@ public abstract class Entity {
 
                 TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
                 if (face == TileFace.LEFT || face == TileFace.RIGHT) {
-                    CollisionSystem.resolveTileCollision(this, tileInstance, face);
+                    CollisionSystem.checkTileCollision(this, tileInstance, face);
                     dx = 0; // Cancel horizontal movement
                     break;
                 }
@@ -139,7 +130,7 @@ public abstract class Entity {
                 if (tileInstance.prototype == null || !tileInstance.prototype.collision) continue;
                 TileFace face = CollisionSystem.getCollisionFace(this, tileInstance);
                 if (face == TileFace.TOP || face == TileFace.BOTTOM) {
-                    CollisionSystem.resolveTileCollision(this, tileInstance, face);
+                    CollisionSystem.checkTileCollision(this, tileInstance, face);
                     dy = 0; // Cancel vertical movement
                     break;
                 }

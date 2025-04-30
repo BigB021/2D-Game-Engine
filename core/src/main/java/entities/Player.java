@@ -256,23 +256,5 @@ public class Player extends Entity {
         this.animation_index = animation_index;
     }
 
-    public void setCheckPointX(int checkpointX) {
-        this.checkpointX = checkpointX;
-    }
-    public void setCheckPointY(int checkpointY) {
-        this.checkpointY = checkpointY;
-    }
-
-    public int getCheckPointX() {
-        return this.checkpointX;
-    }
-
-    public int getCheckPointY() {
-        return this.checkpointY;
-    }
-
-
-
-
 
 }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -91,10 +90,10 @@ public class OptionsScreen {
     private void handleInput() {
         // MUSIC VOLUME
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            float vol = game.getMusicController().setMusicVolume(game.getMusicController().getVolume() + 0.05f);
+            float vol = game.getMusicController().setVolume(game.getMusicController().getVolume() + 0.05f);
             Gdx.app.log("Options", "Music Volume: " + vol);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            float vol = game.getMusicController().setMusicVolume(game.getMusicController().getVolume() - 0.05f);
+            float vol = game.getMusicController().setVolume(game.getMusicController().getVolume() - 0.05f);
             Gdx.app.log("Options", "Music Volume: " + vol);
         }
 

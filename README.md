@@ -1,8 +1,8 @@
 # 2D Platformer Game Engine
 
-This project is a **simple, extensible 2D game engine** for platformer-style games, built with [LibGDX](https://libgdx.com/). It provides essential components such as an entity system, physics engine (gravity & jumping), tile management (including animated tiles), and a basic rendering pipeline with camera tracking and debug tools.
+This project is a **simple, extensible 2D core engine** for platformer-style games, built with [LibGDX](https://libgdx.com/). It provides essential components such as an entity system, physics engine (gravity & jumping), tile management (including animated tiles), and a basic rendering pipeline with camera tracking and debug tools.
 
-This engine is designed as a base upon which full games can be developed, making it ideal for educational purposes, prototyping, or lightweight game projects.
+This engine is designed as a base upon which full games can be developed, making it ideal for educational purposes, prototyping, or lightweight core projects.
 
 ## Features
 
@@ -24,7 +24,7 @@ This engine is designed as a base upon which full games can be developed, making
 ## Architecture Overview
 - src/
 - ├── **core/** 
-- └─── Game.java # Core LibGDX game lifecycle (create, render, dispose)
+- └─── Game.java # Core LibGDX core lifecycle (create, render, dispose)
 - ├── **entities/**
 - ├─── Entity.java # Base entity class (position, hitboxes, movement)
 - ├─── Player.java # Handles player logic

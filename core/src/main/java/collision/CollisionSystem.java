@@ -6,7 +6,6 @@ import entities.Enemy;
 import entities.Entity;
 import entities.Player;
 import tileManager.TileInstance;
-import tileManager.TileManager;
 import utilities.TileFace;
 
 import static utilities.constants.EntityConstants.LEFT;
@@ -16,7 +15,12 @@ import static utilities.constants.MapTilesConstants.TILE_SIZE;
 
 public class CollisionSystem {
 
-    // Check collision with player
+    /**
+     * Checks if player hitbox overlaps with enemy's
+     * @param player : the player duh
+     * @param enemy : the enemy we want to check collision with
+     * @return true if collision is detected
+     */
     public static boolean checkPlayerCollision(Player player, Enemy enemy) {
 
         Rectangle intersection = new Rectangle();
@@ -35,7 +39,11 @@ public class CollisionSystem {
         return false;
     }
 
-    // Check Collision with screen borders
+    /**
+     * Checks entity collision with screen borders
+     * @param entity : Player or enemy we want to check screen collision with
+     * @return true if entity's hitbox reaches screen borders
+     */
     public static boolean checkScreenCollision(Entity entity) {
         if (entity.getHitBox().x >= SCREEN_WIDTH) {
             if(entity instanceof Enemy){
@@ -50,6 +58,7 @@ public class CollisionSystem {
         }
         return false;
     }
+
 
     public static TileFace getCollisionFace(Entity entity, TileInstance tile) {
         Rectangle intersection = new Rectangle();
@@ -83,22 +92,19 @@ public class CollisionSystem {
         }
     }
 
-    public static void resolveTileCollision(Entity entity, TileInstance tile, TileFace face) {
+    /**
+     * Checks and handles collision with tile
+     * @param entity : player or enemy
+     * @param tile : tile from getOverlapingTiles method
+     * @param face : tile side
+     */
+    public static void checkTileCollision(Entity entity, TileInstance tile, TileFace face) {
         Rectangle overlap = new Rectangle();
-        if (!tile.iscollidqble()) {
 
-                System.out.println("Check point !!!");
-
-        };
-
-
+        // if player's hitbox is not intersecting with the tile skip handling
         if (!Intersector.intersectRectangles(entity.getHitBox(), tile.collisionBox, overlap)) {
             return;
         }
-
-
-
-
 
         switch (face) {
             case TOP:  // landing on tile
@@ -130,6 +136,11 @@ public class CollisionSystem {
     }
 
 
+    /**
+     *  Checks if entity is standing on the top side of a tile
+     * @param entity : Player or Enemy
+     * @return true if player is standing on a collidable tile
+     */
     public static boolean isStandingOnSolid(Entity entity) {
         entity.setGrounded(false);
 

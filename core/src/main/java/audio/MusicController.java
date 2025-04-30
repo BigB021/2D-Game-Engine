@@ -45,12 +45,12 @@ public class MusicController {
     }
 
     /**
-     * Creates a new Music instance from the provided file path.
-     * @param path The internal path to the audio file.
+     * Creates a new Music instance from the provided file filepath.
+     * @param filepath The internal filepath to the audio file.
      * @return A Music instance.
      */
-    public Music generateMusicFromPath(String path) {
-        return Gdx.audio.newMusic(Gdx.files.internal(path));
+    public Music createMusicFile(String filepath) {
+        return Gdx.audio.newMusic(Gdx.files.internal(filepath));
     }
 
     /**
@@ -149,7 +149,7 @@ public class MusicController {
     /**
      * Pauses the currently playing music.
      */
-    public void pauseCurrentMusic() {
+    public void pauseMusic() {
         if (currentMusic != null && currentMusic.isPlaying()) {
             paused = true;
             currentMusic.pause();
@@ -273,7 +273,7 @@ public class MusicController {
      * @param value New volume (between 0 and 1).
      * @return The clamped volume value that was set.
      */
-    public float setMusicVolume(float value) {
+    public float setVolume(float value) {
         float volume = Math.clamp(value, 0f, 1f);
         if (currentMusic != null) {
             currentMusicVolume = volume;
