@@ -68,6 +68,7 @@ assets/PSD/Background.psd
 assets/PSD/Objects.psd
 assets/PSD/Tiles.psd
 assets/license.txt
+demos/demo.mp4
 enemyTextures/Attack_1.png
 enemyTextures/Attack_2.png
 enemyTextures/Attack_3.png

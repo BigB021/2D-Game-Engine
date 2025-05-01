@@ -76,7 +76,9 @@ sudo docker run -it --rm --net=host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.
 ````
 
 ## Method 2: load the image and run it.
-
+```bash
+ sudo systemctl start docker # Start docker
+```
 ```bash
 docker load -i 2d-game-engine.tar
 ```
